@@ -35,6 +35,7 @@ TODO - not on PyPI yet
 TODO - separation of test/dev requirements
 TODO - configuration for travis
 TODO - set up tests for multiple python versions
+TODO - icon for project release
 
 ```sh
 pip install chartmogul
@@ -53,21 +54,23 @@ You need to pass this configuration object as the first argument to each request
 
 ## Usage
 
-The library is based on promises. You can use it synchronously with `.get()`.
+The library is based on [promises](https://pypi.python.org/pypi/promise).
+You can use it synchronously with `.get()`.
+
 Here is an example:
 
 ```python
 import chartmogul
 config = chartMogul.Config("token", "secret")
 
-req = chartmogul.Plan().create(config)
+req = chartmogul.Plan.create(config, data={...})
 # Now either (asynchronous)
 req.then(doSomething).catch(reactOnException)
 # or (synchronous)
 try:
     doSomething(req.get())
-except e:
-    reactOnException(e)
+except Exception as ex:
+    reactOnException(ex)
 ```
 
 ### Import API
@@ -78,9 +81,9 @@ Available methods in Import API:
 
 ```python
 chartmogul.DataSource.create(config)
-chartmogul.DataSource.retrieve(config, data_source_uuid)
-chartmogul.DataSource.all(config, query)
-chartmogul.DataSource.destroy(config, data_source_uuid)
+chartmogul.DataSource.retrieve(config, uuid="data_source_uuid")
+chartmogul.DataSource.all(config)
+chartmogul.DataSource.destroy(config, uuid="data_source_uuid")
 ```
 
 #### [Customers](https://dev.chartmogul.com/docs/customers)
@@ -97,13 +100,13 @@ ChartMogul.Customer.destroy(config, customerUuid)
 #### [Plans](https://dev.chartmogul.com/docs/plans)
 
 ```python
-ChartMogul.Plan.create(config, data)
-ChartMogul.Plan.retrieve(config, uuid)
-ChartMogul.Plan.modify(config, uuid, {
-    name: "new name"
+chartmogul.Plan.create(config, data={})
+chartmogul.Plan.retrieve(config, uuid="")
+chartmogul.Plan.modify(config, uuid="", data={
+    "name": "new name"
 })
-ChartMogul.Plan.all(config, query)
-ChartMogul.Plan.destroy(config, uuid)
+chartmogul.Plan.all(config, page=2, external_id="")
+chartmogul.Plan.destroy(config, uuid="")
 ```
 
 #### [Invoices](https://dev.chartmogul.com/docs/invoices)

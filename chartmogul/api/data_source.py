@@ -8,7 +8,7 @@ class DataSource(Resource):
     """
     _path = '/data_sources{/uuid}'
     _root_key = 'data_sources'
-    _many = namedtuple('DataSources', ['data_sources'])
+    _many = namedtuple('DataSources', [_root_key])
 
     class _Schema(Schema):
         uuid = fields.String()

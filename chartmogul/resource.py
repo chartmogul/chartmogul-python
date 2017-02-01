@@ -64,10 +64,9 @@ class Resource:
                          **{key: jsonObj[key] for key in PAGING if key in jsonObj})
 
     @classmethod
-    def _request(cls, config, method, path, data=None):
-        http_verb = MAPPINGS[method]
-        if http_verb == 'GET':
-            params = data
+    def _request(cls, config, method, http_verb, path, data=None, **kwargs):
+        if http_verb == 'get':
+            params = kwargs
             data = None
         else:
             params = None
@@ -98,16 +97,23 @@ class Resource:
             if pathTemp is None:
                 pathTemp = cls._path
 
-            pathTemp = Resource._expandPath(pathTemp, kwargs)
+            # This enforces user to pass argument, otherwise we could call wrong URL.
+            if method in ['destroy','cancel', 'retrieve', 'update'] and 'uuid' not in kwargs:
+                raise APIError("Please pass 'uuid' parameter")
+            if method in ['create','modify'] and 'data' not in kwargs:
+                raise APIError("Please pass 'data' parameter")
 
-            return cls._request(config,
-                                 method,
-                                 pathTemp,
-                                 data=kwargs.get("data", None))
+            pathTemp = Resource._expandPath(pathTemp, kwargs)
+            # UUID is always path parameter only.
+            if 'uuid' in kwargs:
+                del kwargs['uuid']
+
+            return cls._request(config, method, MAPPINGS[method], pathTemp, **kwargs)
         return fc
+
     def __repr__(self):
         """
-        Pretty-prints any object as <Data{a='a',b=4,c=datetime.datetime(2003, 8, 4, 21, 41, 43)}>
+        Pretty-prints any object as <ClassName{property='string',number=4,date=datetime.datetime(2003, 8, 4, 21, 41, 43)}>
         """
         return "<" + self.__class__.__name__ + "{" + \
                 ",".join([attr + "=" + repr(getattr(self, attr)) for attr in dir(self)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
+from .api.ping import Ping
 from .api.data_source import DataSource
 from .api.plan import Plan
 from .api.config import Config, ping
