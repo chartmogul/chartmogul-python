@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
+from .api.config import Config
+from .errors import APIError, ConfigurationError
+
 from .api.ping import Ping
 from .api.data_source import DataSource
 from .api.plan import Plan
 from .api.customer import Customer
-from .api.config import Config
-from .errors import APIError, ConfigurationError
+
 from . import imp
 from . import metrics
 from . import enrichment

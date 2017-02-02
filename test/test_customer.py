@@ -7,6 +7,8 @@ import requests_mock
 from pprint import pprint
 from collections import namedtuple
 
+# TODO: test modifying a customer
+
 docsListSample = {
   "entries":[
     {

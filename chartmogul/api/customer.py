@@ -134,3 +134,5 @@ class Customer(Resource):
             return Customer(**data)
 
     _schema = _Schema(strict=True)
+
+    #TODO: search/merge - custom endpoints for customers
