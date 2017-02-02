@@ -89,12 +89,12 @@ chartmogul.DataSource.destroy(config, uuid="data_source_uuid")
 #### [Customers](https://dev.chartmogul.com/docs/customers)
 
 ```python
-ChartMogul.Customer.create(config, data)
-ChartMogul.Customer.all(config, {
+chartmogul.Customer.create(config, data={})
+chartmogul.Customer.all(config, {
   page: 2,
   per_page: 20
 })
-ChartMogul.Customer.destroy(config, customerUuid)
+chartmogul.Customer.destroy(config, uuid=customerUuid)
 ```
 
 #### [Plans](https://dev.chartmogul.com/docs/plans)

@@ -1,9 +1,10 @@
 import requests
-from json import JSONDecodeError
+from json import JSONDecodeError, dumps
 from promise import Promise
 from uritemplate import URITemplate
 from .errors import *
 from .api.config import Config
+from datetime import datetime
 
 """
 HTTP verb mapping. Based on nodejs library.
@@ -24,19 +25,43 @@ MAPPINGS = {
 
 PAGING = ['current_page', 'total_pages', 'has_more', 'per_page', 'page']
 
-
-class Resource:
-    _path = ''
-
+class DataObject:
     def __init__(self, **kwargs):
+        """
+        Any arguments are translated into class attributes.
+        """
         self._set_attrs(**kwargs)
 
     def _set_attrs(self, **kwargs):
+        """
+        Dynamically creates attributes of the class, so it's not necessary
+        to repeat their list besides the serialization schema.
+        """
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-    def _dump(self):
-        return self._schema.dump(self).data
+    def __repr__(self):
+        """
+        Pretty-prints any object as <ClassName{property='string',number=4,date=datetime.datetime(2003, 8, 4, 21, 41, 43)}>
+        """
+        return "<" + self.__class__.__name__ + "{" + \
+                ", ".join([attr + "=" + repr(getattr(self, attr)) for attr in sorted(dir(self))
+                          if not attr.startswith('_') and not callable(getattr(self, attr))]) + \
+               "}>"
+
+def json_serial(obj):
+    """
+    JSON serializer for objects not serializable by default json code
+    Handles datetime.
+    """
+
+    if isinstance(obj, datetime):
+        serial = obj.isoformat()
+        return serial
+    raise TypeError("Type not serializable")
+
+class Resource(DataObject):
+    _path = ''
 
     @classmethod
     def _load(cls, response):
@@ -70,6 +95,8 @@ class Resource:
             data = None
         else:
             params = None
+            if data is not None:
+                data=dumps(data, default=json_serial)
 
         if method == 'all':
             postprocess = cls._load_many
@@ -77,7 +104,11 @@ class Resource:
             postprocess = cls._load
 
         return Promise(lambda resolve, _:
-            resolve(getattr(requests, http_verb)(config.uri + path, json=data, params=params, auth=config.auth))
+            resolve(getattr(requests, http_verb)(config.uri + path,
+                data=data,
+                params=params,
+                auth=config.auth)
+            )
         ).then(postprocess
         ).catch(annotateHTTPError)
 
@@ -110,15 +141,6 @@ class Resource:
 
             return cls._request(config, method, MAPPINGS[method], pathTemp, **kwargs)
         return fc
-
-    def __repr__(self):
-        """
-        Pretty-prints any object as <ClassName{property='string',number=4,date=datetime.datetime(2003, 8, 4, 21, 41, 43)}>
-        """
-        return "<" + self.__class__.__name__ + "{" + \
-                ",".join([attr + "=" + repr(getattr(self, attr)) for attr in dir(self)
-                          if not attr.startswith('_') and not callable(getattr(self, attr))]) + \
-               "}>"
 
 def _add_method(cls, method):
     """
