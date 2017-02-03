@@ -8,10 +8,15 @@ from .api.ping import Ping
 from .api.data_source import DataSource
 from .api.plan import Plan
 from .api.customer import Customer
+from .api.attributes import Attributes
+from .api.tags import Tags
+from .api.activity import Activity
+from .api.subscription import Subscription
+from .api.metrics import Metrics
 
-from . import imp
-from . import metrics
-from . import enrichment
+# Can't merge modules, because of Subscription clash.
+import imp
+
 
 """
 ChartMogul API Python Client

@@ -10,17 +10,17 @@ from datetime import datetime
 HTTP verb mapping. Based on nodejs library.
 """
 MAPPINGS = {
+    'add': 'post',
     'all': 'get',
+    'cancel': 'patch',
     'create': 'post',
     'destroy': 'delete',
-    'cancel': 'patch',
     'merge': 'patch',
-    'retrieve': 'get',
-    'patch': 'patch',
-    'update': 'put',
     'modify': 'patch',
-    'add': 'post',
-    'remove': 'delete'
+    'patch': 'patch',
+    'remove': 'delete',
+    'retrieve': 'get',
+    'update': 'put'
 }
 
 PAGING = ['current_page', 'total_pages', 'has_more', 'per_page', 'page']
@@ -65,28 +65,26 @@ class Resource(DataObject):
 
     @classmethod
     def _load(cls, response):
-        response.raise_for_status()
-        if response.status_code == 204:
-            return None
-
-        try:
-            return cls._schema.load(response.json()).data
-        #TODO: schema errors? what class?
-        # except ValueError: ! is parent class of JSONDecodeError
-        except JSONDecodeError:
-            return response.content
-
-    @classmethod
-    def _load_many(cls, response):
         """
         Python doesn't allow arbitrary fields on arrays and having special classes
         for array & cursor attributes is not necessary => namedtuple.
         (immutable, therefore all set on creation by generator)
         """
         response.raise_for_status()
-        jsonObj = response.json()
-        return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True).data,
-                         **{key: jsonObj[key] for key in PAGING if key in jsonObj})
+        if response.status_code == 204:
+            return None
+
+        try:
+            jsonObj = response.json()
+            # has load_many capability & is many entries result?
+            if '_root_key' in dir(cls) is not None and cls._root_key in jsonObj:
+                return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True).data,
+                                 **{key: jsonObj[key] for key in PAGING if key in jsonObj})
+            else:
+                return cls._schema.load(jsonObj).data
+        # except ValueError: ! is parent class of JSONDecodeError
+        except JSONDecodeError:
+            return response.content
 
     @classmethod
     def _request(cls, config, method, http_verb, path, data=None, **kwargs):
@@ -98,18 +96,13 @@ class Resource(DataObject):
             if data is not None:
                 data=dumps(data, default=json_serial)
 
-        if method == 'all':
-            postprocess = cls._load_many
-        else:
-            postprocess = cls._load
-
         return Promise(lambda resolve, _:
             resolve(getattr(requests, http_verb)(config.uri + path,
                 data=data,
                 params=params,
                 auth=config.auth)
             )
-        ).then(postprocess
+        ).then(cls._load
         ).catch(annotateHTTPError)
 
     @classmethod
@@ -118,7 +111,7 @@ class Resource(DataObject):
         return t.expand(kwargs)
 
     @classmethod
-    def _method(cls, method, path=None):
+    def _method(cls, method, http_verb, path=None):
         @classmethod
         def fc(cls, config, **kwargs):
             if config is None or type(config) != Config:
@@ -139,18 +132,18 @@ class Resource(DataObject):
             if 'uuid' in kwargs:
                 del kwargs['uuid']
 
-            return cls._request(config, method, MAPPINGS[method], pathTemp, **kwargs)
+            return cls._request(config, method, http_verb, pathTemp, **kwargs)
         return fc
 
-def _add_method(cls, method):
+def _add_method(cls, method, http_verb, path=None):
     """
     Dynamically define all possible actions.
     """
-    fc = Resource._method(method)
-    fc.__doc__ = "Sends %s request to ChartMogul." % MAPPINGS[method]
+    fc = Resource._method(method, http_verb, path)
+    fc.__doc__ = "Sends %s request to ChartMogul." % http_verb
     fc.__name__ = method
     setattr(cls, fc.__name__, fc)
 
 
-for key in MAPPINGS.keys():
-    _add_method(Resource, key)
+for method, http_verb in MAPPINGS.items():
+    _add_method(Resource, method, http_verb)

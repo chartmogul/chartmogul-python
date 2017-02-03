@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, post_load
-from ..resource import Resource
+from ..resource import Resource, _add_method
 from collections import namedtuple
 
 class Ping(Resource):
@@ -17,6 +17,4 @@ class Ping(Resource):
 
     _schema = _Schema(strict=True)
 
-    @classmethod
-    def ping(cls, config):
-        return super(Ping, cls)._request(config, "ping", "get", cls._path)
+_add_method(Ping, "ping", "get")

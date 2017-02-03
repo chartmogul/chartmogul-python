@@ -5,36 +5,14 @@ import re
 import sys
 
 from codecs import open
-
 from setuptools import setup
-from setuptools.command.test import test as TestCommand
-
-
-class PyTest(TestCommand):
-    user_options = [('pytest-args=', 'a', "Arguments to pass into py.test")]
-
-    def initialize_options(self):
-        TestCommand.initialize_options(self)
-        self.pytest_args = []
-
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        import pytest
-
-        errno = pytest.main(self.pytest_args)
-        sys.exit(errno)
-
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
     sys.exit()
 
 requires = []
-test_requirements = ['pytest>=2.8.0', 'pytest-cov', 'pytest-mock']
+test_requirements = ['mock>=2.0.0', 'requests-mock>=1.3.0']
 
 with open('chartmogul/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
@@ -78,7 +56,6 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
         'Topic :: Software Development :: Libraries'
     ),
-    cmdclass={'test': PyTest},
     tests_require=test_requirements,
     extras_require={},
 )

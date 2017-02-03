@@ -271,3 +271,5 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), sentCreateExpected)
+
+    #TODO: search/merge - custom endpoints for customers
