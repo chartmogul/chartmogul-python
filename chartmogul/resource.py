@@ -2,7 +2,7 @@ import requests
 from json import JSONDecodeError, dumps
 from promise import Promise
 from uritemplate import URITemplate
-from .errors import *
+from .errors import APIError, ConfigurationError, annotateHTTPError
 from .api.config import Config
 from datetime import datetime
 
@@ -24,6 +24,7 @@ MAPPINGS = {
 }
 
 PAGING = ['current_page', 'total_pages', 'has_more', 'per_page', 'page']
+
 
 class DataObject:
     def __init__(self, **kwargs):
@@ -59,6 +60,7 @@ def json_serial(obj):
         serial = obj.isoformat()
         return serial
     raise TypeError("Type not serializable")
+
 
 class Resource(DataObject):
     _path = ''

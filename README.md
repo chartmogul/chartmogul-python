@@ -202,8 +202,8 @@ chartmogul.Metrics.customerChurnRate(config, data={})
 chartmogul.Metrics.mrrChurnRate(config, data={})
 chartmogul.Metrics.ltv(config, data={})
 
-chartmogul.metrics.Customer.activities(config, uuid='')
-chartmogul.metrics.Customer.subscriptions(config, uuid='')
+chartmogul.Activity.all(config, uuid='')
+chartmogul.Subscription.all(config, uuid='')
 ```
 
 
@@ -218,9 +218,8 @@ To work on the library:
 * Fork it
 * Create your feature branch (`git checkout -b my-new-feature`)
 * Install dependencies: `pip install -r requirements.txt && python setup.py develop`
-* Run tests: `python setup.py test`
-* Fix bugs or add features. Make sure the changes pass the coding guidelines. TODO python lint
-* Write tests for your new features. For HTTP mocking TODO library is used. Run tests with TODO and check test coverage with TODO
+* Fix bugs or add features. Make sure the changes pass the coding guidelines (use `pylama`).
+* Write tests for your new features. Use `requests_mock` for HTTP mocking. Run tests with `python setup.py test` and check test coverage with `coverage run -m unittest discover --source=. && coverage report -m`
 * If all tests are passed, push to the branch (`git push origin my-new-feature`)
 * Create a new Pull Request
 
