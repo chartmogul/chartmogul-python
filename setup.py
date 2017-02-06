@@ -12,7 +12,7 @@ if sys.argv[-1] == 'publish':
     sys.exit()
 
 requires = []
-test_requirements = ['mock>=2.0.0', 'requests-mock>=1.3.0']
+test_requirements = ['mock>=1.0.1', 'requests-mock>=1.3.0']
 
 with open('chartmogul/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',

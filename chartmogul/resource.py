@@ -24,7 +24,10 @@ MAPPINGS = {
 }
 
 PAGING = ['current_page', 'total_pages', 'has_more', 'per_page', 'page']
-
+ESCAPED_QUERY_KEYS = {
+    'start_date': 'start-date',
+    'end_date': 'end-date'
+}
 
 class DataObject:
     def __init__(self, **kwargs):
@@ -89,9 +92,17 @@ class Resource(DataObject):
             return response.content
 
     @classmethod
+    def _preProcessParams(cls, params):
+        for key, replacement in ESCAPED_QUERY_KEYS.items():
+            if key in params:
+                params[replacement] = params[key]
+                del params[key]
+        return params
+
+    @classmethod
     def _request(cls, config, method, http_verb, path, data=None, **kwargs):
         if http_verb == 'get':
-            params = kwargs
+            params = cls._preProcessParams(kwargs)
             data = None
         else:
             params = None

@@ -193,7 +193,12 @@ chartmogul.metrics.all(config, data={
   'geo': 'GB',
   'plans': 'Bronze Plan'
 })
-chartmogul.Metrics.mrr(config, data={})
+chartmogul.Metrics.mrr(config, data={},
+                start_date='2015-01-01', # notice the _ here
+                end_date='2015-11-24',
+                interval='month',
+                geo='GB',
+                plans='PRO Plan')
 chartmogul.Metrics.arr(config, data={})
 chartmogul.Metrics.arpa(config, data={})
 chartmogul.Metrics.asp(config, data={})

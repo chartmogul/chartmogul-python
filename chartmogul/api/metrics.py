@@ -4,7 +4,7 @@ from collections import namedtuple
 
 class Metrics(Resource):
     """
-    https://dev.chartmogul.com/docs/authentication
+    https://dev.chartmogul.com/v1.0/reference#introduction-metrics-api
     """
     _path = "/metrics/all"
     _root_key = 'entries'
