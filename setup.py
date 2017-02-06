@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+from __future__ import absolute_import
 import os
 import re
 import sys
@@ -29,7 +29,7 @@ setup(
     version=version,
     description='Python library for ChartMogul API.',
     long_description=readme,
-    author='Petr Kopac',
+    author='Petr Kopac (ChartMogul Ltd.)',
     author_email='petr@chartmogul.com',
     url='https://chartmogul.com',
     packages=['chartmogul'],
@@ -45,7 +45,6 @@ setup(
         'Natural Language :: English',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',

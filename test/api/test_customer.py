@@ -1,5 +1,4 @@
 import unittest
-from unittest import mock
 from chartmogul import Customer, Config, APIError
 from chartmogul.api.customer import Attributes, Stripe, Clearbit, Company, Person, Name, Employment, Address
 from datetime import datetime

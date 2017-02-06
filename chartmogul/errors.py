@@ -1,3 +1,4 @@
+from future.utils import raise_from
 from requests import HTTPError
 
 
@@ -11,6 +12,6 @@ class APIError(Exception):
 
 def annotateHTTPError(err):
     if isinstance(err, HTTPError):
-        raise APIError(err.response.content) from err
+        raise_from(APIError(err.response.content), err)
     else:
         raise err

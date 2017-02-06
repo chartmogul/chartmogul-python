@@ -1,6 +1,21 @@
 from marshmallow import Schema, fields, post_load
-from ..resource import Resource, _add_method
+from ..resource import Resource, DataObject, _add_method
 from collections import namedtuple
+
+class Summary(DataObject):
+    """
+    Optional information about a series of metrics.
+    """
+    class _Schema(Schema):
+        current = fields.Number()
+        previous = fields.Number()
+        percentage_change = fields.Number(load_from='percentage-change')
+
+        @post_load
+        def make(self, data):
+            return Summary(**data)
+
+    _schema = _Schema(strict=True)
 
 class Metrics(Resource):
     """
@@ -8,8 +23,8 @@ class Metrics(Resource):
     """
     _path = "/metrics/all"
     _root_key = 'entries'
-    _many = namedtuple('Metrics', [_root_key, 'summary'])
-    _many.__new__.__defaults__ = (None,) * len(_many._fields)
+    _many_cls = namedtuple('Metrics', [_root_key, 'summary'])
+    _many_cls.__new__.__defaults__ = (None,) * len(_many_cls._fields)
 
     class _Schema(Schema):
         """
@@ -24,12 +39,25 @@ class Metrics(Resource):
         arpa = fields.Number()
         arr = fields.Number()
         mrr = fields.Number()
+        # MRR only
+        mrr_new_business = fields.Number(load_from='mrr-new-business')
+        mrr_expansion = fields.Number(load_from='mrr-expansion')
+        mrr_contraction = fields.Number(load_from='mrr-contraction')
+        mrr_churn = fields.Number(load_from='mrr-churn')
+        mrr_reactivation = fields.Number(load_from='mrr-reactivation')
 
         @post_load
         def make(self, data):
             return Metrics(**data)
 
     _schema = _Schema(strict=True)
+
+    @classmethod
+    def _many(cls, entries, **kwargs):
+        if 'summary' in kwargs:
+            kwargs['summary'] = Summary._schema.load(kwargs['summary']).data
+        return cls._many_cls(entries, **kwargs)
+
 
 _add_method(Metrics, "mrr", "get", path='/metrics/mrr')
 _add_method(Metrics, "arr", "get", path='/metrics/arr')

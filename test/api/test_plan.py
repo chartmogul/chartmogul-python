@@ -1,5 +1,5 @@
 import unittest
-from unittest import mock
+
 from chartmogul import Plan, Config, APIError
 import requests_mock
 from collections import namedtuple
@@ -12,12 +12,12 @@ class PlanTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_cursor_list_plans(self, mock_requests):
-        expected_plan_dict = {"uuid": "whatever_uuid",
-                              "data_source_uuid": "some_uuid",
-                              "name": "some plan",
+        expected_plan_dict = {"uuid": u"whatever_uuid",
+                              "data_source_uuid": u"some_uuid",
+                              "name": u"some plan",
                               "interval_count": 2,
-                              "interval_unit": "moonshines",
-                              "external_id": "custom_filter"}
+                              "interval_unit": u"moonshines",
+                              "external_id": u"custom_filter"}
         mock_requests.register_uri(
             'GET',
             ("https://api.chartmogul.com/v1/plans?page=5"
@@ -47,12 +47,12 @@ class PlanTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_modify_plan(self, mock_requests):
         expected_plan_dict = {
-            "uuid": "whatever_uuid",
-            "data_source_uuid": "some_uuid",
-            "name": "new_name",
+            "uuid": u"whatever_uuid",
+            "data_source_uuid": u"some_uuid",
+            "name": u"new_name",
             "interval_count": 2,
-            "interval_unit": "moonshines",
-            "external_id": "custom_filter"
+            "interval_unit": u"moonshines",
+            "external_id": u"custom_filter"
         }
         mock_requests.register_uri(
             'PATCH',
@@ -69,5 +69,5 @@ class PlanTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(),
-                         {"name": "new_name"})
+                         {"name": u"new_name"})
         self.assertEqual(str(plan), str(expected))

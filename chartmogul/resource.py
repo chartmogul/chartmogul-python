@@ -1,10 +1,11 @@
 import requests
-from json import JSONDecodeError, dumps
+from json import dumps
 from promise import Promise
 from uritemplate import URITemplate
 from .errors import APIError, ConfigurationError, annotateHTTPError
 from .api.config import Config
 from datetime import datetime
+from builtins import str
 
 """
 HTTP verb mapping. Based on nodejs library.
@@ -23,7 +24,7 @@ MAPPINGS = {
     'update': 'put'
 }
 
-PAGING = ['current_page', 'total_pages', 'has_more', 'per_page', 'page']
+PAGING = ['current_page', 'total_pages', 'has_more', 'per_page', 'page', 'summary']
 ESCAPED_QUERY_KEYS = {
     'start_date': 'start-date',
     'end_date': 'end-date'
@@ -87,8 +88,7 @@ class Resource(DataObject):
                                  **{key: jsonObj[key] for key in PAGING if key in jsonObj})
             else:
                 return cls._schema.load(jsonObj).data
-        # except ValueError: ! is parent class of JSONDecodeError
-        except JSONDecodeError:
+        except ValueError:
             return response.content
 
     @classmethod
@@ -127,7 +127,7 @@ class Resource(DataObject):
     def _method(cls, method, http_verb, path=None):
         @classmethod
         def fc(cls, config, **kwargs):
-            if config is None or type(config) != Config:
+            if config is None or not isinstance(config, Config):
                 raise ConfigurationError("First argument should be instance of chartmogul.Config class!")
 
             pathTemp = path # due to Python closure
@@ -153,9 +153,9 @@ def _add_method(cls, method, http_verb, path=None):
     Dynamically define all possible actions.
     """
     fc = Resource._method(method, http_verb, path)
-    fc.__doc__ = "Sends %s request to ChartMogul." % http_verb
-    fc.__name__ = method
-    setattr(cls, fc.__name__, fc)
+    # fc.__doc__ = "Sends %s request to ChartMogul." % http_verb
+    # fc.__name__ = method
+    setattr(cls, method, fc)
 
 
 for method, http_verb in MAPPINGS.items():

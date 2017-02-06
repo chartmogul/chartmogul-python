@@ -1,12 +1,12 @@
 import unittest
-from unittest import mock
+
 from chartmogul import Ping, Config, APIError
 import requests_mock
 from collections import namedtuple
 
 class PingTestCase(unittest.TestCase):
     """
-    Tests authorization is passed correctly and ping GET alias. 
+    Tests authorization is passed correctly and ping GET alias.
     """
 
     @requests_mock.mock()
@@ -21,7 +21,7 @@ class PingTestCase(unittest.TestCase):
 
         config = Config("token", "secret") # is actually checked in mock
         pong = Ping.ping(config).get()
-        expected = Ping(**{"data": "pong!"})
+        expected = Ping(**{"data": u"pong!"})
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.text, None)
