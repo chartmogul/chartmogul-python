@@ -57,5 +57,6 @@ setup(
         'Topic :: Software Development :: Libraries'
     ),
     tests_require=test_requirements,
+    test_suite="test",
     extras_require={},
 )

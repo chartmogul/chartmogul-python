@@ -6,7 +6,7 @@
 
 <p align='center'><code>chartmogul-python</code> provides convenient Python bindings for <a href='https://dev.chartmogul.com'>ChartMogul's API</a>.</p>
 <p align='center'>
-  <a href='https://www.npmjs.com/package/chartmogul-python'><img src='https://badge.fury.io/js/chartmogul-python.svg' alt='npm Package' /></a>
+  <a href="https://badge.fury.io/py/chartmogul"><img src="https://badge.fury.io/py/chartmogul.svg" alt="PyPI version" height="18"></a>
   <a href='https://travis-ci.org/chartmogul/chartmogul-python'><img src='https://travis-ci.org/chartmogul/chartmogul-python.svg?branch=master' alt='Build Status'/></a>
 </p>
 <hr>
@@ -29,13 +29,7 @@
 
 ## Installation
 
-This library requires Python 2.6 or 3 and above.
-
-TODO - not on PyPI yet
-TODO - separation of test/dev requirements
-TODO - configuration for travis
-TODO - set up tests for multiple python versions
-TODO - icon for project release
+This library requires Python 2.6, 2.7 or 3.2 and above.
 
 ```sh
 pip install chartmogul
@@ -223,7 +217,8 @@ To work on the library:
 
 * Fork it
 * Create your feature branch (`git checkout -b my-new-feature`)
-* Install dependencies: `python setup.py develop`
+* Install dependencies: `pip install -r requirements.txt && python setup.py develop`
+* Run tests: `python setup.py test`
 * Fix bugs or add features. Make sure the changes pass the coding guidelines. TODO python lint
 * Write tests for your new features. For HTTP mocking TODO library is used. Run tests with TODO and check test coverage with TODO
 * If all tests are passed, push to the branch (`git push origin my-new-feature`)
