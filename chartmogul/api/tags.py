@@ -31,6 +31,7 @@ class Tags(Resource):
             return None
         jsonObj = response.json()
         if 'entries' in jsonObj:
-            return _customers(Customer._schema.load(jsonObj['entries']))
+            customers = Customer._schema.load(jsonObj['entries'], many=True).data
+            return cls._customers(customers)
         else:
-            return cls._schema._load(response)
+            return cls._schema.load(jsonObj).data
