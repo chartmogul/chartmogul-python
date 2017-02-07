@@ -7,6 +7,8 @@ import sys
 from codecs import open
 from setuptools import setup
 
+github_url = 'https://github.com/chartmogul/chartmogul-python'
+
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
     sys.exit()
