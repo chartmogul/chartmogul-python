@@ -54,6 +54,13 @@ config = Config('token', 'secret')
 Note that both ways should import all necessary classes and submodules,
 but the first one is preferred due to being explicit.
 
+To test authentication, try ping endpoint:
+```python
+import chartmogul
+chartmogul.Ping.ping(config).get()
+```
+This throws error or returns `<Ping{data='pong!'}>`
+
 ## Usage
 
 The library is based on [promises](https://pypi.python.org/pypi/promise).
