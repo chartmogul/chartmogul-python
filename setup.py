@@ -21,17 +21,15 @@ with open('chartmogul/__init__.py', 'r') as fd:
 if not version:
     raise RuntimeError('Cannot find version information')
 
-with open('README.md', 'r', 'utf-8') as f:
-    readme = f.read()
-
 setup(
     name='chartmogul',
     version=version,
     description='Python library for ChartMogul API.',
-    long_description=readme,
+    long_description='`See documentation on GitHub <' + github_url + '>`_',
     author='Petr Kopac (ChartMogul Ltd.)',
     author_email='petr@chartmogul.com',
     url='https://chartmogul.com',
+    download_url = github_url + '/tarball/v' + version,
     packages=['chartmogul'],
     package_data={'': ['LICENSE', 'NOTICE'], 'chartmogul': ['*.pem']},
     package_dir={'chartmogul': 'chartmogul'},

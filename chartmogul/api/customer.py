@@ -26,7 +26,7 @@ class Address(DataObject):
 
 class Customer(Resource):
     """
-    https://dev.chartmogul.com/v1.0/reference#plans
+    https://dev.chartmogul.com/v1.0/reference#customers
     """
     _path = "/customers{/uuid}"
     _root_key = 'entries'
