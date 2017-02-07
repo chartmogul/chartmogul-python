@@ -38,13 +38,21 @@ pip install chartmogul
 ## Configuration
 
 First create a `Config` object by passing your account token and secret key, available from the administration section of your ChartMogul account.
+You need to pass this configuration object as the first argument to each request.
 
 ```python
 import chartmogul
-config = chartMogul.Config('token', 'secret')
+config = chartmogul.Config('token', 'secret')
 ```
 
-You need to pass this configuration object as the first argument to each request.
+Alternatively, you can use the library without the module prefix:
+```python
+from chartmogul import *
+config = Config('token', 'secret')
+```
+
+Note that both ways should import all necessary classes and submodules,
+but the first one is preferred due to being explicit.
 
 ## Usage
 
@@ -55,7 +63,7 @@ Here is an example:
 
 ```python
 import chartmogul
-config = chartMogul.Config('token', 'secret')
+config = chartmogul.Config('token', 'secret')
 
 req = chartmogul.Plan.create(config, data={...})
 # Now either (asynchronous)
@@ -102,6 +110,8 @@ chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4
 ```
 
 #### [Customer Attributes](https://dev.chartmogul.com/docs/customer-attributes)
+
+Note that the returned attributes of type date are not parsed and stay in string.
 
 ```python
 chartmogul.Attributes.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
@@ -186,19 +196,19 @@ Available methods in Metrics API:
 
 
 ```python
-chartmogul.metrics.all(config, data={
-  'start-date': '2015-01-01',
-  'end-date': '2015-11-24',
-  'interval': 'month',
-  'geo': 'GB',
-  'plans': 'Bronze Plan'
+chartmogul.metrics.all(config,
+                       start_date='2015-01-01', # notice the _ here
+                       end_date='2015-11-24',
+                       interval='month',
+                       geo='GB',
+                       plans='Bronze Plan'
 })
-chartmogul.Metrics.mrr(config, data={},
-                start_date='2015-01-01', # notice the _ here
-                end_date='2015-11-24',
-                interval='month',
-                geo='GB',
-                plans='PRO Plan')
+chartmogul.Metrics.mrr(config,
+                       start_date='2015-01-01',
+                       end_date='2015-11-24',
+                       interval='month',
+                       geo='GB',
+                       plans='PRO Plan')
 chartmogul.Metrics.arr(config, data={})
 chartmogul.Metrics.arpa(config, data={})
 chartmogul.Metrics.asp(config, data={})
@@ -214,7 +224,36 @@ chartmogul.Subscription.all(config, uuid='')
 
 ### Errors
 
-The library throws `chartmogul.APIError`.
+The library throws `TypeError` if data parameter is not serializable.
+
+The `chartmogul.ArgumentMissingError` is raised if obligatory `uuid` or `data`
+is missing in the call.
+
+The error `chartmogul.APIError` is raised for any non-20x response from the API.
+It always has cause of type `requests.HTTPError`, which contains the response,
+so you can extract JSON/text in the following way (and program reaction):
+
+```python
+from pprint import pprint
+try:
+    chartmogul.doStuff()
+except chartmogul.APIError as e:
+    response = e.__cause__.response
+    try:
+        pprint(response.json())
+    except ValueError:
+        pprint(response.text)
+```
+
+The cause default serialization doesn't give the API user much detail:
+```
+HTTPError('422 Client Error: Unprocessable Entity for url: https://api.chartmogul.com/v1/data_sources',)
+```
+
+That's why it's wrapped, so that you get the detail by default.
+```
+APIError(b'{"errors":{"name":"Has already been taken."}}',)
+```
 
 ## Development
 
@@ -224,7 +263,12 @@ To work on the library:
 * Create your feature branch (`git checkout -b my-new-feature`)
 * Install dependencies: `pip install -r requirements.txt && python setup.py develop`
 * Fix bugs or add features. Make sure the changes pass the coding guidelines (use `pylama`).
-* Write tests for your new features. Use `requests_mock` for HTTP mocking. Run tests with `python setup.py test` and check test coverage with `coverage run -m unittest discover --source=. && coverage report -m`
+* Write tests for your new features. Use `requests_mock` for HTTP mocking.
+* Run tests with `python setup.py test` and check test coverage with:
+  * `pip install coverage`
+  * `coverage run ./setup.py test`
+  * `coverage html --include='chartmogul/*'`
+  * Find results in `htmlcov/index.html`
 * If all tests are passed, push to the branch (`git push origin my-new-feature`)
 * Create a new Pull Request
 

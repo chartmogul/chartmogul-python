@@ -2,7 +2,7 @@
 import logging
 
 from .api.config import Config
-from .errors import APIError, ConfigurationError
+from .errors import APIError, ConfigurationError, ArgumentMissingError
 
 from .api.ping import Ping
 from .api.data_source import DataSource
@@ -13,6 +13,7 @@ from .api.tags import Tags
 from .api.activity import Activity
 from .api.subscription import Subscription
 from .api.metrics import Metrics
+from .api.custom_attrs import CustomAttributes
 
 # Can't merge modules, because of Subscription clash.
 import imp
@@ -33,16 +34,3 @@ __build__ = 0x000000
 __author__ = 'ChartMogul Ltd'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2017 ChartMogul Ltd'
-
-
-
-# Set default logging handler to avoid "No handler found" warnings.
-
-try:  # Python 2.7+
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        def emit(self, record):
-            pass
-
-logging.getLogger(__name__).addHandler(NullHandler())

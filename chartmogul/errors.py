@@ -10,6 +10,10 @@ class APIError(Exception):
     pass
 
 
+class ArgumentMissingError(Exception):
+    pass
+
+
 def annotateHTTPError(err):
     if isinstance(err, HTTPError):
         raise_from(APIError(err.response.content), err)

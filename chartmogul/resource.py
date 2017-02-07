@@ -2,7 +2,7 @@ import requests
 from json import dumps
 from promise import Promise
 from uritemplate import URITemplate
-from .errors import APIError, ConfigurationError, annotateHTTPError
+from .errors import APIError, ConfigurationError, ArgumentMissingError, annotateHTTPError
 from .api.config import Config
 from datetime import datetime
 from builtins import str
@@ -79,17 +79,20 @@ class Resource(DataObject):
         response.raise_for_status()
         if response.status_code == 204:
             return None
-
         try:
             jsonObj = response.json()
+        except ValueError: # Couldn't parse JSON, probably just text message.
+            return response.content
+
+        try:
             # has load_many capability & is many entries result?
             if '_root_key' in dir(cls) is not None and cls._root_key in jsonObj:
                 return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True).data,
                                  **{key: jsonObj[key] for key in PAGING if key in jsonObj})
             else:
                 return cls._schema.load(jsonObj).data
-        except ValueError:
-            return response.content
+        except ValueError: # Model parsing/validation failed, return the json at least.
+            return jsonObj
 
     @classmethod
     def _preProcessParams(cls, params):
@@ -136,9 +139,9 @@ class Resource(DataObject):
 
             # This enforces user to pass argument, otherwise we could call wrong URL.
             if method in ['destroy','cancel', 'retrieve', 'update'] and 'uuid' not in kwargs:
-                raise APIError("Please pass 'uuid' parameter")
+                raise ArgumentMissingError("Please pass 'uuid' parameter")
             if method in ['create','modify'] and 'data' not in kwargs:
-                raise APIError("Please pass 'data' parameter")
+                raise ArgumentMissingError("Please pass 'data' parameter")
 
             pathTemp = Resource._expandPath(pathTemp, kwargs)
             # UUID is always path parameter only.
