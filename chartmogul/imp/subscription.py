@@ -11,7 +11,6 @@ class Subscription(Resource):
     _root_key = 'subscriptions'
     _many = namedtuple('Subscriptions', [_root_key, "current_page", "total_pages", "customer_uuid"])
 
-
     class _Schema(Schema):
         uuid = fields.String()
         external_id = fields.String()
@@ -25,6 +24,7 @@ class Subscription(Resource):
             return Subscription(**data)
 
     _schema = _Schema(strict=True)
+
 
 Subscription.cancel = Subscription._method('cancel', 'patch', "/import/subscriptions{/uuid}")
 Subscription.modify = Subscription._method('modify', 'patch', "/import/subscriptions{/uuid}")

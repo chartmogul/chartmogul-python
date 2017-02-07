@@ -39,7 +39,8 @@ class CommonTestCase(unittest.TestCase):
             "https://api.chartmogul.com/v1/data_sources",
             status_code=200,
             json={"data_sources": [{"name": "test", "uuid": "my_uuid",
-                                    "created_at": "2016-01-10 15:34:05", "status": "never_imported"}]}
+                                    "created_at": "2016-01-10 15:34:05",
+                                    "status": "never_imported"}]}
         )
 
         config = Config("token", "secret")

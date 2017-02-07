@@ -95,6 +95,7 @@ jsonResponse2 = {
     ]
 }
 
+
 class CustomAttributesTestCase(unittest.TestCase):
     """
     Tests asymmetric custom attributes' schema.

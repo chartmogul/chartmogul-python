@@ -11,6 +11,7 @@ class Stripe(DataObject):
         def make(self, data):
             return Stripe(**data)
 
+
 class Name(DataObject):
     class _Schema(Schema):
         fullName = fields.String()
@@ -18,6 +19,7 @@ class Name(DataObject):
         @post_load
         def make(self, data):
             return Name(**data)
+
 
 class Employment(DataObject):
     class _Schema(Schema):
@@ -27,6 +29,7 @@ class Employment(DataObject):
         def make(self, data):
             return Employment(**data)
 
+
 class Person(DataObject):
     class _Schema(Schema):
         name = fields.Nested(Name._Schema)
@@ -35,6 +38,7 @@ class Person(DataObject):
         @post_load
         def make(self, data):
             return Person(**data)
+
 
 class Company(DataObject):
     class _Schema(Schema):
@@ -49,14 +53,16 @@ class Company(DataObject):
         def make(self, data):
             return Company(**data)
 
+
 class Clearbit(DataObject):
     class _Schema(Schema):
-        company= fields.Nested(Company._Schema)
+        company = fields.Nested(Company._Schema)
         person = fields.Nested(Person._Schema)
 
         @post_load
         def make(self, data):
             return Clearbit(**data)
+
 
 class Attributes(Resource):
     """

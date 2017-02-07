@@ -16,7 +16,7 @@ class TagsTestCase(unittest.TestCase):
           "tags": ["important", "Prio1"]
          }
         expected_dict = {
-            "tags": ["engage", "unit loss", "discountable", "important", "Prio1"]
+            "tags": [u"engage", u"unit loss", u"discountable", u"important", u"Prio1"]
         }
         mock_requests.register_uri(
             'POST',

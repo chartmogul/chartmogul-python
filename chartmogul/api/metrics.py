@@ -2,6 +2,7 @@ from marshmallow import Schema, fields, post_load
 from ..resource import Resource, DataObject, _add_method
 from collections import namedtuple
 
+
 class Summary(DataObject):
     """
     Optional information about a series of metrics.
@@ -16,6 +17,7 @@ class Summary(DataObject):
             return Summary(**data)
 
     _schema = _Schema(strict=True)
+
 
 class Metrics(Resource):
     """

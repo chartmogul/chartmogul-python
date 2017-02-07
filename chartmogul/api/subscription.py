@@ -2,6 +2,7 @@ from marshmallow import Schema, fields, post_load
 from ..resource import Resource
 from collections import namedtuple
 
+
 class Subscription(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#list-customer-subscriptions

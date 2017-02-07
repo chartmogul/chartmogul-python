@@ -2,6 +2,7 @@ from marshmallow import Schema, fields, post_load
 from ..resource import Resource, _add_method
 from collections import namedtuple
 
+
 class Ping(Resource):
     """
     https://dev.chartmogul.com/docs/authentication
@@ -16,5 +17,6 @@ class Ping(Resource):
             return Ping(**data)
 
     _schema = _Schema(strict=True)
+
 
 _add_method(Ping, "ping", "get")

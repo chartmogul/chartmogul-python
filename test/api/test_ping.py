@@ -1,8 +1,9 @@
 import unittest
 
-from chartmogul import Ping, Config, APIError
 import requests_mock
-from collections import namedtuple
+
+from chartmogul import Ping, Config, APIError
+
 
 class PingTestCase(unittest.TestCase):
     """
@@ -19,7 +20,7 @@ class PingTestCase(unittest.TestCase):
             json={"data": "pong!"}
         )
 
-        config = Config("token", "secret") # is actually checked in mock
+        config = Config("token", "secret")  # is actually checked in mock
         pong = Ping.ping(config).get()
         expected = Ping(**{"data": u"pong!"})
         self.assertEqual(mock_requests.call_count, 1, "expected call")

@@ -274,7 +274,7 @@ To work on the library:
 
 For a testing project we recommend setting up a [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/)
 with [development mode](https://packaging.python.org/installing/#installing-from-a-local-src-tree) installation
-and [Jupyter](http://jupyter.org/).
+and [Jupyter](http://jupyter.org/). [virtualenvwrapper](http://chrisstrelioff.ws/sandbox/2014/09/04/virtualenv_and_virtualenvwrapper_on_ubuntu_14_04.html) is another handy tool.
 
 Built using [Requests](https://github.com/kennethreitz/requests).
 

@@ -1,6 +1,7 @@
 VERSION = "v1"
 API_BASE = "https://api.chartmogul.com"
 
+
 class Config:
     uri = API_BASE + "/" + VERSION
 

@@ -24,13 +24,16 @@ MAPPINGS = {
     'update': 'put'
 }
 
-PAGING = ['current_page', 'total_pages', 'has_more', 'per_page', 'page', 'summary']
+PAGING = ['current_page', 'total_pages',
+          'has_more', 'per_page', 'page', 'summary']
 ESCAPED_QUERY_KEYS = {
     'start_date': 'start-date',
     'end_date': 'end-date'
 }
 
+
 class DataObject:
+
     def __init__(self, **kwargs):
         """
         Any arguments are translated into class attributes.
@@ -47,12 +50,14 @@ class DataObject:
 
     def __repr__(self):
         """
-        Pretty-prints any object as <ClassName{property='string',number=4,date=datetime.datetime(2003, 8, 4, 21, 41, 43)}>
+        Pretty-prints any object as
+        <ClassName{property='string',number=4,date=datetime.datetime(2003, 8, 4, 21, 41, 43)}>
         """
         return "<" + self.__class__.__name__ + "{" + \
-                ", ".join([attr + "=" + repr(getattr(self, attr)) for attr in sorted(dir(self))
-                          if not attr.startswith('_') and not callable(getattr(self, attr))]) + \
+            ", ".join([attr + "=" + repr(getattr(self, attr)) for attr in sorted(dir(self))
+                       if not attr.startswith('_') and not callable(getattr(self, attr))]) + \
                "}>"
+
 
 def json_serial(obj):
     """
@@ -81,7 +86,7 @@ class Resource(DataObject):
             return None
         try:
             jsonObj = response.json()
-        except ValueError: # Couldn't parse JSON, probably just text message.
+        except ValueError:  # Couldn't parse JSON, probably just text message.
             return response.content
 
         try:
@@ -91,7 +96,8 @@ class Resource(DataObject):
                                  **{key: jsonObj[key] for key in PAGING if key in jsonObj})
             else:
                 return cls._schema.load(jsonObj).data
-        except ValueError: # Model parsing/validation failed, return the json at least.
+        # Model parsing/validation failed, return the json at least.
+        except ValueError:
             return jsonObj
 
     @classmethod
@@ -110,16 +116,14 @@ class Resource(DataObject):
         else:
             params = None
             if data is not None:
-                data=dumps(data, default=json_serial)
+                data = dumps(data, default=json_serial)
 
         return Promise(lambda resolve, _:
-            resolve(getattr(requests, http_verb)(config.uri + path,
-                data=data,
-                params=params,
-                auth=config.auth)
-            )
-        ).then(cls._load
-        ).catch(annotateHTTPError)
+                       resolve(getattr(requests, http_verb)(config.uri + path,
+                                                            data=data,
+                                                            params=params,
+                                                            auth=config.auth)
+                               )).then(cls._load).catch(annotateHTTPError)
 
     @classmethod
     def _expandPath(cls, path, kwargs):
@@ -131,16 +135,18 @@ class Resource(DataObject):
         @classmethod
         def fc(cls, config, **kwargs):
             if config is None or not isinstance(config, Config):
-                raise ConfigurationError("First argument should be instance of chartmogul.Config class!")
+                raise ConfigurationError("First argument should be"
+                                         " instance of chartmogul.Config class!")
 
-            pathTemp = path # due to Python closure
+            pathTemp = path  # due to Python closure
             if pathTemp is None:
                 pathTemp = cls._path
 
-            # This enforces user to pass argument, otherwise we could call wrong URL.
-            if method in ['destroy','cancel', 'retrieve', 'update'] and 'uuid' not in kwargs:
+            # This enforces user to pass argument, otherwise we could call
+            # wrong URL.
+            if method in ['destroy', 'cancel', 'retrieve', 'update'] and 'uuid' not in kwargs:
                 raise ArgumentMissingError("Please pass 'uuid' parameter")
-            if method in ['create','modify'] and 'data' not in kwargs:
+            if method in ['create', 'modify'] and 'data' not in kwargs:
                 raise ArgumentMissingError("Please pass 'data' parameter")
 
             pathTemp = Resource._expandPath(pathTemp, kwargs)
@@ -151,11 +157,13 @@ class Resource(DataObject):
             return cls._request(config, method, http_verb, pathTemp, **kwargs)
         return fc
 
+
 def _add_method(cls, method, http_verb, path=None):
     """
     Dynamically define all possible actions.
     """
     fc = Resource._method(method, http_verb, path)
+    # Not supported by 2.7, but probably not needed.
     # fc.__doc__ = "Sends %s request to ChartMogul." % http_verb
     # fc.__name__ = method
     setattr(cls, method, fc)
