@@ -254,6 +254,7 @@ class CustomerTestCase(unittest.TestCase):
         # self.assertEqual(str(customers), str(expected))
         # => check only first level fields are OK
         self.assertEqual(sorted(dir(customers)), sorted(dir(expected)))
+        self.assertTrue(isinstance(customers.entries[0], Customer))
 
     @requests_mock.mock()
     def test_create(self, mock_requests):

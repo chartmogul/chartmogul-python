@@ -14,7 +14,7 @@ class DataSource(Resource):
     class _Schema(Schema):
         uuid = fields.String()
         name = fields.String()
-        created_at = fields.DateTime(format='%Y-%m-%d %H:%M:%S')
+        created_at = fields.DateTime()
         status = fields.Str()
 
         @post_load

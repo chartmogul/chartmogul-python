@@ -89,16 +89,12 @@ class Resource(DataObject):
         except ValueError:  # Couldn't parse JSON, probably just text message.
             return response.content
 
-        try:
-            # has load_many capability & is many entries result?
-            if '_root_key' in dir(cls) is not None and cls._root_key in jsonObj:
-                return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True).data,
-                                 **{key: jsonObj[key] for key in PAGING if key in jsonObj})
-            else:
-                return cls._schema.load(jsonObj).data
-        # Model parsing/validation failed, return the json at least.
-        except ValueError:
-            return jsonObj
+        # has load_many capability & is many entries result?
+        if '_root_key' in dir(cls) is not None and cls._root_key in jsonObj:
+            return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True).data,
+                             **{key: jsonObj[key] for key in PAGING if key in jsonObj})
+        else:
+            return cls._schema.load(jsonObj).data
 
     @classmethod
     def _preProcessParams(cls, params):

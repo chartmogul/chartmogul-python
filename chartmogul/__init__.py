@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import logging
-
 from .api.config import Config
 from .errors import APIError, ConfigurationError, ArgumentMissingError
 

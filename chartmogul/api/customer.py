@@ -14,10 +14,10 @@ from .attributes import Stripe, Name, Employment, Person, Company, Clearbit, Att
 class Address(DataObject):
 
     class _Schema(Schema):
-        address_zip = fields.String()
-        city = fields.String()
-        country = fields.String()
-        state = fields.String()
+        address_zip = fields.String(allow_none=True)
+        city = fields.String(allow_none=True)
+        country = fields.String(allow_none=True)
+        state = fields.String(allow_none=True)
 
         @post_load
         def make(self, data):
@@ -40,12 +40,12 @@ class Customer(Resource):
         name = fields.String()
         company = fields.String()
         email = fields.String()
-        city = fields.String()
-        state = fields.String()
-        country = fields.String()
-        zip = fields.String()
-        lead_created_at = fields.DateTime()
-        free_trial_started_at = fields.DateTime()
+        city = fields.String(allow_none=True)
+        state = fields.String(allow_none=True)
+        country = fields.String(allow_none=True)
+        zip = fields.String(allow_none=True)
+        lead_created_at = fields.DateTime(allow_none=True)
+        free_trial_started_at = fields.DateTime(allow_none=True)
 
         # Things that differ between create/update & retrieve/list
         attributes = fields.Nested(Attributes._Schema)
@@ -56,15 +56,15 @@ class Customer(Resource):
         external_ids = fields.List(fields.String())
         data_source_uuids = fields.List(fields.String())
         status = fields.String()
-        customer_since = fields.DateTime(load_from="customer-since")
+        customer_since = fields.DateTime(load_from="customer-since", allow_none=True)
         mrr = fields.Number()
         arr = fields.Number()
-        billing_system_url = fields.String(load_from="billing-system-url")
+        billing_system_url = fields.String(load_from="billing-system-url", allow_none=True)
         chartmogul_url = fields.String(load_from="chartmogul-url")
         billing_system_type = fields.String(load_from="billing-system-type")
         currency = fields.String()
         currency_sign = fields.String(load_from="currency-sign")
-        address = fields.Nested(Address._Schema)
+        address = fields.Nested(Address._Schema, allow_none=True)
 
         @post_load
         def make(self, data):
