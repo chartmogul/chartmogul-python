@@ -89,7 +89,7 @@ Available methods in Import API:
 #### [Data Sources](https://dev.chartmogul.com/docs/data-sources)
 
 ```python
-chartmogul.DataSource.create(config)
+chartmogul.DataSource.create(config, data={'name': 'In-house billing'})
 chartmogul.DataSource.retrieve(config, uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.DataSource.all(config)
 chartmogul.DataSource.destroy(config, uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb4cb')

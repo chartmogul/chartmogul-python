@@ -4,7 +4,7 @@ from promise import Promise
 from uritemplate import URITemplate
 from .errors import APIError, ConfigurationError, ArgumentMissingError, annotateHTTPError
 from .api.config import Config
-from datetime import datetime
+from datetime import datetime, date
 from builtins import str
 
 """
@@ -62,10 +62,10 @@ class DataObject:
 def json_serial(obj):
     """
     JSON serializer for objects not serializable by default json code
-    Handles datetime.
+    Handles date & datetime.
     """
 
-    if isinstance(obj, datetime):
+    if isinstance(obj, date) or isinstance(obj, datetime):
         serial = obj.isoformat()
         return serial
     raise TypeError("Type not serializable")

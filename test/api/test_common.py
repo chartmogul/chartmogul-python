@@ -1,9 +1,10 @@
 import unittest
+from datetime import date, datetime
 
-from chartmogul import DataSource, Config, APIError, ArgumentMissingError
-from pprint import pprint
 import requests_mock
 from requests.exceptions import HTTPError
+
+from chartmogul import DataSource, Config, APIError, ArgumentMissingError
 
 
 class CommonTestCase(unittest.TestCase):
@@ -71,3 +72,26 @@ class CommonTestCase(unittest.TestCase):
             self.assertTrue(isinstance(err.__cause__, HTTPError))
         else:
             self.fail('ArgumentMissingError not raised')
+
+    @requests_mock.mock()
+    def test_date_serialization(self, mock_requests):
+        mock_requests.register_uri(
+            'POST',
+            "https://api.chartmogul.com/v1/data_sources",
+            status_code=200,  # whatever, not testing this
+            json={'data_sources': []}
+        )
+
+        config = Config("token", "secret")
+
+        DataSource.create(config, data={
+            "test_date": date(2015, 1, 1)
+        }).get()
+        self.assertEqual(mock_requests.last_request.json(),
+                         {"test_date": u"2015-01-01"})
+
+        DataSource.create(config, data={
+            "test_datetime": datetime(2015, 1, 1, 1, 2, 3)
+        }).get()
+        self.assertEqual(mock_requests.last_request.json(), {
+            'test_datetime': u'2015-01-01T01:02:03'})
