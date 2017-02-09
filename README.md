@@ -179,22 +179,28 @@ chartmogul.Plan.destroy(config, uuid='')
 #### [Invoices](https://dev.chartmogul.com/docs/invoices)
 
 ```python
-chartmogul.Invoice.create(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
-chartmogul.Invoice.all(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', page=2, per_page=10)
+import chartmogul.imp
+
+chartmogul.imp.Invoice.create(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+chartmogul.imp.Invoice.all(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', page=2, per_page=10)
 ```
 
 #### [Transactions](https://dev.chartmogul.com/docs/transactions)
 
 ```python
-chartmogul.Transaction.create(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+import chartmogul.imp
+
+chartmogul.imp.Transaction.create(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 ```
 
 #### [Subscriptions](https://dev.chartmogul.com/docs/subscriptions)
 
 ```python
-chartmogul.Subscription.all(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
-chartmogul.Subscription.cancel(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb' data={'cancelled_at': ''})
-chartmogul.Subscription.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb' data={'cancellation_dates': []})
+import chartmogul.imp
+
+chartmogul.imp.Subscription.all(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.imp.Subscription.cancel(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb' data={'cancelled_at': ''})
+chartmogul.imp.Subscription.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb' data={'cancellation_dates': []})
 ```
 
 ### [Metrics API](https://dev.chartmogul.com/docs/introduction-metrics-api)
@@ -203,7 +209,7 @@ Available methods in Metrics API:
 
 
 ```python
-chartmogul.metrics.all(config,
+chartmogul.Metrics.all(config,
                        start_date='2015-01-01', # notice the _ here
                        end_date='2015-11-24',
                        interval='month',

@@ -9,6 +9,7 @@ class PlanTestCase(unittest.TestCase):
     """
     Tests cursor query parameters & modify (patch a plan).
     """
+    maxDiff = None
 
     @requests_mock.mock()
     def test_cursor_list_plans(self, mock_requests):
@@ -70,4 +71,38 @@ class PlanTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(),
                          {"name": u"new_name"})
+        self.assertEqual(str(plan), str(expected))
+
+    @requests_mock.mock()
+    def test_create_plan(self, mock_requests):
+        expected_plan_dict = {
+            "uuid": u"whatever_uuid",
+            "data_source_uuid": u"some_uuid",
+            "name": u"new_name",
+            "interval_count": 2,
+            "interval_unit": u"moonshines",
+            "external_id": u"custom_filter"
+        }
+        sent = {
+            "data_source_uuid": "ds_9bb53a1e-edfd-11e6-bf83-af49e978cb11",
+            "name": "Gold Plan",
+            "interval_count": 1,
+            "interval_unit": "month",
+            "external_id": "plan_0002"
+        }
+        mock_requests.register_uri(
+            'POST',
+            "https://api.chartmogul.com/v1/plans",
+            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            status_code=200,
+            json=expected_plan_dict
+        )
+        config = Config("token", "secret")  # is actually checked in mock
+        plan = Plan.create(
+            config,
+            data=sent).get()
+        expected = Plan(**expected_plan_dict)
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.json(), sent)
         self.assertEqual(str(plan), str(expected))

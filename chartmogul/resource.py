@@ -115,11 +115,13 @@ class Resource(DataObject):
                 data = dumps(data, default=json_serial)
 
         return Promise(lambda resolve, _:
-                       resolve(getattr(requests, http_verb)(config.uri + path,
-                                                            data=data,
-                                                            params=params,
-                                                            auth=config.auth)
-                               )).then(cls._load).catch(annotateHTTPError)
+                       resolve(getattr(requests, http_verb)(
+                           config.uri + path,
+                           data=data,
+                           headers={'content-type': 'application/json'},
+                           params=params,
+                           auth=config.auth)
+                       )).then(cls._load).catch(annotateHTTPError)
 
     @classmethod
     def _expandPath(cls, path, kwargs):
