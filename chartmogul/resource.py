@@ -24,8 +24,9 @@ MAPPINGS = {
     'update': 'put'
 }
 
-PAGING = ['current_page', 'total_pages',
-          'has_more', 'per_page', 'page', 'summary']
+LIST_PARAMS = ['current_page', 'total_pages',
+               'has_more', 'per_page', 'page',
+               'summary', 'customer_uuid']
 ESCAPED_QUERY_KEYS = {
     'start_date': 'start-date',
     'end_date': 'end-date'
@@ -92,7 +93,7 @@ class Resource(DataObject):
         # has load_many capability & is many entries result?
         if '_root_key' in dir(cls) is not None and cls._root_key in jsonObj:
             return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True).data,
-                             **{key: jsonObj[key] for key in PAGING if key in jsonObj})
+                             **{key: jsonObj[key] for key in LIST_PARAMS if key in jsonObj})
         else:
             return cls._schema.load(jsonObj).data
 
