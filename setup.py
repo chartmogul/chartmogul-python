@@ -13,7 +13,13 @@ if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
     sys.exit()
 
-requires = []
+requires = [
+    'requests>=2.10.0',
+    'uritemplate==3.0.0',
+    'promise==1.0.1',
+    'marshmallow==2.12.2',
+    'future==0.16.0',
+]
 test_requirements = ['mock>=1.0.1', 'requests-mock>=1.3.0']
 
 with open('chartmogul/__init__.py', 'r') as fd:
