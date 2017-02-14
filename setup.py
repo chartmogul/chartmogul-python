@@ -34,7 +34,7 @@ setup(
     download_url = github_url + '/tarball/v' + version,
     packages=['chartmogul', 'chartmogul.api', 'chartmogul.imp'],
     package_data={'': ['LICENSE', 'NOTICE'], 'chartmogul': ['*.pem']},
-    package_dir={'chartmogul': 'chartmogul'},
+    package_dir={'chartmogul': 'chartmogul', 'chartmogul.api': 'chartmogul/api', 'chartmogul.imp': 'chartmogul/imp'},
     include_package_data=True,
     install_requires=requires,
     license='MIT',
