@@ -32,7 +32,7 @@ setup(
     author_email='petr@chartmogul.com',
     url='https://chartmogul.com',
     download_url = github_url + '/tarball/v' + version,
-    packages=['chartmogul'],
+    packages=['chartmogul', 'chartmogul.api', 'chartmogul.imp'],
     package_data={'': ['LICENSE', 'NOTICE'], 'chartmogul': ['*.pem']},
     package_dir={'chartmogul': 'chartmogul'},
     include_package_data=True,
