@@ -225,9 +225,9 @@ chartmogul.Metrics.mrr(config,
 chartmogul.Metrics.arr(config, data={})
 chartmogul.Metrics.arpa(config, data={})
 chartmogul.Metrics.asp(config, data={})
-chartmogul.Metrics.customerCount(config, data={})
-chartmogul.Metrics.customerChurnRate(config, data={})
-chartmogul.Metrics.mrrChurnRate(config, data={})
+chartmogul.Metrics.customer_count(config, data={})
+chartmogul.Metrics.customer_churn_rate(config, data={})
+chartmogul.Metrics.mrr_churn_rate(config, data={})
 chartmogul.Metrics.ltv(config, data={})
 
 chartmogul.Activity.all(config, uuid='')
