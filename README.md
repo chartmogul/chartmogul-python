@@ -63,21 +63,25 @@ This throws error or returns `<Ping{data='pong!'}>`
 
 ## Usage
 
-The library is based on [promises](https://pypi.python.org/pypi/promise).
-You can use it synchronously with `.get()`.
-
-Here is an example:
+The library is based on [promises](https://pypi.python.org/pypi/promise) (mechanism similar to futures).
+Every call therefore returns an object like `<promise.promise.Promise object at 0x123456789>`
+The requests are running asynchronously, but you can use them synchronously, just appending `.get()`,
+which will block your program until the response has come.
+Both sync/async ways will return/pass native Python objects mapping to the entities in the API,
+or raise/pass errors from the API, see an example:
 
 ```python
 import chartmogul
-config = chartmogul.Config('token', 'secret')
 
-req = chartmogul.Plan.create(config, data={...})
-# Now either (asynchronous)
-req.then(doSomething).catch(reactOnException)
-# or (synchronous)
+config = chartmogul.Config('token', 'secret')
+req = chartmogul.Plan.create(config, data={'name': 'Awesome plan'...})
+
+# Now either asynchronous reaction:
+req.then(lambda plan: print(plan)).catch(reactOnException)
+
+# or synchronous:
 try:
-    doSomething(req.get())
+    print(req.get())
 except Exception as ex:
     reactOnException(ex)
 ```
