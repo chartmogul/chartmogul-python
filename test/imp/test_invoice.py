@@ -154,7 +154,6 @@ class InvoiceTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_create(self, mock_requests):
-
         mock_requests.register_uri(
             'POST',
             "https://api.chartmogul.com/v1/import/customers/UUID/invoices",
@@ -172,3 +171,25 @@ class InvoiceTestCase(unittest.TestCase):
         # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice._many))
         self.assertEqual(len(result.invoices), 1)
+
+    @requests_mock.mock()
+    def test_list_has_customer_uuid(self, mock_requests):
+        responseData['customer_uuid'] = 'UUID'
+
+        mock_requests.register_uri(
+            'GET',
+            "https://api.chartmogul.com/v1/import/customers/UUID/invoices",
+            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            status_code=200,
+            json=responseData
+        )
+
+        config = Config("token", "secret")  # is actually checked in mock
+        result = Invoice.all(config, uuid="UUID").get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        # Struct too complex to do 1:1 comparison
+        self.assertTrue(isinstance(result, Invoice._many))
+        self.assertEqual(len(result.invoices), 1)
+        self.assertEqual(result.customer_uuid, 'UUID')

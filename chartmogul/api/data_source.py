@@ -16,6 +16,7 @@ class DataSource(Resource):
         name = fields.String()
         created_at = fields.DateTime()
         status = fields.Str()
+        system = fields.Str()
 
         @post_load
         def make(self, data):
