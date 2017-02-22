@@ -194,7 +194,7 @@ chartmogul.imp.Invoice.all(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4c
 ```python
 import chartmogul.imp
 
-chartmogul.imp.Transaction.create(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+chartmogul.imp.Transaction.create(config, uuid='inv_745df1d4-819f-48ee-873d-b5204801e021', data={})
 ```
 
 #### [Subscriptions](https://dev.chartmogul.com/docs/subscriptions)
