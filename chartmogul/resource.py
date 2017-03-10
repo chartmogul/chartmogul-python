@@ -118,7 +118,6 @@ class Resource(DataObject):
             if data is not None:
                 data = dumps(data, default=json_serial)
 
-        print(method, http_verb, path)
         return Promise(lambda resolve, _:
                        resolve(getattr(requests, http_verb)(
                            config.uri + path,
