@@ -33,7 +33,7 @@ ESCAPED_QUERY_KEYS = {
 }
 
 
-class DataObject:
+class DataObject(object):
 
     def __init__(self, **kwargs):
         """
