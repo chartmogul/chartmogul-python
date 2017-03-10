@@ -89,7 +89,10 @@ class Resource(DataObject):
             jsonObj = response.json()
         except ValueError:  # Couldn't parse JSON, probably just text message.
             return response.content
+        return cls._loadJSON(jsonObj)
 
+    @classmethod
+    def _loadJSON(cls, jsonObj):
         # has load_many capability & is many entries result?
         if '_root_key' in dir(cls) is not None and cls._root_key in jsonObj:
             return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True).data,
@@ -115,6 +118,7 @@ class Resource(DataObject):
             if data is not None:
                 data = dumps(data, default=json_serial)
 
+        print(method, http_verb, path)
         return Promise(lambda resolve, _:
                        resolve(getattr(requests, http_verb)(
                            config.uri + path,

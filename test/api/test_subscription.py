@@ -4,7 +4,7 @@ from datetime import datetime
 import requests_mock
 
 from chartmogul import Config
-from chartmogul.imp import Subscription
+from chartmogul import Subscription
 
 
 class SubscriptionsTestCase(unittest.TestCase):
