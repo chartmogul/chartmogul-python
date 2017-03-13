@@ -5,7 +5,7 @@ from datetime import datetime
 import requests_mock
 
 from chartmogul import Config
-from chartmogul.imp import Invoice
+from chartmogul import Invoice
 
 
 requestData = {
