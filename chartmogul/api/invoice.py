@@ -41,7 +41,7 @@ class Invoice(Resource):
         uuid = fields.String()
         external_id = fields.String(allow_none=True)
         date = fields.DateTime()
-        due_date = fields.DateTime()
+        due_date = fields.DateTime(allow_none=True)
         currency = fields.String()
         line_items = fields.Nested(LineItem._Schema, many=True)
         transactions = fields.Nested(Transaction._Schema, many=True)
