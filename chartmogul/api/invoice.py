@@ -39,6 +39,7 @@ class Invoice(Resource):
 
     class _Schema(Schema):
         uuid = fields.String()
+        customer_uuid = fields.String(allow_none=True)
         external_id = fields.String(allow_none=True)
         date = fields.DateTime()
         due_date = fields.DateTime(allow_none=True)
@@ -51,3 +52,16 @@ class Invoice(Resource):
             return Invoice(**data)
 
     _schema = _Schema(strict=True)
+
+
+Invoice.all_customer = Invoice.all
+Invoice.all_any = Invoice._method('all', 'get', '/invoices')
+
+
+def all(config, **kwargs):
+    if 'uuid' in kwargs:
+        return Invoice.all_customer(config, **kwargs)
+    else:
+        return Invoice.all_any(config, **kwargs)
+
+Invoice.all = all
