@@ -247,6 +247,8 @@ class InvoiceTestCase(unittest.TestCase):
         # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice._many))
         self.assertEqual(len(result.invoices), 1)
+        self.assertTrue(isinstance(result.invoices[0], Invoice))
+        self.assertEqual(result.invoices[0].uuid, "inv_565c73b2-85b9-49c9-a25e-2b7df6a677c9")
         self.assertEqual(result.customer_uuid, 'UUID')
 
     @requests_mock.mock()

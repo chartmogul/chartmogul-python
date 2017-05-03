@@ -53,15 +53,15 @@ class Invoice(Resource):
 
     _schema = _Schema(strict=True)
 
+    @classmethod
+    def all(cls, config, **kwargs):
+        """
+        Actually uses two different endpoints, where it dispatches the call depends on whether
+        customer uuid is given with the old parameter name ('uuid') or not.
+        """
+        if 'uuid' in kwargs:
+            return super(Invoice, cls).all(config, **kwargs)
+        else:
+            return cls.all_any(config, **kwargs)
 
-Invoice.all_customer = Invoice.all
 Invoice.all_any = Invoice._method('all', 'get', '/invoices')
-
-
-def all(config, **kwargs):
-    if 'uuid' in kwargs:
-        return Invoice.all_customer(config, **kwargs)
-    else:
-        return Invoice.all_any(config, **kwargs)
-
-Invoice.all = all
