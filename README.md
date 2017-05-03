@@ -187,6 +187,7 @@ import chartmogul
 
 chartmogul.Invoice.create(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 chartmogul.Invoice.all(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', page=2, per_page=10)
+chartmogul.Invoice.all(config, customer_uuid='cus_f466e33d-ff2b-4a11-8f85-417eb02157a7', external_id='INV0001')
 ```
 
 #### [Transactions](https://dev.chartmogul.com/docs/transactions)

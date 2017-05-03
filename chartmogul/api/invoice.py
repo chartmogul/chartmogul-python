@@ -39,6 +39,7 @@ class Invoice(Resource):
 
     class _Schema(Schema):
         uuid = fields.String()
+        customer_uuid = fields.String(allow_none=True)
         external_id = fields.String(allow_none=True)
         date = fields.DateTime()
         due_date = fields.DateTime(allow_none=True)
@@ -51,3 +52,16 @@ class Invoice(Resource):
             return Invoice(**data)
 
     _schema = _Schema(strict=True)
+
+    @classmethod
+    def all(cls, config, **kwargs):
+        """
+        Actually uses two different endpoints, where it dispatches the call depends on whether
+        customer uuid is given with the old parameter name ('uuid') or not.
+        """
+        if 'uuid' in kwargs:
+            return super(Invoice, cls).all(config, **kwargs)
+        else:
+            return cls.all_any(config, **kwargs)
+
+Invoice.all_any = Invoice._method('all', 'get', '/invoices')
