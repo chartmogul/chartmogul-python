@@ -4,7 +4,10 @@ from datetime import datetime
 
 import requests_mock
 
+from requests.exceptions import HTTPError
+
 from chartmogul import Config
+from chartmogul import APIError
 from chartmogul import Invoice
 
 
@@ -282,3 +285,41 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertEqual(result.invoices[0].customer_uuid, 'cus_f466e33d-ff2b-4a11-8f85-417eb02157a7')
         self.assertEqual(result.current_page, 1)
         self.assertEqual(result.total_pages, 1)
+
+    @requests_mock.mock()
+    def test_delete(self, mock_requests):
+
+        mock_requests.register_uri(
+            'DELETE',
+            ("https://api.chartmogul.com/v1/invoices"
+            "/inv_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
+            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            status_code=204
+        )
+
+        config = Config("token", "secret")  # is actually checked in mock
+        result = Invoice.destroy(config,
+                             uuid='inv_f466e33d-ff2b-4a11-8f85-417eb02157a7').get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertTrue(result is None)
+
+    @requests_mock.mock()
+    def test_delete_not_found(self, mock_requests):
+
+        mock_requests.register_uri(
+            'DELETE',
+            ("https://api.chartmogul.com/v1/invoices"
+            "/inv_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
+            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            headers={'Content-Type': 'application/json'},
+            status_code=404,
+            json={'error': 'Invoice not found'}
+        )
+
+        config = Config("token", "secret")  # is actually checked in mock
+        with self.assertRaises(APIError) as context:
+            result = Invoice.destroy(config, uuid='inv_f466e33d-ff2b-4a11-8f85-417eb02157a7').get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
