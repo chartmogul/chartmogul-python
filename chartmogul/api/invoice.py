@@ -65,3 +65,4 @@ class Invoice(Resource):
             return cls.all_any(config, **kwargs)
 
 Invoice.all_any = Invoice._method('all', 'get', '/invoices')
+Invoice.destroy = Invoice._method('destroy', 'delete', '/invoices{/uuid}')
