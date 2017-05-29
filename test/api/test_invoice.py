@@ -206,7 +206,7 @@ newInvoiceListExample = """
 
 retrieveInvoiceExample = """
 {
-  "uuid": "inv_123",
+  "uuid": "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
   "external_id": "INV0001",
   "date": "2015-11-01T00:00:00.000Z",
   "due_date": "2015-11-15T00:00:00.000Z",
@@ -386,11 +386,11 @@ class InvoiceTestCase(unittest.TestCase):
         )
 
         config = Config("token", "secret")  # is actually checked in mock
-        result = Invoice.retrieve(config, uuid='inv_123').get()
+        result = Invoice.retrieve(config, uuid='inv_22910fc6-c931-48e7-ac12-90d2cb5f0059').get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
 
         # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice))
 
-        self.assertEqual(result.uuid, 'inv_123')
+        self.assertEqual(result.uuid, 'inv_22910fc6-c931-48e7-ac12-90d2cb5f0059')
