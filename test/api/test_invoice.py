@@ -378,7 +378,7 @@ class InvoiceTestCase(unittest.TestCase):
 
         mock_requests.register_uri(
             'GET',
-            ("https://api.chartmogul.com/v1/invoices/inv_123"),
+            ("https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059"),
             request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
             headers={'Content-Type': 'application/json'},
             status_code=200,
