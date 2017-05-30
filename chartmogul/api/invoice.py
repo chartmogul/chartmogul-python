@@ -66,3 +66,4 @@ class Invoice(Resource):
 
 Invoice.all_any = Invoice._method('all', 'get', '/invoices')
 Invoice.destroy = Invoice._method('destroy', 'delete', '/invoices{/uuid}')
+Invoice.retrieve = Invoice._method('retrieve', 'get', '/invoices{/uuid}')
