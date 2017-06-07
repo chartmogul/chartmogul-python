@@ -39,11 +39,14 @@ class Invoice(Resource):
 
     class _Schema(Schema):
         uuid = fields.String()
-        customer_uuid = fields.String(allow_none=True)
         external_id = fields.String(allow_none=True)
+        customer_uuid = fields.String(allow_none=True)
+        data_source_uuid = fields.String(allow_none=True)
+
+        currency = fields.String()
         date = fields.DateTime()
         due_date = fields.DateTime(allow_none=True)
-        currency = fields.String()
+
         line_items = fields.Nested(LineItem._Schema, many=True)
         transactions = fields.Nested(Transaction._Schema, many=True)
 
