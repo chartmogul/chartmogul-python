@@ -1,0 +1,24 @@
+interactions:
+- request:
+    body: !!python/unicode '{"name": "Test"}'
+    headers:
+      Accept: ['*/*']
+      Accept-Encoding: ['gzip, deflate']
+      Authorization: [Basic LTot]
+      Connection: [keep-alive]
+      Content-Length: ['16']
+      User-Agent: [python-requests/2.13.0]
+      content-type: [application/json]
+    method: POST
+    uri: https://api.chartmogul.com/v1/data_sources
+  response:
+    body: {string: !!python/unicode '{"code":401,"message":"No valid API key provided","param":null}'}
+    headers:
+      connection: [keep-alive]
+      content-length: ['63']
+      content-type: [application/json]
+      date: ['Wed, 21 Jun 2017 08:31:54 GMT']
+      server: [nginx/1.10.1]
+      status: [401 Unauthorized]
+    status: {code: 401, message: Unauthorized}
+version: 1
