@@ -124,7 +124,8 @@ class Resource(DataObject):
                            data=data,
                            headers={'content-type': 'application/json'},
                            params=params,
-                           auth=config.auth)
+                           auth=config.auth,
+                           timeout=config.request_timeout)
                        )).then(cls._load).catch(annotateHTTPError)
 
     @classmethod
