@@ -61,6 +61,10 @@ chartmogul.Ping.ping(config).get()
 ```
 This throws error or returns `<Ping{data='pong!'}>`
 
+### Options
+You can also pass to the Config initializer:
+* `request_timeout=` sets timeout for requests (seconds), default: none (see [requests docs](http://docs.python-requests.org/en/master/user/quickstart/#timeouts) for details)
+
 ## Usage
 
 The library is based on [promises](https://pypi.python.org/pypi/promise) (mechanism similar to futures).
