@@ -107,10 +107,7 @@ chartmogul.DataSource.destroy(config, uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb
 
 ```python
 chartmogul.Customer.create(config, data={})
-chartmogul.Customer.all(config, {
-  page: 2,
-  per_page: 20
-})
+chartmogul.Customer.all(config, page=2, per_page=20)
 chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.search(config, email='email@email.com')
 chartmogul.Customer.merge(config, data={
