@@ -44,10 +44,11 @@ class Subscription(Resource):
     @classmethod
     def _loadJSON(cls, jsonObj):
         if "subscriptions" in jsonObj:
-            _many = namedtuple('Subscriptions', ["subscriptions", "current_page", "total_pages"])
+            _many = namedtuple('Subscriptions', ["subscriptions", "current_page", "total_pages", "customer_uuid"])
             return _many(cls._schema.load(jsonObj["subscriptions"], many=True).data,
                          jsonObj["current_page"],
-                         jsonObj["total_pages"])
+                         jsonObj["total_pages"],
+                         jsonObj["customer_uuid"])
         else:
             return super(Subscription, cls)._loadJSON(jsonObj)
 
