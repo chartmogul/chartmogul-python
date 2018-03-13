@@ -21,6 +21,7 @@ class LineItem(DataObject):
         discount_code = fields.String(allow_none=True)
         discount_amount_in_cents = fields.Int()
         tax_amount_in_cents = fields.Int()
+        transaction_fees_in_cents = fields.Int()
         account_code = fields.String(allow_none=True)
 
         @post_load
