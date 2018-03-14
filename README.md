@@ -302,6 +302,17 @@ Built using [Requests](https://github.com/kennethreitz/requests).
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/chartmogul/chartmogul-python.
 
+## Releasing
+
+Make sure that:
+1. you have prepared `~/.pypirc` with credentials,
+2. a higher version has been set in `chartmogul/__init__.py`,
+3. code works `python setup.py test`,
+4. release works `python setup.py sdist upload -r pypitest`,
+5. release to production `python setup.py sdist upload -r pypi`,
+
+[Read full HOWTO](http://peterdowns.com/posts/first-time-with-pypi.html)
+
 ## License
 
 The library is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
