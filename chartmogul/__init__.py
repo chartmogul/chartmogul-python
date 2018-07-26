@@ -29,7 +29,7 @@ Provides convenient Python bindings for ChartMogul's API.
 """
 
 __title__ = 'chartmogul'
-__version__ = '1.1.7'
+__version__ = '1.1.8'
 __build__ = 0x000000
 __author__ = 'ChartMogul Ltd'
 __license__ = 'MIT'
