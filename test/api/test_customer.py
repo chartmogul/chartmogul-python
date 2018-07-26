@@ -1,7 +1,6 @@
 import unittest
 from chartmogul import Customer, Config
-from chartmogul.api.customer import Attributes, Stripe, Clearbit,\
-                                    Company, Person, Name, Employment, Address
+from chartmogul.api.customer import Attributes, Address
 from datetime import datetime
 import requests_mock
 
@@ -112,39 +111,39 @@ deserializedCustomer = Customer(
     zip="0185128",
     attributes=Attributes(
         tags=["engage", "unit loss", "discountable"],
-        stripe=Stripe(
-          uid=7,
-          coupon=True
-        ),
-        clearbit=Clearbit(
-            company=Company(
-                name="Example Company",
-                legalName="Example Company Inc.",
-                domain="examplecompany.com",
-                url="http://examplecompany.com",
-                category={
+        stripe={
+          "uid": 7,
+          "coupon": True
+        },
+        clearbit={
+            "company": {
+                "name": "Example Company",
+                "legalName": "Example Company Inc.",
+                "domain": "examplecompany.com",
+                "url": "http://examplecompany.com",
+                "category": {
                     "sector": "Information Technology",
                     "industryGroup": "Software and Services",
                     "industry": "Software",
                     "subIndustry": "Application Software"
                 },
-                metrics={
+                "metrics": {
                     "alexaGlobalRank": 2319,
                     "googleRank": 7,
                     "employees": 1000,
                     "marketCap": None,
                     "raised": 1502450000
                 },
-            ),
-            person=Person(
-                name=Name(
-                    fullName="Bob Kramer"
-                ),
-                employment=Employment(
-                    name="Example Company"
-                )
-            )
-        ),
+            },
+            "person": {
+                "name": {
+                    "fullName": "Bob Kramer"
+                },
+                "employment": {
+                    "name": "Example Company"
+                }
+            }
+        },
         custom={
             "CAC": 213,
             "utmCampaign": "social media 1",
@@ -183,6 +182,39 @@ createCustomer = {
     "zip": "0185128",
     "attributes": {
         "tags": ["engage", "unit loss", "discountable"],
+        "stripe":{
+            "uid": 7,
+            "coupon": True
+            },
+        "clearbit": {
+            "company": {
+                "name": "Example Company",
+                "legalName": "Example Company Inc.",
+                "domain": "examplecompany.com",
+                "url": "http://examplecompany.com",
+                "category": {
+                    "sector": "Information Technology",
+                    "industryGroup": "Software and Services",
+                    "industry": "Software",
+                    "subIndustry": "Application Software"
+                },
+                "metrics": {
+                    "raised": 1502450000,
+                    "employees": 1000,
+                    "googleRank": 7,
+                    "alexaGlobalRank": 2319,
+                    "marketCap": None
+                },
+            },
+            "person": {
+                "name": {
+                    "fullName": "Bob Kramer"
+                },
+                "employment": {
+                    "name": "Example Company"
+                }
+            }
+        },
         "custom": [
             {'key': 'CAC', 'type': 'Integer', 'value': 213},
             {"key": "utmCampaign", "value": "social media 1", "type": "String"},
@@ -195,6 +227,39 @@ createCustomer = {
 
 sentCreateExpected = {
     'attributes': {
+        "stripe":{
+            "uid": 7,
+            "coupon": True
+            },
+        "clearbit": {
+            "company": {
+                "name": "Example Company",
+                "legalName": "Example Company Inc.",
+                "domain": "examplecompany.com",
+                "url": "http://examplecompany.com",
+                "category": {
+                    "sector": "Information Technology",
+                    "industryGroup": "Software and Services",
+                    "industry": "Software",
+                    "subIndustry": "Application Software"
+                },
+                "metrics": {
+                    "raised": 1502450000,
+                    "employees": 1000,
+                    "googleRank": 7,
+                    "alexaGlobalRank": 2319,
+                    "marketCap": None
+                },
+            },
+            "person": {
+                "name": {
+                    "fullName": "Bob Kramer"
+                },
+                "employment": {
+                    "name": "Example Company"
+                }
+            }
+        },
         'custom': [
             {'key': 'CAC', 'type': 'Integer', 'value': 213},
             {"key": "utmCampaign", "value": "social media 1", "type": "String"},
@@ -254,6 +319,8 @@ class CustomerTestCase(unittest.TestCase):
         # self.assertEqual(str(customers), str(expected))
         # => check only first level fields are OK
         self.assertEqual(sorted(dir(customers)), sorted(dir(expected)))
+        self.assertEqual(sorted(customers.entries[0].attributes.stripe), sorted(expected.entries[0].attributes.stripe))
+        self.assertEqual(sorted(customers.entries[0].attributes.clearbit), sorted(expected.entries[0].attributes.clearbit))
         self.assertTrue(isinstance(customers.entries[0], Customer))
 
     @requests_mock.mock()
