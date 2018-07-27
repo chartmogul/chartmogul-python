@@ -8,7 +8,7 @@ Validation is done on server.
 from marshmallow import Schema, fields, post_load
 from ..resource import Resource, DataObject, _add_method
 from collections import namedtuple
-from .attributes import Stripe, Name, Employment, Person, Company, Clearbit, Attributes
+from .attributes import Attributes
 
 
 class Address(DataObject):
