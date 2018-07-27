@@ -8,7 +8,9 @@ python:
   - "3.6"
 
 # command to install dependencies
-install: "pip install -r requirements.txt"
+install: 
+  - "pip install -r requirements.txt"
+  - if [[ $TRAVIS_PYTHON_VERSION == 3.3 ]]; then pip install --upgrade setuptools==35.0.0; fi
 
 # command to run tests
 script: python setup.py test
