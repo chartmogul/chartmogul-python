@@ -65,6 +65,17 @@ This throws error or returns `<Ping{data='pong!'}>`
 You can also pass to the Config initializer:
 * `request_timeout=` sets timeout for requests (seconds), default: none (see [requests docs](http://docs.python-requests.org/en/master/user/quickstart/#timeouts) for details)
 
+### Rate Limits & Exponential Backoff
+The library will keep retrying if the request exceeds the rate limit or if there's any network related error.
+By default, the request will be retried for 20 times (approximated 15 minutes) before finally giving up.
+
+You can change the retry count from the Config initializer:
+
+ * `max_retries=` sets the maximum number of retries for failed requests, default: 20
+ * `backoff_factor=` sets the exponential backoff factor, default: 2
+
+Set it to 0 to disable it.
+
 ## Usage
 
 The library is based on [promises](https://pypi.python.org/pypi/promise) (mechanism similar to futures).
