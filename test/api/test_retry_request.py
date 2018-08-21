@@ -2,12 +2,12 @@ import unittest
 import httpretty
 import chartmogul
 from unittest.mock import patch
-from chartmogul import retryrequest, Config, DataSource
+from chartmogul import Config, DataSource
 from datetime import date, datetime
 from requests.exceptions import RetryError
+from chartmogul.retry_request import requests_retry_session
 
-
-class TestRetryRequests(unittest.TestCase):
+class RetryRequestTestCase(unittest.TestCase):
 
     @httpretty.activate
     def test_requests_retry_session(self):
@@ -21,9 +21,9 @@ class TestRetryRequests(unittest.TestCase):
         )
 
         with self.assertRaises(RetryError):
-            retryrequest.requests_retry_session(0).get('https://example:444/testing')
+            requests_retry_session(0).get('https://example:444/testing')
 
-        response = retryrequest.requests_retry_session(2, 0).get('https://example:444/testing')
+        response = requests_retry_session(2, 0).get('https://example:444/testing')
         self.assertEqual(response.text, '{}')
 
     @httpretty.activate

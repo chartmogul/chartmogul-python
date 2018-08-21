@@ -2,7 +2,7 @@ import requests
 from json import dumps
 from promise import Promise
 from uritemplate import URITemplate
-from .retryrequest import requests_retry_session
+from .retry_request import requests_retry_session
 from .errors import APIError, ConfigurationError, ArgumentMissingError, annotateHTTPError
 from .api.config import Config
 from datetime import datetime, date
