@@ -2,12 +2,11 @@ import requests
 from json import dumps
 from promise import Promise
 from uritemplate import URITemplate
+from .retryrequest import requests_retry_session
 from .errors import APIError, ConfigurationError, ArgumentMissingError, annotateHTTPError
 from .api.config import Config
 from datetime import datetime, date
 from builtins import str
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
 
 """
 HTTP verb mapping. Based on nodejs library.
@@ -121,14 +120,14 @@ class Resource(DataObject):
                 data = dumps(data, default=json_serial)
 
         return Promise(lambda resolve, _:
-                       resolve(getattr(_requests_retry_session(), http_verb)(
-                           config.uri + path,
-                           data=data,
-                           headers={'content-type': 'application/json'},
-                           params=params,
-                           auth=config.auth,
-                           timeout=config.request_timeout)
-                       )).then(cls._load).catch(annotateHTTPError)
+            resolve(getattr(requests_retry_session(config.max_retries, config.backoff_factor), http_verb)(
+                config.uri + path,
+                data=data,
+                headers={'content-type': 'application/json'},
+                params=params,
+                auth=config.auth,
+                timeout=config.request_timeout)
+            )).then(cls._load).catch(annotateHTTPError)
 
     @classmethod
     def _expandPath(cls, path, kwargs):
@@ -161,28 +160,6 @@ class Resource(DataObject):
 
             return cls._request(config, method, http_verb, pathTemp, **kwargs)
         return fc
-
-def _requests_retry_session(
-        retries=20,
-        backoff_factor=2,
-        method_whitelist=['HEAD', 'GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'TRACE'],
-        status_forcelist=(401, 429, 500, 502, 503, 504, 520, 524),
-        session=None,
-    ):
-        session = session or requests.Session()
-        retry = Retry(
-            total=retries,
-            read=retries,
-            connect=retries,
-            status=retries,
-            method_whitelist=method_whitelist,
-            backoff_factor=backoff_factor,
-            status_forcelist=status_forcelist,
-        )
-        adapter = HTTPAdapter(max_retries=retry)
-        session.mount('http://', adapter)
-        session.mount('https://', adapter)
-        return session
 
 def _add_method(cls, method, http_verb, path=None):
     """
