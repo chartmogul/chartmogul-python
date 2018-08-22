@@ -1,7 +1,7 @@
 import unittest
+
 import httpretty
 import chartmogul
-from unittest.mock import patch
 from chartmogul import Config, DataSource
 from datetime import date, datetime
 from requests.exceptions import RetryError
@@ -10,7 +10,7 @@ from chartmogul.retry_request import requests_retry_session
 class RetryRequestTestCase(unittest.TestCase):
 
     @httpretty.activate
-    def test_requests_retry_session(self):
+    def test_retry_request(self):
         httpretty.register_uri(
             httpretty.GET,
             "https://example:444/testing",
