@@ -67,14 +67,15 @@ You can also pass to the Config initializer:
 
 ### Rate Limits & Exponential Backoff
 The library will keep retrying if the request exceeds the rate limit or if there's any network related error.
-By default, the request will be retried for 20 times (approximated 15 minutes) before finally giving up.
+By default, the request will be retried for 20 times (approximately 15 minutes) before finally giving up.
 
 You can change the retry count from the Config initializer:
 
  * `max_retries=` sets the maximum number of retries for failed requests, default: 20
  * `backoff_factor=` sets the exponential backoff factor, default: 2
 
-Set it to 0 to disable it.
+Set max_retries 0 to disable it.
+Set backoff_factor 0 to disable it.
 
 ## Usage
 

@@ -8,7 +8,6 @@ STATUS_FORCELIST = (429, 500, 502, 503, 504, 520, 524)
 def requests_retry_session(retries=20, backoff_factor=2, session=None,):
     session = session or requests.Session()
     adapter = _retry_adapter(retries, backoff_factor)
-    session.mount('http://', adapter)
     session.mount('https://', adapter)
     return session
 
