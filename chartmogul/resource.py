@@ -2,6 +2,7 @@ import requests
 from json import dumps
 from promise import Promise
 from uritemplate import URITemplate
+from .retry_request import requests_retry_session
 from .errors import APIError, ConfigurationError, ArgumentMissingError, annotateHTTPError
 from .api.config import Config
 from datetime import datetime, date
@@ -119,14 +120,14 @@ class Resource(DataObject):
                 data = dumps(data, default=json_serial)
 
         return Promise(lambda resolve, _:
-                       resolve(getattr(requests, http_verb)(
-                           config.uri + path,
-                           data=data,
-                           headers={'content-type': 'application/json'},
-                           params=params,
-                           auth=config.auth,
-                           timeout=config.request_timeout)
-                       )).then(cls._load).catch(annotateHTTPError)
+            resolve(getattr(requests_retry_session(config.max_retries, config.backoff_factor), http_verb)(
+                config.uri + path,
+                data=data,
+                headers={'content-type': 'application/json'},
+                params=params,
+                auth=config.auth,
+                timeout=config.request_timeout)
+            )).then(cls._load).catch(annotateHTTPError)
 
     @classmethod
     def _expandPath(cls, path, kwargs):
@@ -159,7 +160,6 @@ class Resource(DataObject):
 
             return cls._request(config, method, http_verb, pathTemp, **kwargs)
         return fc
-
 
 def _add_method(cls, method, http_verb, path=None):
     """
