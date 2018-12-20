@@ -84,7 +84,7 @@ class Resource(DataObject):
         (immutable, therefore all set on creation by generator)
         """
         response.raise_for_status()
-        if response.status_code == 204:
+        if response.status_code == 204 or response.status_code == 202:
             return None
         try:
             jsonObj = response.json()

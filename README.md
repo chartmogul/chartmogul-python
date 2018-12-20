@@ -131,6 +131,18 @@ chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4c
   'into': {'customer_uuid': 'cus_2123290f-09c8-4628-a205-db5596bd58f7'}
 })
 chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  'subscriptions': [
+    {
+      "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
+      "external_id": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0"
+    },
+    {
+      "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
+      "external_id": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4"
+    }
+  ]
+})
 ```
 
 #### [Customer Attributes](https://dev.chartmogul.com/docs/customer-attributes)
