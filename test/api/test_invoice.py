@@ -132,7 +132,8 @@ responseData = {
                     "discount_code": "PSO86",
                     "discount_amount_in_cents": 500,
                     "tax_amount_in_cents": 450,
-                    "account_code": None
+                    "account_code": None,
+                    "plan_uuid": None,
                 }
             ],
             "transactions": [
