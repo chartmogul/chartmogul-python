@@ -19,7 +19,7 @@ before_script:
 script: coverage run ./setup.py test && coverage xml -i
 
 after_script:
-  - ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build -t coverage.py --exit-code $TRAVIS_TEST_RESULT
 
 branches:
   only:
