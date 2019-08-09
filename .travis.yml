@@ -8,7 +8,7 @@ python:
 
 install:
   - pip install -r requirements.txt
-  - pip install httpretty coverage
+  - pip install coverage
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -16,7 +16,7 @@ before_script:
   - ./cc-test-reporter before-build
 
 # command to run tests
-script: coverage run ./setup.py test && coverage xml
+script: coverage run ./setup.py test && coverage xml -i
 
 after_script:
   - ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT
