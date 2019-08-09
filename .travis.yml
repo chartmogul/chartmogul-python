@@ -6,11 +6,20 @@ python:
   - "3.5"
   - "3.6"
 
-# command to install dependencies
-install: "pip install -r requirements.txt"
+install:
+  - pip install -r requirements.txt
+  - pip install coverage
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 # command to run tests
-script: python setup.py test
+script: coverage run ./setup.py test && coverage xml
+
+after_script:
+  - ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT
 
 branches:
   only:
