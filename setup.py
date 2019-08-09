@@ -20,7 +20,15 @@ requires = [
     'marshmallow>=2.12.1',
     'future>=0.16.0',
 ]
-test_requirements = ['mock>=1.0.1', 'requests-mock>=1.3.0', 'vcrpy>=1.11.1', 'httpretty>=0.9.5']
+test_requirements = [
+    'mock>=1.0.1',
+    'requests-mock>=1.3.0',
+    'vcrpy>=1.11.1',
+    'httpretty>=0.9.5',
+    'PyYAML>=5.1.2',
+    'httpretty>=0.9.6',
+    'wrapt>=1.11.2'
+]
 
 with open('chartmogul/__init__.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',

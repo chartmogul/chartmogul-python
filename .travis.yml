@@ -16,9 +16,12 @@ before_script:
   - ./cc-test-reporter before-build
 
 # command to run tests
-script: coverage run ./setup.py test && coverage xml -i
+script: coverage run ./setup.py test
 
 after_script:
+  - function unzip_egg { mv $1 tmp.zip && unzip tmp.zip -d $1; }
+  - unzip_egg .eggs/PyYAML-5.1.2-py2.7-linux-x86_64.egg
+  - unzip_egg .eggs/wrapt-1.11.2-py2.7-linux-x86_64.egg
   - ./cc-test-reporter after-build -t coverage.py --exit-code $TRAVIS_TEST_RESULT
 
 branches:
