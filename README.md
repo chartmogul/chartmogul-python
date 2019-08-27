@@ -331,9 +331,9 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/chartm
 Make sure that:
 1. you have prepared `~/.pypirc` with credentials,
 2. a higher version has been set in `chartmogul/__init__.py`,
-3. code works `python setup.py test`,
-4. release works `python setup.py sdist upload -r pypitest`,
-5. release to production `python setup.py sdist upload -r pypi`,
+3. Test & build package `python setup.py test sdist`
+4. release works `twine upload --repository-url https://test.pypi.org/legacy/ dist/*`,
+5. release to production `twine upload dist/*`,
 
 [Read full HOWTO](http://peterdowns.com/posts/first-time-with-pypi.html)
 
