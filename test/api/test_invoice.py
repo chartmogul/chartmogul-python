@@ -17,6 +17,7 @@ requestData = {
             "external_id": "INV0001",
             "date": datetime(2015, 11, 1, 0, 0, 0),  # "2015-11-01 00:00:00",
             "currency": "USD",
+            "customer_external_id": "ext-id",
             # "2015-11-15 00:00:00",
             "due_date": datetime(2015, 11, 15, 0, 0, 0),
             "line_items": [
@@ -63,6 +64,7 @@ requestSerialized = {
             u"date": u"2015-11-01T00:00:00",
             u"currency": u"USD",
             u"due_date": u"2015-11-15T00:00:00",
+            u"customer_external_id": u"ext-id",
             u"line_items": [
                 {
                     u"type": "subscription",

@@ -42,6 +42,7 @@ class Invoice(Resource):
         uuid = fields.String()
         external_id = fields.String(allow_none=True)
         customer_uuid = fields.String(allow_none=True)
+        customer_external_id = fields.String(allow_none=True)
         data_source_uuid = fields.String(allow_none=True)
 
         currency = fields.String()
