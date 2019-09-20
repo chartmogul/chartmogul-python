@@ -29,8 +29,8 @@ Provides convenient Python bindings for ChartMogul's API.
 """
 
 __title__ = 'chartmogul'
-__version__ = '1.2.4'
+__version__ = '1.2.5'
 __build__ = 0x000000
 __author__ = 'ChartMogul Ltd'
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2017 ChartMogul Ltd'
+__copyright__ = 'Copyright 2019 ChartMogul Ltd'
