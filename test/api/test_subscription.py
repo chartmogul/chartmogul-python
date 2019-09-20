@@ -95,6 +95,7 @@ class SubscriptionsTestCase(unittest.TestCase):
                     {
                       "uuid": "sub_e6bc5407-e258-4de0-bb43-61faaf062035",
                       "external_id": "sub_0001",
+                      "subscription_set_external_id": "sub_set_0001",
                       "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
                       "data_source_uuid": "ds_fef05d54-47b4-431b-aed2-eb6b9e545430",
                       "cancellation_dates":[]
