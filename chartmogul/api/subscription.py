@@ -29,6 +29,7 @@ class Subscription(Resource):
         # /import namespace
         uuid = fields.String(allow_none=True)
         external_id = fields.String(allow_none=True)
+        subscription_set_external_id = fields.String(allow_none=True)
         plan_uuid = fields.String(allow_none=True)
         customer_uuid = fields.String(allow_none=True)
         data_source_uuid = fields.String(allow_none=True)

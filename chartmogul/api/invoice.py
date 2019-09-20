@@ -12,6 +12,7 @@ class LineItem(DataObject):
         type = fields.String()
         subscription_uuid = fields.String(allow_none=True)
         subscription_external_id = fields.String(allow_none=True)
+        subscription_set_external_id = fields.String(allow_none=True)
         plan_uuid = fields.String(allow_none=True)
         prorated = fields.Boolean()
         service_period_start = fields.DateTime(allow_none=True)
