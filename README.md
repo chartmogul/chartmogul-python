@@ -29,7 +29,7 @@
 
 ## Installation
 
-This library requires Python 2.7 or 3.3 to 3.6.
+This library requires Python 2.7 or 3.5 to 3.8.
 
 ```sh
 pip install chartmogul
