@@ -21,10 +21,14 @@ requires = [
     'future>=0.16.0',
 ]
 test_requirements = [
+    # This is needed to circumvent a vcrpy dependency problem And can be
+    # deleted once it is solved.
+    'yarl; python_version>"3.5"',
+    'yarl<1.4; python_version=="3.5"',
+
     'mock>=1.0.1',
     'requests-mock>=1.3.0',
     'vcrpy>=1.11.1',
-    'httpretty>=0.9.5',
     'PyYAML>=5.1.2',
     'httpretty>=0.9.6',
     'wrapt>=1.11.2'
@@ -56,4 +60,14 @@ setup(
     tests_require=test_requirements,
     test_suite="test",
     extras_require={},
+    classifiers=[
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8'
+    ]
 )
