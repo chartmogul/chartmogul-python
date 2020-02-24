@@ -14,7 +14,7 @@ class PlanGroupTestCase(unittest.TestCase):
     def test_create_plan_group(self, mock_requests):
         expected_plan_group_dict = {
             "uuid": u"whatever_uuid",
-            "name": u"new_name",
+            "name": u"Gold Plan Group",
             "plans_count": 2
         }
         sent = {
@@ -43,7 +43,7 @@ class PlanGroupTestCase(unittest.TestCase):
     def test_retrieve_plan_group(self, mock_requests):
         expected_plan_group_dict = {
             "uuid": u"whatever_uuid",
-            "name": u"new_name",
+            "name": u"Gold Plan Group",
             "plans_count": 2
         }
         mock_requests.register_uri(
@@ -61,7 +61,7 @@ class PlanGroupTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertTrue(isinstance(result, PlanGroup))
         self.assertEqual(result.uuid, "whatever_uuid")
-        self.assertEqual(result.name, 'new_name')
+        self.assertEqual(result.name, 'Gold Plan Group')
         self.assertEqual(result.plans_count, 2)
 
     @requests_mock.mock()
