@@ -205,6 +205,17 @@ chartmogul.Plan.all(config, page=2, external_id='')
 chartmogul.Plan.destroy(config, uuid='')
 ```
 
+#### [Plan Groups](https://dev.chartmogul.com/docs/plan_groups)
+
+```python
+chartmogul.PlanGroup.create(config, data={})
+chartmogul.PlanGroup.retrieve(config, uuid='plg_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.PlanGroup.modify(config, uuid='plg_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+chartmogul.PlanGroup.all(config, page=2)
+chartmogul.PlanGroup.all(config, uuid='plg_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.PlanGroup.destroy(config, uuid='')
+```
+
 #### [Invoices](https://dev.chartmogul.com/docs/invoices)
 
 ```python

@@ -60,6 +60,14 @@ test.api.test_plan module
     :undoc-members:
     :show-inheritance:
 
+test.api.test_plan_group module
+-------------------------
+
+.. automodule:: test.api.test_plan_group
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 test.api.test_tags module
 -------------------------
 
