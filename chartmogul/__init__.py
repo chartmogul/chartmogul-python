@@ -11,6 +11,7 @@ from .api.invoice import Invoice
 from .api.metrics import Metrics
 from .api.ping import Ping
 from .api.plan import Plan
+from .api.plan_group import PlanGroup
 from .api.subscription import Subscription
 from .api.tags import Tags
 from .api.transaction import Transaction
