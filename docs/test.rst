@@ -44,14 +44,6 @@ test.test_plan_group module
     :undoc-members:
     :show-inheritance:
 
-test.test_delete_invoice module
----------------------
-
-.. automodule:: test.test_delete_invoice
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 Module contents
 ---------------
 
