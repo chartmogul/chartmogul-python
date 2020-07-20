@@ -7,7 +7,7 @@
 <p align='center'><code>chartmogul-python</code> provides convenient Python bindings for <a href='https://dev.chartmogul.com'>ChartMogul's API</a>.</p>
 <p align='center'>
   <a href="https://badge.fury.io/py/chartmogul"><img src="https://badge.fury.io/py/chartmogul.svg" alt="PyPI version" height="18"></a>
-  <a href='https://travis-ci.org/chartmogul/chartmogul-python'><img src='https://travis-ci.org/chartmogul/chartmogul-python.svg?branch=master' alt='Build Status'/></a>
+  <a href='https://travis-ci.org/chartmogul/chartmogul-python'><img src='https://travis-ci.org/chartmogul/chartmogul-python.svg?branch=main' alt='Build Status'/></a>
 </p>
 <hr>
 
@@ -63,7 +63,7 @@ This throws error or returns `<Ping{data='pong!'}>`
 
 ### Options
 You can also pass to the Config initializer:
-* `request_timeout=` sets timeout for requests (seconds), default: none (see [requests docs](http://docs.python-requests.org/en/master/user/quickstart/#timeouts) for details)
+* `request_timeout=` sets timeout for requests (seconds), default: none (see [requests docs](https://2.python-requests.org/en/master/user/quickstart/#timeouts) for details)
 
 ### Rate Limits & Exponential Backoff
 The library will keep retrying if the request exceeds the rate limit or if there's any network related error.
