@@ -152,6 +152,8 @@ class Resource(DataObject):
                 raise ArgumentMissingError("Please pass 'uuid' parameter")
             if method in ['create', 'modify'] and 'data' not in kwargs:
                 raise ArgumentMissingError("Please pass 'data' parameter")
+            if method in ['destroy_all'] and 'data_source_uuid' not in kwargs and 'customer_uuid' not in kwargs:
+                raise ArgumentMissingError("Please pass 'data_source_uuid' and 'customer_uuid' parameters")
 
             pathTemp = Resource._expandPath(pathTemp, kwargs)
             # UUID is always path parameter only.
