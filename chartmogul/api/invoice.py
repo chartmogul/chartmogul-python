@@ -72,4 +72,5 @@ class Invoice(Resource):
 
 Invoice.all_any = Invoice._method('all', 'get', '/invoices')
 Invoice.destroy = Invoice._method('destroy', 'delete', '/invoices{/uuid}')
+Invoice.destroy_all = Invoice._method('destroy_all', 'delete', '/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices')
 Invoice.retrieve = Invoice._method('retrieve', 'get', '/invoices{/uuid}')

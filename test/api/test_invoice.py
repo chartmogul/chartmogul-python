@@ -377,6 +377,27 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
 
     @requests_mock.mock()
+    def test_delete_all(self, mock_requests):
+        mock_requests.register_uri(
+            'DELETE',
+            ("https://api.chartmogul.com/v1/data_sources"
+            "/ds_f466e33d-ff2b-4a11-8f85-417eb02157a7/customers"
+            "/cus_f466e33d-ff2b-4a11-8f85-417eb02157a7/invoices"),
+            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            headers={'Content-Type': 'application/json'},
+            status_code=204
+        )
+
+        config = Config("token", "secret")  # is actually checked in mock
+        result = Invoice.destroy_all(config,
+                             data_source_uuid='ds_f466e33d-ff2b-4a11-8f85-417eb02157a7',
+                             customer_uuid='cus_f466e33d-ff2b-4a11-8f85-417eb02157a7').get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertTrue(result is None)
+
+    @requests_mock.mock()
     def test_retrieve_invoice(self, mock_requests):
 
         mock_requests.register_uri(
