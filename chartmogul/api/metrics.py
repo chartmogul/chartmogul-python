@@ -10,13 +10,13 @@ class Summary(DataObject):
     class _Schema(Schema):
         current = fields.Number()
         previous = fields.Number()
-        percentage_change = fields.Number(load_from='percentage-change')
+        percentage_change = fields.Number(data_key='percentage-change')
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return Summary(**data)
 
-    _schema = _Schema(strict=True)
+    _schema = _Schema()
 
 
 class Metrics(Resource):
@@ -33,8 +33,8 @@ class Metrics(Resource):
         Fields are optional, so a subset present is good enough
         """
         date = fields.Date()
-        customer_churn_rate = fields.Number(load_from='customer-churn-rate')
-        mrr_churn_rate = fields.Number(load_from='mrr-churn-rate')
+        customer_churn_rate = fields.Number(data_key='customer-churn-rate')
+        mrr_churn_rate = fields.Number(data_key='mrr-churn-rate')
         ltv = fields.Number()
         customers = fields.Number()
         asp = fields.Number()
@@ -42,22 +42,22 @@ class Metrics(Resource):
         arr = fields.Number()
         mrr = fields.Number()
         # MRR only
-        mrr_new_business = fields.Number(load_from='mrr-new-business')
-        mrr_expansion = fields.Number(load_from='mrr-expansion')
-        mrr_contraction = fields.Number(load_from='mrr-contraction')
-        mrr_churn = fields.Number(load_from='mrr-churn')
-        mrr_reactivation = fields.Number(load_from='mrr-reactivation')
+        mrr_new_business = fields.Number(data_key='mrr-new-business')
+        mrr_expansion = fields.Number(data_key='mrr-expansion')
+        mrr_contraction = fields.Number(data_key='mrr-contraction')
+        mrr_churn = fields.Number(data_key='mrr-churn')
+        mrr_reactivation = fields.Number(data_key='mrr-reactivation')
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return Metrics(**data)
 
-    _schema = _Schema(strict=True)
+    _schema = _Schema()
 
     @classmethod
     def _many(cls, entries, **kwargs):
         if 'summary' in kwargs:
-            kwargs['summary'] = Summary._schema.load(kwargs['summary']).data
+            kwargs['summary'] = Summary._schema.load(kwargs['summary'])
         return cls._many_cls(entries, **kwargs)
 
 

@@ -19,7 +19,7 @@ class DataSource(Resource):
         system = fields.Str()
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return DataSource(**data)
 
-    _schema = _Schema(strict=True)
+    _schema = _Schema()

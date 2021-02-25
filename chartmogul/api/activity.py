@@ -13,17 +13,17 @@ class Activity(Resource):
 
     class _Schema(Schema):
         id = fields.Int()
-        activity_arr = fields.Number(load_from='activity-arr')
-        activity_mrr = fields.Number(load_from='activity-mrr')
-        activity_mrr_movement = fields.Number(load_from='activity-mrr-movement')
+        activity_arr = fields.Number(data_key='activity-arr')
+        activity_mrr = fields.Number(data_key='activity-mrr')
+        activity_mrr_movement = fields.Number(data_key='activity-mrr-movement')
         currency = fields.String()
-        currency_sign = fields.String(load_from='currency-sign')
+        currency_sign = fields.String(data_key='currency-sign')
         date = fields.DateTime()
         description = fields.String()
         type = fields.String()
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return Activity(**data)
 
-    _schema = _Schema(strict=True)
+    _schema = _Schema()

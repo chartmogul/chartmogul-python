@@ -14,7 +14,7 @@ class Attributes(Resource):
         custom = fields.Dict()
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return Attributes(**data)
 
-    _schema = _Schema(strict=True)
+    _schema = _Schema()
