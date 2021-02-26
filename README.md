@@ -29,10 +29,10 @@
 
 ## Installation
 
-This library requires Python 3.5 to 3.8. It was last tested against Python 2.7 in version 1.3.0.
+This library requires Python 3.5 to 3.9. It was last tested against Python 2.7 in version 1.3.0.
 
 ```sh
-pip install chartmogul
+pip3 install chartmogul
 ```
 
 ## Configuration
@@ -316,11 +316,11 @@ To work on the library:
 
 * Fork it
 * Create your feature branch (`git checkout -b my-new-feature`)
-* Install dependencies: `pip install -r requirements.txt && python setup.py develop`
+* Install dependencies: `pip3 install -r requirements.txt && python3 setup.py develop`
 * Fix bugs or add features. Make sure the changes pass the coding guidelines (use `pylama`).
 * Write tests for your new features. Use `requests_mock` for HTTP mocking.
-* Run tests with `python setup.py test` and check test coverage with:
-  * `pip install coverage`
+* Run tests with `python3 setup.py test` and check test coverage with:
+  * `pip3 install coverage`
   * `coverage run ./setup.py test`
   * `coverage html --include='chartmogul/*'`
   * Find results in `htmlcov/index.html`
@@ -342,7 +342,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/chartm
 Make sure that:
 1. you have prepared `~/.pypirc` with credentials,
 2. a higher version has been set in `chartmogul/__init__.py`,
-3. Test & build package `python setup.py test sdist`
+3. Test & build package `python3 setup.py test sdist`
 4. release works `twine upload --repository-url https://test.pypi.org/legacy/ dist/*`,
 5. release to production `twine upload dist/*`,
 
