@@ -14,11 +14,11 @@ class Tags(Resource):
         tags = fields.List(fields.String())
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return Tags(**data)
 
     _customers = namedtuple('Customers', ['entries'])
-    _schema = _Schema(strict=True)
+    _schema = _Schema()
 
     @classmethod
     def _load(cls, response):
@@ -31,7 +31,7 @@ class Tags(Resource):
             return None
         jsonObj = response.json()
         if 'entries' in jsonObj:
-            customers = Customer._schema.load(jsonObj['entries'], many=True).data
+            customers = Customer._schema.load(jsonObj['entries'], many=True)
             return cls._customers(customers)
         else:
-            return cls._schema.load(jsonObj).data
+            return cls._schema.load(jsonObj)

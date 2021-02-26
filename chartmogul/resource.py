@@ -1,12 +1,14 @@
-import requests
+from builtins import str
+from datetime import date, datetime
 from json import dumps
+
+import requests
 from promise import Promise
 from uritemplate import URITemplate
-from .retry_request import requests_retry_session
-from .errors import APIError, ConfigurationError, ArgumentMissingError, annotateHTTPError
+
 from .api.config import Config
-from datetime import datetime, date
-from builtins import str
+from .errors import APIError, ArgumentMissingError, ConfigurationError, annotateHTTPError
+from .retry_request import requests_retry_session
 
 """
 HTTP verb mapping. Based on nodejs library.
@@ -96,10 +98,10 @@ class Resource(DataObject):
     def _loadJSON(cls, jsonObj):
         # has load_many capability & is many entries result?
         if '_root_key' in dir(cls) is not None and cls._root_key in jsonObj:
-            return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True).data,
+            return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True),
                              **{key: jsonObj[key] for key in LIST_PARAMS if key in jsonObj})
         else:
-            return cls._schema.load(jsonObj).data
+            return cls._schema.load(jsonObj)
 
     @classmethod
     def _preProcessParams(cls, params):

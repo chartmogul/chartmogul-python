@@ -20,7 +20,7 @@ class Address(DataObject):
         state = fields.String(allow_none=True)
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return Address(**data)
 
 
@@ -56,21 +56,21 @@ class Customer(Resource):
         external_ids = fields.List(fields.String())
         data_source_uuids = fields.List(fields.String())
         status = fields.String()
-        customer_since = fields.DateTime(load_from="customer-since", allow_none=True)
+        customer_since = fields.DateTime(data_key="customer-since", allow_none=True)
         mrr = fields.Number()
         arr = fields.Number()
-        billing_system_url = fields.String(load_from="billing-system-url", allow_none=True)
-        chartmogul_url = fields.String(load_from="chartmogul-url")
-        billing_system_type = fields.String(load_from="billing-system-type")
+        billing_system_url = fields.String(data_key="billing-system-url", allow_none=True)
+        chartmogul_url = fields.String(data_key="chartmogul-url")
+        billing_system_type = fields.String(data_key="billing-system-type")
         currency = fields.String()
-        currency_sign = fields.String(load_from="currency-sign")
+        currency_sign = fields.String(data_key="currency-sign")
         address = fields.Nested(Address._Schema, allow_none=True)
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return Customer(**data)
 
-    _schema = _Schema(strict=True)
+    _schema = _Schema()
 
 
 Customer.search = Customer._method('all', 'get', '/customers/search')

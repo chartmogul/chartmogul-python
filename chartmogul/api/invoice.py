@@ -24,9 +24,10 @@ class LineItem(DataObject):
         tax_amount_in_cents = fields.Int()
         transaction_fees_in_cents = fields.Int()
         account_code = fields.String(allow_none=True)
+        description = fields.String(allow_none=True)
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return LineItem(**data)
 
 
@@ -54,10 +55,10 @@ class Invoice(Resource):
         transactions = fields.Nested(Transaction._Schema, many=True)
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return Invoice(**data)
 
-    _schema = _Schema(strict=True)
+    _schema = _Schema()
 
     @classmethod
     def all(cls, config, **kwargs):

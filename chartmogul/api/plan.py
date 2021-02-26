@@ -20,7 +20,7 @@ class Plan(Resource):
         external_id = fields.String()
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return Plan(**data)
 
-    _schema = _Schema(strict=True)
+    _schema = _Schema()

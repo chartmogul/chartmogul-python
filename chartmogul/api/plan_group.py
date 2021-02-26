@@ -18,10 +18,10 @@ class PlanGroup(Resource):
         plans_count = fields.Int()
 
         @post_load
-        def make(self, data):
+        def make(self, data, **kwargs):
             return PlanGroup(**data)
 
-    _schema = _Schema(strict=True)
+    _schema = _Schema()
 
     @classmethod
     def all(cls, config, **kwargs):
