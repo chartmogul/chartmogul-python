@@ -15,6 +15,7 @@ from .api.plan_group import PlanGroup
 from .api.subscription import Subscription
 from .api.tags import Tags
 from .api.transaction import Transaction
+from .api.account import Account
 
 # Deprecated
 import imp
@@ -30,7 +31,7 @@ Provides convenient Python bindings for ChartMogul's API.
 """
 
 __title__ = 'chartmogul'
-__version__ = '1.5.0'
+__version__ = '1.5.1'
 __build__ = 0x000000
 __author__ = 'ChartMogul Ltd'
 __license__ = 'MIT'

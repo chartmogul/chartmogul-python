@@ -76,6 +76,14 @@ test.api.test_tags module
     :undoc-members:
     :show-inheritance:
 
+test.api.test_account module
+-------------------------
+
+.. automodule:: test.api.test_account
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

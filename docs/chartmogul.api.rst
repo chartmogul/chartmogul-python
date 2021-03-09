@@ -52,6 +52,14 @@ chartmogul.api.plan_group module
     :undoc-members:
     :show-inheritance:
 
+chartmogul.api.account module
+--------------------------
+
+.. automodule:: chartmogul.api.account
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 Module contents
 ---------------

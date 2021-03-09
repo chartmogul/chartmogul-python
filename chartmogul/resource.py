@@ -138,6 +138,16 @@ class Resource(DataObject):
 
     @classmethod
     def _method(cls, method, http_verb, path=None):
+        def validate_arguments(**kwargs):
+            # This enforces user to pass argument, otherwise we could call
+            # wrong URL.
+            if method in ['destroy', 'cancel', 'retrieve', 'update'] and 'uuid' not in kwargs:
+                raise ArgumentMissingError("Please pass 'uuid' parameter")
+            if method in ['create', 'modify'] and 'data' not in kwargs:
+                raise ArgumentMissingError("Please pass 'data' parameter")
+            if method in ['destroy_all'] and 'data_source_uuid' not in kwargs and 'customer_uuid' not in kwargs:
+                raise ArgumentMissingError("Please pass 'data_source_uuid' and 'customer_uuid' parameters")
+
         @classmethod
         def fc(cls, config, **kwargs):
             if config is None or not isinstance(config, Config):
@@ -148,14 +158,8 @@ class Resource(DataObject):
             if pathTemp is None:
                 pathTemp = cls._path
 
-            # This enforces user to pass argument, otherwise we could call
-            # wrong URL.
-            if method in ['destroy', 'cancel', 'retrieve', 'update'] and 'uuid' not in kwargs:
-                raise ArgumentMissingError("Please pass 'uuid' parameter")
-            if method in ['create', 'modify'] and 'data' not in kwargs:
-                raise ArgumentMissingError("Please pass 'data' parameter")
-            if method in ['destroy_all'] and 'data_source_uuid' not in kwargs and 'customer_uuid' not in kwargs:
-                raise ArgumentMissingError("Please pass 'data_source_uuid' and 'customer_uuid' parameters")
+            if cls.__name__ != 'Account':
+                validate_arguments(**kwargs)
 
             pathTemp = Resource._expandPath(pathTemp, kwargs)
             # UUID is always path parameter only.
