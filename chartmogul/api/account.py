@@ -22,5 +22,7 @@ class Account(Resource):
 
     _schema = _Schema()
 
-
-Account.retrieve = Account._method('retrieve', 'get', '/account')
+    @classmethod
+    def _validate_arguments(cls, method, kwargs):
+        # no need for uuid validation on account
+        return
