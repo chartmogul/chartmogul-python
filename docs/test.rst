@@ -44,6 +44,15 @@ test.test_plan_group module
     :undoc-members:
     :show-inheritance:
 
+test.test_account module
+---------------------
+
+.. automodule:: test.test_account
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+
 Module contents
 ---------------
 

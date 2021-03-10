@@ -276,6 +276,14 @@ chartmogul.Activity.all(config, uuid='')
 chartmogul.Subscription.all(config, uuid='')
 ```
 
+### Account
+
+Available methods:
+
+```python
+chartmogul.Account.retrieve(config)
+```
+
 
 ### Errors
 
