@@ -50,7 +50,8 @@ requestData = {
                     # "2015-11-05 00:14:23",
                     "date": datetime(2015, 11, 5, 0, 4, 3),
                     "type": "payment",
-                    "result": "successful"
+                    "result": "successful",
+                    "amount_in_cents": 7500
                 }
             ]
         }
@@ -92,7 +93,8 @@ requestSerialized = {
                 {
                     "date": "2015-11-05T00:04:03",
                     "type": "payment",
-                    "result": "successful"
+                    "result": "successful",
+                    "amount_in_cents": 7500
                 }
             ]
         }
@@ -144,7 +146,8 @@ responseData = {
                     "external_id": None,
                     "type": "payment",
                     "date": "2015-11-05T00:04:03.000Z",
-                    "result": "successful"
+                    "result": "successful", 
+                    "amount_in_cents": 7500
                 }
             ]
         }
