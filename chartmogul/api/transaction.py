@@ -1,6 +1,5 @@
 from marshmallow import Schema, fields, post_load
 from ..resource import Resource
-from collections import namedtuple
 
 
 class Transaction(Resource):
@@ -15,7 +14,7 @@ class Transaction(Resource):
         type = fields.String()
         date = fields.DateTime()
         result = fields.String()
-        amount_in_cents = fields.Int()
+        amount_in_cents = fields.Int(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
