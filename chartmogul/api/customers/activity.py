@@ -1,9 +1,9 @@
-from marshmallow import Schema, fields, post_load
-from ..resource import Resource
+from marshmallow import Schema, fields, post_load, EXCLUDE
+from chartmogul.resource import Resource
 from collections import namedtuple
 
 
-class Activity(Resource):
+class CustomerActivity(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#list-customer-subscriptions
     """
@@ -21,9 +21,10 @@ class Activity(Resource):
         date = fields.DateTime()
         description = fields.String()
         type = fields.String()
+        subscription_external_id = fields.String(data_key='subscription-external-id')
 
         @post_load
         def make(self, data, **kwargs):
-            return Activity(**data)
+            return CustomerActivity(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)

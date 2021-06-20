@@ -1,9 +1,9 @@
-from marshmallow import Schema, fields, post_load
-from ..resource import Resource
+from marshmallow import Schema, fields, post_load, EXCLUDE
+from chartmogul.resource import Resource
 from collections import namedtuple
 
 
-class Subscription(Resource):
+class CustomerSubscription(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#list-customer-subscriptions
     https://dev.chartmogul.com/v1.0/reference#list-a-customers-subscriptions
@@ -37,9 +37,9 @@ class Subscription(Resource):
 
         @post_load
         def make(self, data, **kwargs):
-            return Subscription(**data)
+            return CustomerSubscription(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)
 
     # /import has different paging
     @classmethod
@@ -51,9 +51,9 @@ class Subscription(Resource):
                          jsonObj["total_pages"],
                          jsonObj["customer_uuid"])
         else:
-            return super(Subscription, cls)._loadJSON(jsonObj)
+            return super(CustomerSubscription, cls)._loadJSON(jsonObj)
 
 # /import namespace
-Subscription.list_imported = Subscription._method('list_imported', 'get', "/import/customers{/uuid}/subscriptions")
-Subscription.cancel = Subscription._method('cancel', 'patch', "/import/subscriptions{/uuid}")
-Subscription.modify = Subscription._method('modify', 'patch', "/import/subscriptions{/uuid}")
+CustomerSubscription.list_imported = CustomerSubscription._method('list_imported', 'get', "/import/customers{/uuid}/subscriptions")
+CustomerSubscription.cancel = CustomerSubscription._method('cancel', 'patch', "/import/subscriptions{/uuid}")
+CustomerSubscription.modify = CustomerSubscription._method('modify', 'patch', "/import/subscriptions{/uuid}")
