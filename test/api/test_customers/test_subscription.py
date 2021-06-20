@@ -4,7 +4,7 @@ from datetime import datetime
 import requests_mock
 
 from chartmogul import Config
-from chartmogul import Subscription
+from chartmogul import CustomerSubscription
 
 
 class SubscriptionsTestCase(unittest.TestCase):
@@ -31,7 +31,7 @@ class SubscriptionsTestCase(unittest.TestCase):
             }
         )
         config = Config("token", "secret")  # is actually checked in mock
-        result = Subscription.cancel(config,
+        result = CustomerSubscription.cancel(config,
                                      uuid="some_uuid",
                                      data={
                                          "cancelled_at": datetime(2016, 1, 15, 0, 0, 0)
@@ -41,7 +41,7 @@ class SubscriptionsTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), {
             "cancelled_at": "2016-01-15T00:00:00"})
-        self.assertTrue(isinstance(result, Subscription))
+        self.assertTrue(isinstance(result, CustomerSubscription))
         self.assertEqual(result.uuid, "some_uuid")
 
     @requests_mock.mock()
@@ -63,15 +63,15 @@ class SubscriptionsTestCase(unittest.TestCase):
             }
         )
         config = Config("token", "secret")  # is actually checked in mock
-        result = Subscription.modify(config, uuid="some_uuid", data={
+        result = CustomerSubscription.modify(config, uuid="some_uuid", data={
             "cancellation_dates": []}).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(),
                          {"cancellation_dates": []})
-        self.assertEqual(result.__class__, Subscription)
-        self.assertEqual(result.__dict__, Subscription(**{
+        self.assertEqual(result.__class__, CustomerSubscription)
+        self.assertEqual(result.__dict__, CustomerSubscription(**{
             "cancellation_dates": [],
             "customer_uuid": u"cus_f466e33d-ff2b-4a11-8f85-417eb02157a7",
             "data_source_uuid": u"ds_fef05d54-47b4-431b-aed2-eb6b9e545430",
@@ -106,9 +106,9 @@ class SubscriptionsTestCase(unittest.TestCase):
                 }
         )
         config = Config("token", "secret")  # is actually checked in mock
-        result = Subscription.list_imported(config, uuid="some_uuid").get()
+        result = CustomerSubscription.list_imported(config, uuid="some_uuid").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
-        self.assertEqual(result.__class__.__name__, Subscription._many.__name__)
+        self.assertEqual(result.__class__.__name__, CustomerSubscription._many.__name__)
         self.assertEqual(result.customer_uuid, "some_uuid")
