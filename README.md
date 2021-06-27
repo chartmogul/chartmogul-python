@@ -272,8 +272,9 @@ chartmogul.Metrics.customer_churn_rate(config, data={})
 chartmogul.Metrics.mrr_churn_rate(config, data={})
 chartmogul.Metrics.ltv(config, data={})
 
-chartmogul.Activity.all(config, uuid='')
-chartmogul.Subscription.all(config, uuid='')
+chartmogul.CustomerActivity.all(config, uuid='') # >= 2.0.0
+chartmogul.CustomerSubscription.all(config, uuid='') # >= 2.0.0
+chartmogul.Activity.all(config) # >= 2.0.0
 ```
 
 ### Account
