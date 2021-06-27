@@ -274,7 +274,7 @@ chartmogul.Metrics.ltv(config, data={})
 
 chartmogul.CustomerActivity.all(config, uuid='') # >= 2.0.0
 chartmogul.CustomerSubscription.all(config, uuid='') # >= 2.0.0
-chartmogul.Activity.all(config) # >= 2.0.0
+chartmogul.Activity.all(config, start_date='2020-06-02T00:00:00Z') # >= 2.0.0
 ```
 
 ### Account
