@@ -257,7 +257,7 @@ chartmogul.Metrics.all(config,
                        interval='month',
                        geo='GB',
                        plans='Bronze Plan'
-})
+)
 chartmogul.Metrics.mrr(config,
                        start_date='2015-01-01',
                        end_date='2015-11-24',
@@ -272,9 +272,9 @@ chartmogul.Metrics.customer_churn_rate(config, data={})
 chartmogul.Metrics.mrr_churn_rate(config, data={})
 chartmogul.Metrics.ltv(config, data={})
 
-chartmogul.CustomerActivity.all(config, uuid='') # >= 2.0.0
-chartmogul.CustomerSubscription.all(config, uuid='') # >= 2.0.0
-chartmogul.Activity.all(config, start_date='2020-06-02T00:00:00Z') # >= 2.0.0
+chartmogul.CustomerActivity.all(config, uuid='')
+chartmogul.CustomerSubscription.all(config, uuid='')
+chartmogul.Activity.all(config, start_date='2020-06-02T00:00:00Z')
 ```
 
 ### Account
