@@ -53,6 +53,7 @@ class CustomerSubscription(Resource):
         else:
             return super(CustomerSubscription, cls)._loadJSON(jsonObj)
 
+
 # /import namespace
 CustomerSubscription.list_imported = CustomerSubscription._method('list_imported', 'get', "/import/customers{/uuid}/subscriptions")
 CustomerSubscription.cancel = CustomerSubscription._method('cancel', 'patch', "/import/subscriptions{/uuid}")

@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, post_load
-from ..resource import Resource, DataObject
+from ..resource import Resource
+
 
 class Attributes(Resource):
     """

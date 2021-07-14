@@ -34,4 +34,5 @@ class PlanGroup(Resource):
         else:
             return cls.all_any(config, **kwargs)
 
+
 PlanGroup.all_any = PlanGroup._method('all', 'get', '/plan_groups')

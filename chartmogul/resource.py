@@ -1,13 +1,11 @@
-from builtins import str
 from datetime import date, datetime
 from json import dumps
 
-import requests
 from promise import Promise
 from uritemplate import URITemplate
 
 from .api.config import Config
-from .errors import APIError, ArgumentMissingError, ConfigurationError, annotateHTTPError
+from .errors import ArgumentMissingError, ConfigurationError, annotateHTTPError
 from .retry_request import requests_retry_session
 
 """
@@ -98,8 +96,8 @@ class Resource(DataObject):
     def _loadJSON(cls, jsonObj):
         # has load_many capability & is many entries result?
         if '_root_key' in dir(cls) is not None and cls._root_key in jsonObj:
-            return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True),
-                             **{key: jsonObj[key] for key in LIST_PARAMS if key in jsonObj})
+            return cls._many(cls._schema.load(jsonObj[cls._root_key], many=True), **{
+                             key: jsonObj[key] for key in LIST_PARAMS if key in jsonObj})
         else:
             return cls._schema.load(jsonObj)
 
@@ -121,15 +119,22 @@ class Resource(DataObject):
             if data is not None:
                 data = dumps(data, default=json_serial)
 
-        return Promise(lambda resolve, _:
-            resolve(getattr(requests_retry_session(config.max_retries, config.backoff_factor), http_verb)(
-                config.uri + path,
-                data=data,
-                headers={'content-type': 'application/json'},
-                params=params,
-                auth=config.auth,
-                timeout=config.request_timeout)
-            )).then(cls._load).catch(annotateHTTPError)
+        return Promise(
+            lambda resolve,
+            _: resolve(
+                getattr(
+                    requests_retry_session(
+                        config.max_retries,
+                        config.backoff_factor),
+                    http_verb)(
+                    config.uri + path,
+                    data=data,
+                    headers={
+                        'content-type': 'application/json'},
+                    params=params,
+                    auth=config.auth,
+                    timeout=config.request_timeout))).then(
+            cls._load).catch(annotateHTTPError)
 
     @classmethod
     def _expandPath(cls, path, kwargs):
@@ -140,20 +145,27 @@ class Resource(DataObject):
     def _validate_arguments(cls, method, kwargs):
         # This enforces user to pass argument, otherwise we could call
         # wrong URL.
-        if method in ['destroy', 'cancel', 'retrieve', 'update'] and 'uuid' not in kwargs:
+        if method in [
+            'destroy',
+            'cancel',
+            'retrieve',
+                'update'] and 'uuid' not in kwargs:
             raise ArgumentMissingError("Please pass 'uuid' parameter")
         if method in ['create', 'modify'] and 'data' not in kwargs:
             raise ArgumentMissingError("Please pass 'data' parameter")
-        if method in ['destroy_all'] and 'data_source_uuid' not in kwargs and 'customer_uuid' not in kwargs:
-            raise ArgumentMissingError("Please pass 'data_source_uuid' and 'customer_uuid' parameters")
+        if method in [
+                'destroy_all'] and 'data_source_uuid' not in kwargs and 'customer_uuid' not in kwargs:
+            raise ArgumentMissingError(
+                "Please pass 'data_source_uuid' and 'customer_uuid' parameters")
 
     @classmethod
     def _method(cls, method, http_verb, path=None):
         @classmethod
         def fc(cls, config, **kwargs):
             if config is None or not isinstance(config, Config):
-                raise ConfigurationError("First argument should be"
-                                         " instance of chartmogul.Config class!")
+                raise ConfigurationError(
+                    "First argument should be"
+                    " instance of chartmogul.Config class!")
 
             pathTemp = path  # due to Python closure
             if pathTemp is None:
@@ -168,6 +180,7 @@ class Resource(DataObject):
 
             return cls._request(config, method, http_verb, pathTemp, **kwargs)
         return fc
+
 
 def _add_method(cls, method, http_verb, path=None):
     """
