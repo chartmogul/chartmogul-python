@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, post_load
-from ..resource import Resource, DataObject, _add_method
+from ..resource import Resource
 from .customer import Customer
 from collections import namedtuple
 

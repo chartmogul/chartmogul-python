@@ -1,0 +1,76 @@
+name: Run specs and generate Code Climate report
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  lint:
+    name: "Linting with Flake8"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          flake8 ./chartmogul
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+       python-versions: ["3.5", "3.6", "3.7", "3.8", "3.9"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-versions }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-versions }}
+      - name: Cache pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel coverage
+          pip install -r requirements.txt
+      - name: Set ENV for codeclimate (pull_request)
+        run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/$GITHUB_HEAD_REF:refs/remotes/origin/$GITHUB_HEAD_REF
+          echo "GIT_BRANCH=$GITHUB_HEAD_REF" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHA=$(git rev-parse origin/$GITHUB_HEAD_REF)" >> $GITHUB_ENV
+        if: github.event_name == 'pull_request'
+      - name: Set ENV for codeclimate (push)
+        run: |
+          echo "GIT_BRANCH=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          echo "GIT_COMMIT_SHA=$GITHUB_SHA" >> $GITHUB_ENV
+        if: github.event_name == 'push'
+      - name: Install Code Climate test report
+        run: |
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
+      - name: Run tests
+        run: coverage run ./setup.py test && coverage xml -i --include='chartmogul/*'
+      - name: Send Report to Code Climate
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        if: ${{ success() }}
+        run: ./cc-test-reporter after-build -t coverage.py
+

@@ -1,6 +1,5 @@
 from marshmallow import Schema, fields, post_load
 from ..resource import Resource, _add_method
-from collections import namedtuple
 
 
 class Ping(Resource):

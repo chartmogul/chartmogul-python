@@ -6,7 +6,7 @@ requires Customer class and simple dict/array data.
 Validation is done on server.
 """
 from marshmallow import Schema, fields, post_load
-from ..resource import Resource, DataObject, _add_method
+from ..resource import DataObject, Resource
 from collections import namedtuple
 from .attributes import Attributes
 
