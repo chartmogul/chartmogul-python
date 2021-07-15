@@ -3,8 +3,7 @@ from datetime import datetime
 
 import requests_mock
 
-from chartmogul import Config
-from chartmogul import CustomerActivity
+from chartmogul import Config, CustomerActivity
 
 
 class CustomerActivitiesTestCase(unittest.TestCase):
