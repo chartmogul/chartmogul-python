@@ -5,9 +5,10 @@ from collections import namedtuple
 
 class ActivitiesExport(Resource):
     """
-    https://dev.chartmogul.com/v1.0/reference#list-customer-subscriptions
+    https://dev.chartmogul.com/v1.0/reference#
     """
     _path = "/activities_export"
+    _many = namedtuple('ActivitiesExport', ["id", "status", "file_url", "params", "expires_at", "created_at"])
 
     class _Schema(Schema):
         # Create
