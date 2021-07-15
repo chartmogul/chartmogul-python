@@ -39,5 +39,6 @@ class ActivitiesExport(Resource):
         if method in ['create'] and 'data' not in kwargs:
             raise ArgumentMissingError("Please pass 'data' parameter")
 
+
 ActivitiesExport.create = ActivitiesExport._method('create', 'post', '/activities_export')
 ActivitiesExport.retrieve = ActivitiesExport._method('retrieve', 'get', '/activities_export/{id}')
