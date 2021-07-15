@@ -17,6 +17,7 @@ from .api.tags import Tags
 from .api.transaction import Transaction
 from .api.account import Account
 from .api.activity import Activity
+from .api.activities_export import ActivitiesExport
 
 # Deprecated
 import imp
@@ -32,7 +33,7 @@ Provides convenient Python bindings for ChartMogul's API.
 """
 
 __title__ = 'chartmogul'
-__version__ = '2.0.1'
+__version__ = '2.1.0'
 __build__ = 0x000000
 __author__ = 'ChartMogul Ltd'
 __license__ = 'MIT'
