@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource
+from chartmogul import ArgumentMissingError
 from collections import namedtuple
 
 
