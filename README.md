@@ -277,7 +277,7 @@ chartmogul.CustomerSubscription.all(config, uuid='')
 chartmogul.Activity.all(config, start_date='2020-06-02T00:00:00Z')
 
 chartmogul.ActivitiesExport.create(config,data={})
-chartmogul.ActivitiesExport.create(config, data={'type':'churn', 'start_date':'2020-06-02T00:00:00Z'})
+chartmogul.ActivitiesExport.create(config, data={'type':'churn', 'start-date':'2020-06-02T00:00:00Z'})
 chartmogul.ActivitiesExport.retrieve(config, id='febbd467-40d4-4f99-a647-3f47333453db')
 ```
 
