@@ -1,7 +1,18 @@
-from marshmallow import Schema, fields, post_load, EXCLUDE
-from ..resource import Resource
+from marshmallow import Schema, fields, post_load, EXCLUDE, INCLUDE
+from ..resource import Resource, DataObject
 from chartmogul import ArgumentMissingError
 from collections import namedtuple
+
+
+class ExportParams(DataObject):
+
+    class _Schema(Schema):
+        kind = fields.String()
+        params = fields.Dict(allow_none=True)
+
+        @post_load
+        def make(self, data, **kwargs):
+            return ExportParams(**data)
 
 
 class ActivitiesExport(Resource):
@@ -9,7 +20,7 @@ class ActivitiesExport(Resource):
     https://dev.chartmogul.com/v1.0/reference#
     """
     _path = "/activities_export"
-    _many = namedtuple('ActivitiesExport', ["id", "status", "file_url", "params", "expires_at", "created_at"])
+    _many = namedtuple('ActivitiesExport', ["id", "status", "file_url", "expires_at", "created_at"])
 
     class _Schema(Schema):
         # Create
@@ -21,7 +32,7 @@ class ActivitiesExport(Resource):
         id = fields.String()
         status = fields.String()
         file_url = fields.String(allow_none=True)
-        params = fields.Dict(allow_none=True)
+        params = fields.Nested(ExportParams._Schema(unknown=INCLUDE), allow_none=True)
         expires_at = fields.DateTime(allow_none=True)
         created_at = fields.DateTime()
 
