@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource, DataObject
 from .transaction import Transaction
 from collections import namedtuple
@@ -21,8 +21,10 @@ class LineItem(DataObject):
         quantity = fields.Int()
         discount_code = fields.String(allow_none=True)
         discount_amount_in_cents = fields.Int()
+        discount_description = fields.String(allow_none=True)
         tax_amount_in_cents = fields.Int()
         transaction_fees_in_cents = fields.Int()
+        transaction_fees_currency = fields.String(allow_none=True)
         account_code = fields.String(allow_none=True)
         description = fields.String(allow_none=True)
 
@@ -51,14 +53,14 @@ class Invoice(Resource):
         date = fields.DateTime()
         due_date = fields.DateTime(allow_none=True)
 
-        line_items = fields.Nested(LineItem._Schema, many=True)
-        transactions = fields.Nested(Transaction._Schema, many=True)
+        line_items = fields.Nested(LineItem._Schema, many=True, unknown=EXCLUDE)
+        transactions = fields.Nested(Transaction._Schema, many=True, unknown=EXCLUDE)
 
         @post_load
         def make(self, data, **kwargs):
             return Invoice(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)
 
     @classmethod
     def all(cls, config, **kwargs):

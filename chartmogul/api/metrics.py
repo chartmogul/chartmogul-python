@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource, DataObject, _add_method
 from collections import namedtuple
 
@@ -16,7 +16,7 @@ class Summary(DataObject):
         def make(self, data, **kwargs):
             return Summary(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)
 
 
 class Metrics(Resource):

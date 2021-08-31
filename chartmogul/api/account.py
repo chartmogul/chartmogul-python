@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource
 
 
@@ -18,7 +18,7 @@ class Account(Resource):
         def make(self, data, **kwargs):
             return Account(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)
 
     @classmethod
     def _validate_arguments(cls, method, kwargs):

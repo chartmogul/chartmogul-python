@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource, _add_method
 
 
@@ -15,7 +15,7 @@ class Ping(Resource):
         def make(self, data, **kwargs):
             return Ping(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)
 
 
 _add_method(Ping, "ping", "get")

@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource
 from collections import namedtuple
 
@@ -23,4 +23,4 @@ class PlanGroupPlans(Resource):
         def make(self, data, **kwargs):
             return PlanGroupPlans(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)
