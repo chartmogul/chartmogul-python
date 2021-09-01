@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource
 from .customer import Customer
 from collections import namedtuple
@@ -18,7 +18,7 @@ class Tags(Resource):
             return Tags(**data)
 
     _customers = namedtuple('Customers', ['entries'])
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)
 
     @classmethod
     def _load(cls, response):

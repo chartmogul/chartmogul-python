@@ -42,7 +42,10 @@ requestData = {
                     "quantity": 1,
                     "discount_code": "PSO86",
                     "discount_amount_in_cents": 500,
-                    "tax_amount_in_cents": 450
+                    "tax_amount_in_cents": 450,
+                    "discount_description": "Special 20 % discount",
+                    "transaction_fees_in_cents": 50,
+                    "transaction_fees_currency": "CZK"
                 }
             ],
             "transactions": [
@@ -86,7 +89,10 @@ requestSerialized = {
                     "quantity": 1,
                     "discount_code": "PSO86",
                     "discount_amount_in_cents": 500,
-                    "tax_amount_in_cents": 450
+                    "tax_amount_in_cents": 450,
+                    "discount_description": "Special 20 % discount",
+                    "transaction_fees_in_cents": 50,
+                    "transaction_fees_currency": "CZK"
                 }
             ],
             "transactions": [
@@ -138,6 +144,9 @@ responseData = {
                     "tax_amount_in_cents": 450,
                     "account_code": None,
                     "plan_uuid": None,
+                    "discount_description": "Special 20 % discount",
+                    "transaction_fees_in_cents": 50,
+                    "transaction_fees_currency": "CZK"
                 }
             ],
             "transactions": [
@@ -146,7 +155,7 @@ responseData = {
                     "external_id": None,
                     "type": "payment",
                     "date": "2015-11-05T00:04:03.000Z",
-                    "result": "successful", 
+                    "result": "successful",
                     "amount_in_cents": 7500
                 }
             ]
@@ -191,7 +200,10 @@ newInvoiceListExample = """
           "discount_code": "PSO86",
           "discount_amount_in_cents": 500,
           "tax_amount_in_cents": 450,
-          "account_code": null
+          "account_code": null,
+          "discount_description": "Special 20 % discount",
+          "transaction_fees_in_cents": 50,
+          "transaction_fees_currency": "CZK"
         }
       ],
       "transactions": [
@@ -244,7 +256,10 @@ retrieveInvoiceExample = """
       "discount_code": "PSO86",
       "discount_amount_in_cents": 500,
       "tax_amount_in_cents": 450,
-      "account_code": null
+      "account_code": null,
+      "discount_description": "Special 20 % discount",
+      "transaction_fees_in_cents": 50,
+      "transaction_fees_currency": "CZK"
     }
   ],
   "transactions": [

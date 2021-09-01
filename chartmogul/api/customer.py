@@ -5,7 +5,7 @@ proper types (eg. parsed dates instead of strings). Creating customer only
 requires Customer class and simple dict/array data.
 Validation is done on server.
 """
-from marshmallow import Schema, fields, post_load
+from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import DataObject, Resource
 from collections import namedtuple
 from .attributes import Attributes
@@ -48,7 +48,7 @@ class Customer(Resource):
         free_trial_started_at = fields.DateTime(allow_none=True)
 
         # Things that differ between create/update & retrieve/list
-        attributes = fields.Nested(Attributes._Schema)
+        attributes = fields.Nested(Attributes._Schema, unknown=EXCLUDE)
 
         # Retrieve/List only
         id = fields.Int()
@@ -64,13 +64,13 @@ class Customer(Resource):
         billing_system_type = fields.String(data_key="billing-system-type")
         currency = fields.String()
         currency_sign = fields.String(data_key="currency-sign")
-        address = fields.Nested(Address._Schema, allow_none=True)
+        address = fields.Nested(Address._Schema, allow_none=True, unknown=EXCLUDE)
 
         @post_load
         def make(self, data, **kwargs):
             return Customer(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)
 
 
 Customer.search = Customer._method('all', 'get', '/customers/search')
