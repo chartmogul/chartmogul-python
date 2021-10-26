@@ -45,7 +45,8 @@ requestData = {
                     "tax_amount_in_cents": 450,
                     "discount_description": "Special 20 % discount",
                     "transaction_fees_in_cents": 50,
-                    "transaction_fees_currency": "CZK"
+                    "transaction_fees_currency": "CZK",
+                    "event_order": 5
                 }
             ],
             "transactions": [
@@ -92,7 +93,8 @@ requestSerialized = {
                     "tax_amount_in_cents": 450,
                     "discount_description": "Special 20 % discount",
                     "transaction_fees_in_cents": 50,
-                    "transaction_fees_currency": "CZK"
+                    "transaction_fees_currency": "CZK",
+                    "event_order": 5
                 }
             ],
             "transactions": [
@@ -146,7 +148,8 @@ responseData = {
                     "plan_uuid": None,
                     "discount_description": "Special 20 % discount",
                     "transaction_fees_in_cents": 50,
-                    "transaction_fees_currency": "CZK"
+                    "transaction_fees_currency": "CZK",
+                    "event_order": 5
                 }
             ],
             "transactions": [
@@ -203,7 +206,8 @@ newInvoiceListExample = """
           "account_code": null,
           "discount_description": "Special 20 % discount",
           "transaction_fees_in_cents": 50,
-          "transaction_fees_currency": "CZK"
+          "transaction_fees_currency": "CZK",
+          "event_order": 5
         }
       ],
       "transactions": [
@@ -259,7 +263,8 @@ retrieveInvoiceExample = """
       "account_code": null,
       "discount_description": "Special 20 % discount",
       "transaction_fees_in_cents": 50,
-      "transaction_fees_currency": "CZK"
+      "transaction_fees_currency": "CZK",
+      "event_order": 5
     }
   ],
   "transactions": [

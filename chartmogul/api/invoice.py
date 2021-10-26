@@ -27,6 +27,7 @@ class LineItem(DataObject):
         transaction_fees_currency = fields.String(allow_none=True)
         account_code = fields.String(allow_none=True)
         description = fields.String(allow_none=True)
+        event_order = fields.Int(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
