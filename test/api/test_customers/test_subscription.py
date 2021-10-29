@@ -18,7 +18,7 @@ class SubscriptionsTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'PATCH',
             "https://api.chartmogul.com/v1/import/subscriptions/some_uuid",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json={
                 "uuid": "some_uuid",
@@ -50,7 +50,7 @@ class SubscriptionsTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'PATCH',
             "https://api.chartmogul.com/v1/import/subscriptions/some_uuid",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json={
                 "uuid": "some_uuid",
@@ -86,7 +86,7 @@ class SubscriptionsTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'GET',
             "https://api.chartmogul.com/v1/import/customers/some_uuid/subscriptions",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json={
                   "customer_uuid": "some_uuid",

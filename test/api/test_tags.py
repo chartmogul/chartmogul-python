@@ -21,7 +21,7 @@ class TagsTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'POST',
             "https://api.chartmogul.com/v1/customers/UUID/attributes/tags",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=expected_dict
         )

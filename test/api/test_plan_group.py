@@ -24,7 +24,7 @@ class PlanGroupTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'POST',
             "https://api.chartmogul.com/v1/plan_groups",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=expected_plan_group_dict
         )
@@ -49,7 +49,7 @@ class PlanGroupTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'GET',
             "https://api.chartmogul.com/v1/plan_groups/whatever_uuid",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=expected_plan_group_dict
         )
@@ -91,7 +91,7 @@ class PlanGroupTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'GET',
             "https://api.chartmogul.com/v1/plan_groups/whatever_uuid/plans",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=expected_plans
         )
@@ -166,7 +166,7 @@ class PlanGroupTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'PATCH',
             "https://api.chartmogul.com/v1/plan_groups/whatever_uuid",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=expected_plan_group_dict
         )
@@ -192,7 +192,7 @@ class PlanGroupTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'PATCH',
             "https://api.chartmogul.com/v1/plan_groups/whatever_uuid",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=expected_plan_group_dict
         )
