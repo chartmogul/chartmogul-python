@@ -25,7 +25,7 @@ class TagsTestCase(unittest.TestCase):
             status_code=200,
             json=expected_dict
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         tags = Tags.add(config, uuid="UUID", data=requestData).get()
         expected = Tags(**expected_dict)
         self.assertEqual(mock_requests.call_count, 1, "expected call")

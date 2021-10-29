@@ -24,7 +24,7 @@ class DataSourceTestCase(unittest.TestCase):
                   "status": "never_imported"}
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         ds = DataSource.create(config, data={"name": "test"}).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -47,7 +47,7 @@ class DataSourceTestCase(unittest.TestCase):
                   "status": "never_imported"}
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         ds = DataSource.retrieve(config, uuid="my_uuid").get()
         expected = DataSource(**{"name": u"test",
                                  "uuid": u"my_uuid",
@@ -75,7 +75,7 @@ class DataSourceTestCase(unittest.TestCase):
             ]}
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         ds = DataSource.all(config).get()
         expected = DataSource._many(data_sources=[
             DataSource(**{"name": u"test",
@@ -96,7 +96,7 @@ class DataSourceTestCase(unittest.TestCase):
             status_code=204
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         res = DataSource.destroy(config, uuid="my_uuid").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")

@@ -29,7 +29,7 @@ class PlanTestCase(unittest.TestCase):
                   "current_page": 5,
                   "total_pages": 18}
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         plan = Plan.all(config, page=5, per_page=12,
                         data_source_uuid="some_uuid",
                         external_id="custom_filter").get()
@@ -62,7 +62,7 @@ class PlanTestCase(unittest.TestCase):
             status_code=200,
             json=expected_plan_dict
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         plan = Plan.modify(config,
                            uuid="whatever_uuid",
                            data={"name": "new_name"}).get()
@@ -97,7 +97,7 @@ class PlanTestCase(unittest.TestCase):
             status_code=200,
             json=expected_plan_dict
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         plan = Plan.create(
             config,
             data=sent).get()

@@ -29,7 +29,7 @@ class SubscriptionsTestCase(unittest.TestCase):
                 "data_source_uuid": "ds_fef05d54-47b4-431b-aed2-eb6b9e545430"
             }
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = CustomerSubscription.cancel(config,
                                      uuid="some_uuid",
                                      data={
@@ -61,7 +61,7 @@ class SubscriptionsTestCase(unittest.TestCase):
                 "data_source_uuid": "ds_fef05d54-47b4-431b-aed2-eb6b9e545430"
             }
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = CustomerSubscription.modify(config, uuid="some_uuid", data={
             "cancellation_dates": []}).get()
 
@@ -104,7 +104,7 @@ class SubscriptionsTestCase(unittest.TestCase):
                   "total_pages": 1
                 }
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = CustomerSubscription.list_imported(config, uuid="some_uuid").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")

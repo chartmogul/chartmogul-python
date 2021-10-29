@@ -37,7 +37,7 @@ class CustomerActivitiesTestCase(unittest.TestCase):
                     "page":1
                 }
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = CustomerActivity.all(config, uuid="some_uuid").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")

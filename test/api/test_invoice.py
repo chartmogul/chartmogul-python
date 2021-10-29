@@ -295,7 +295,7 @@ class InvoiceTestCase(unittest.TestCase):
             json=responseData
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = Invoice.create(config, uuid="UUID", data=requestData).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -317,7 +317,7 @@ class InvoiceTestCase(unittest.TestCase):
             json=responseData
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = Invoice.all(config, uuid="UUID").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -342,7 +342,7 @@ class InvoiceTestCase(unittest.TestCase):
             text=newInvoiceListExample
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = Invoice.all(config,
                              customer_uuid='cus_f466e33d-ff2b-4a11-8f85-417eb02157a7',
                              external_id='INV0001').get()
@@ -372,7 +372,7 @@ class InvoiceTestCase(unittest.TestCase):
             status_code=204
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = Invoice.destroy(config,
                              uuid='inv_f466e33d-ff2b-4a11-8f85-417eb02157a7').get()
 
@@ -393,7 +393,7 @@ class InvoiceTestCase(unittest.TestCase):
             json={'error': 'Invoice not found'}
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         with self.assertRaises(APIError) as context:
             result = Invoice.destroy(config, uuid='inv_f466e33d-ff2b-4a11-8f85-417eb02157a7').get()
 
@@ -411,7 +411,7 @@ class InvoiceTestCase(unittest.TestCase):
             status_code=204
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = Invoice.destroy_all(config,
                              data_source_uuid='ds_f466e33d-ff2b-4a11-8f85-417eb02157a7',
                              customer_uuid='cus_f466e33d-ff2b-4a11-8f85-417eb02157a7').get()
@@ -432,7 +432,7 @@ class InvoiceTestCase(unittest.TestCase):
             text=retrieveInvoiceExample
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = Invoice.retrieve(config, uuid='inv_22910fc6-c931-48e7-ac12-90d2cb5f0059').get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")

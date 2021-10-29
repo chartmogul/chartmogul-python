@@ -40,7 +40,7 @@ class ActivitiesTestCase(unittest.TestCase):
                     "per_page":200,
                 }
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = Activity.all(config).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")

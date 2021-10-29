@@ -37,18 +37,18 @@ pip3 install chartmogul
 
 ## Configuration
 
-First create a `Config` object by passing your account token and secret key, available from the administration section of your ChartMogul account.
+First create a `Config` object by passing your API key, available from the administration section of your ChartMogul account.
 You need to pass this configuration object as the first argument to each request.
 
 ```python
 import chartmogul
-config = chartmogul.Config('token', 'secret')
+config = chartmogul.Config('api_key')
 ```
 
 Alternatively, you can use the library without the module prefix:
 ```python
 from chartmogul import *
-config = Config('token', 'secret')
+config = Config('api_key')
 ```
 
 Note that both ways should import all necessary classes and submodules,
@@ -89,7 +89,7 @@ or raise/pass errors from the API, see an example:
 ```python
 import chartmogul
 
-config = chartmogul.Config('token', 'secret')
+config = chartmogul.Config('api_key')
 req = chartmogul.Plan.create(config, data={'name': 'Awesome plan'...})
 
 # Now either asynchronous reaction:

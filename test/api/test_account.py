@@ -27,7 +27,7 @@ class AccountTestCase(unittest.TestCase):
             json=jsonResponse
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         account = Account.retrieve(config).get()
         self.assertTrue(isinstance(account, Account))
         self.assertEqual(account.name, "Example Test Company")

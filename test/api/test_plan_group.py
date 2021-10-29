@@ -28,7 +28,7 @@ class PlanGroupTestCase(unittest.TestCase):
             status_code=200,
             json=expected_plan_group_dict
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         plan_group = PlanGroup.create(
             config,
             data=sent).get()
@@ -54,7 +54,7 @@ class PlanGroupTestCase(unittest.TestCase):
             json=expected_plan_group_dict
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = PlanGroup.retrieve(config, uuid="whatever_uuid").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -96,7 +96,7 @@ class PlanGroupTestCase(unittest.TestCase):
             json=expected_plans
         )
 
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = PlanGroup.all(config, uuid="whatever_uuid").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -130,7 +130,7 @@ class PlanGroupTestCase(unittest.TestCase):
             json=expected_plan_groups
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         result = PlanGroup.all(config).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -148,7 +148,7 @@ class PlanGroupTestCase(unittest.TestCase):
             status_code=204
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         result = PlanGroup.destroy(config, uuid="my_uuid").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -170,7 +170,7 @@ class PlanGroupTestCase(unittest.TestCase):
             status_code=200,
             json=expected_plan_group_dict
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = PlanGroup.modify(config,
                            uuid="whatever_uuid",
                            data={"name": "new_name"}).get()
@@ -196,7 +196,7 @@ class PlanGroupTestCase(unittest.TestCase):
             status_code=200,
             json=expected_plan_group_dict
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = PlanGroup.modify(config,
                            uuid="whatever_uuid",
                            data={"plans": "[pl_uuid_1, pl_uuid_2, pl_uuid_3]"}).get()
