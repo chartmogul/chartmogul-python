@@ -15,7 +15,7 @@ class ActivitiesExportTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'POST',
             "https://api.chartmogul.com/v1/activities_export",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json={
                     "id": "618b6698-c6d0-42e9-8c4f-6a2bda5ac472",
@@ -44,7 +44,7 @@ class ActivitiesExportTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'GET',
             "https://api.chartmogul.com/v1/activities_export/618b6698-c6d0-42e9-8c4f-6a2bda5ac472",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json={
                     "id": "618b6798-c6d0-42e0-8c4f-6a2bdb5ac412",

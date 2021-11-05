@@ -290,7 +290,7 @@ class InvoiceTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'POST',
             "https://api.chartmogul.com/v1/import/customers/UUID/invoices",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=responseData
         )
@@ -312,7 +312,7 @@ class InvoiceTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'GET',
             "https://api.chartmogul.com/v1/import/customers/UUID/invoices",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=responseData
         )
@@ -336,7 +336,7 @@ class InvoiceTestCase(unittest.TestCase):
             'GET',
             ("https://api.chartmogul.com/v1/invoices"
             "?external_id=INV0001&customer_uuid=cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             headers={'Content-Type': 'application/json'},
             status_code=200,
             text=newInvoiceListExample
@@ -368,7 +368,7 @@ class InvoiceTestCase(unittest.TestCase):
             'DELETE',
             ("https://api.chartmogul.com/v1/invoices"
             "/inv_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=204
         )
 
@@ -387,7 +387,7 @@ class InvoiceTestCase(unittest.TestCase):
             'DELETE',
             ("https://api.chartmogul.com/v1/invoices"
             "/inv_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             headers={'Content-Type': 'application/json'},
             status_code=404,
             json={'error': 'Invoice not found'}
@@ -406,7 +406,7 @@ class InvoiceTestCase(unittest.TestCase):
             ("https://api.chartmogul.com/v1/data_sources"
             "/ds_f466e33d-ff2b-4a11-8f85-417eb02157a7/customers"
             "/cus_f466e33d-ff2b-4a11-8f85-417eb02157a7/invoices"),
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             headers={'Content-Type': 'application/json'},
             status_code=204
         )
@@ -426,7 +426,7 @@ class InvoiceTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'GET',
             ("https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059"),
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             headers={'Content-Type': 'application/json'},
             status_code=200,
             text=retrieveInvoiceExample

@@ -15,7 +15,7 @@ class PingTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'GET',
             "https://api.chartmogul.com/v1/ping",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json={"data": "pong!"}
         )
