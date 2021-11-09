@@ -25,7 +25,7 @@ class CommonTestCase(unittest.TestCase):
             text="Not found"
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         try:
             res = DataSource.destroy(config).get()
         except ArgumentMissingError:
@@ -44,7 +44,7 @@ class CommonTestCase(unittest.TestCase):
                                     "status": "never_imported"}]}
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         try:
             DataSource.retrieve(config).get()
         except ArgumentMissingError:
@@ -65,7 +65,7 @@ class CommonTestCase(unittest.TestCase):
             }
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         try:
             DataSource.create(config, data={"xname": "abc"}).get()
         except APIError as err:
@@ -82,7 +82,7 @@ class CommonTestCase(unittest.TestCase):
             json={'data_sources': []}
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
 
         DataSource.create(config, data={
             "test_date": date(2015, 1, 1)

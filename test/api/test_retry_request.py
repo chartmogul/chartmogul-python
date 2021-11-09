@@ -42,7 +42,7 @@ class RetryRequestTestCase(unittest.TestCase):
 
         # max_retries set as 4
         # backoff_factor set as 0 to avoid waiting while testing
-        config = Config("token", "secret", None, 4, 0)
+        config = Config("token", None, 4, 0)
         try:
             DataSource.create(config, data={ "test_date": date(2015, 1, 1) }).get()
         except RetryError:

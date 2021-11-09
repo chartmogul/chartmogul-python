@@ -29,7 +29,7 @@ class ActivitiesExportTestCase(unittest.TestCase):
                     "created_at": "2021-07-15T08:23:40+00:00"
                 }
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = ActivitiesExport.create(config, data={})
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -58,7 +58,7 @@ class ActivitiesExportTestCase(unittest.TestCase):
                     "created_at": "2021-07-15T08:23:40+00:00"
                 }
         )
-        config = Config("token", "secret")  # is actually checked in mock
+        config = Config("token")  # is actually checked in mock
         result = ActivitiesExport.retrieve(config, id='618b6698-c6d0-42e9-8c4f-6a2bda5ac472')
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")

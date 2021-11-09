@@ -8,7 +8,7 @@ from requests.exceptions import HTTPError
 
 from chartmogul import DataSource, Customer, Plan, Config, Invoice
 
-config = Config('-', '-')
+config = Config('-')
 
 def _create_plan(ds):
     customer = Customer.create(config, data={

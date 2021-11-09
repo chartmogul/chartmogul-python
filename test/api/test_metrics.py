@@ -158,7 +158,7 @@ class MetricsTestCase(unittest.TestCase):
             json=allMetricsJSON
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         result = Metrics.all(config,
                              start_date='2015-01-01',
                              end_date='2015-11-24',
@@ -187,7 +187,7 @@ class MetricsTestCase(unittest.TestCase):
             json=mrrResponse
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         result = Metrics.mrr(config,
                              start_date='2015-01-01',
                              end_date='2015-11-01',
@@ -211,7 +211,7 @@ class MetricsTestCase(unittest.TestCase):
             json=ltvResponse
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         result = Metrics.ltv(config,
                              start_date='2015-01-01',
                              end_date='2015-11-01').get()

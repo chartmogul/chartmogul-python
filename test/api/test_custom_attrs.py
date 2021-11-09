@@ -112,7 +112,7 @@ class CustomAttributesTestCase(unittest.TestCase):
 
         expected = CustomAttributes(**simpleJSONResult)
 
-        config = Config('token', 'secret')
+        config = Config('token')
         result = CustomAttributes.add(config,
                                       uuid='CUSTOMER_UUID',
                                       data=jsonData).get()
@@ -136,7 +136,7 @@ class CustomAttributesTestCase(unittest.TestCase):
             json=jsonResponse2
         )
 
-        config = Config('token', 'secret')
+        config = Config('token')
         result = CustomAttributes.add(config,
                                       uuid='CUSTOMER_UUID',
                                       data=jsonRequest2).get()

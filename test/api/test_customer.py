@@ -298,7 +298,7 @@ class CustomerTestCase(unittest.TestCase):
             json=docsListSample
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         customers = Customer.all(config).get()
 
         expected = Customer._many(
@@ -332,7 +332,7 @@ class CustomerTestCase(unittest.TestCase):
             json=docsListSample["entries"][0]
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         Customer.create(config, data=createCustomer).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
@@ -347,7 +347,7 @@ class CustomerTestCase(unittest.TestCase):
             json=docsListSample
         )
 
-        config = Config("token", "secret")
+        config = Config("token")
         result = Customer.search(config, email='tralala@someemail.com').get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {
@@ -369,7 +369,7 @@ class CustomerTestCase(unittest.TestCase):
             "into": {"customer_uuid": "cus_ab223d54-75b4-431b-adb2-eb6b9e234571"}
         }
 
-        config = Config("token", "secret")
+        config = Config("token")
         result = Customer.merge(config, data=jsonRequest).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
@@ -395,7 +395,7 @@ class CustomerTestCase(unittest.TestCase):
             }
           ]
         }
-        config = Config("token", "secret")
+        config = Config("token")
         result = Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data=jsonRequest).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
