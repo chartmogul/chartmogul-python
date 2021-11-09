@@ -23,7 +23,7 @@ class PlanTestCase(unittest.TestCase):
             'GET',
             ("https://api.chartmogul.com/v1/plans?page=5"
              "&per_page=12&data_source_uuid=some_uuid&external_id=custom_filter"),
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json={"plans": [expected_plan_dict],
                   "current_page": 5,
@@ -58,7 +58,7 @@ class PlanTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'PATCH',
             "https://api.chartmogul.com/v1/plans/whatever_uuid",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=expected_plan_dict
         )
@@ -93,7 +93,7 @@ class PlanTestCase(unittest.TestCase):
         mock_requests.register_uri(
             'POST',
             "https://api.chartmogul.com/v1/plans",
-            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
             json=expected_plan_dict
         )
