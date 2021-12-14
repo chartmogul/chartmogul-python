@@ -8,6 +8,8 @@ from .api.config import Config
 from .errors import ArgumentMissingError, ConfigurationError, annotateHTTPError
 from .retry_request import requests_retry_session
 
+from .version import __version__
+
 """
 HTTP verb mapping. Based on nodejs library.
 """
@@ -130,7 +132,7 @@ class Resource(DataObject):
                     config.uri + path,
                     data=data,
                     headers={
-                        'content-type': 'application/json'},
+                        'content-type': 'application/json', 'User-Agent': 'chartmogul-python/' + __version__},
                     params=params,
                     auth=config.auth,
                     timeout=config.request_timeout))).then(
