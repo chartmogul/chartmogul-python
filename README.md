@@ -127,8 +127,9 @@ chartmogul.Customer.merge(config, data={
   'into': {'customer_uuid': 'cus_2123290f-09c8-4628-a205-db5596bd58f7'}
 })
 chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
-  'from': {'customer_uuid': 'cus_5915ee5a-babd-406b-b8ce-d207133fb4cb'},
-  'into': {'customer_uuid': 'cus_2123290f-09c8-4628-a205-db5596bd58f7'}
+  "city": "San Francisco",
+  "country": "US",
+  "state": "CA",
 })
 chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
