@@ -151,6 +151,7 @@ class Resource(DataObject):
             'destroy',
             'cancel',
             'retrieve',
+            'modify',
                 'update'] and 'uuid' not in kwargs:
             raise ArgumentMissingError("Please pass 'uuid' parameter")
         if method in ['create', 'modify'] and 'data' not in kwargs:
