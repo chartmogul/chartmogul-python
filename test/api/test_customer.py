@@ -2,6 +2,7 @@ import unittest
 from chartmogul import Customer, Config
 from chartmogul.api.customer import Attributes, Address
 from datetime import datetime
+from chartmogul import APIError
 import requests_mock
 
 from pprint import pprint
@@ -401,3 +402,46 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
         self.assertEqual(result, None)
+
+    @requests_mock.mock()
+    def test_modify_uuid_missing(self, mock_requests):
+        mock_requests.register_uri(
+            'PATCH',
+            "https://api.chartmogul.com/v1/customers/",
+            status_code=400,
+            json= {
+                "code": 400,
+                "message": "Please pass 'uuid' parameter",
+            }
+        )
+
+        jsonRequest = {
+          "country": "US"
+        }
+        config = Config("token")
+
+        with self.assertRaises(APIError) as context:
+            result = Customer.modify(config, uuid='', data=jsonRequest).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual('b\'{"code": 400, "message": "Please pass \\\'uuid\\\' parameter"}\'', str(context.exception))
+
+    @requests_mock.mock()
+    def test_modify(self, mock_requests):
+       mock_requests.register_uri(
+           'PATCH',
+           "https://api.chartmogul.com/v1/customers/cus_5915ee5a-babd-406b-b8ce-d207133fb4cb",
+           status_code=200
+       )
+
+       jsonRequest = {
+         "country": "US"
+       }
+       config = Config("token")
+
+       result = Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data=jsonRequest).get()
+
+       self.assertEqual(mock_requests.call_count, 1, "expected call")
+       self.assertEqual(mock_requests.last_request.qs, {})
+       self.assertEqual(mock_requests.last_request.json(), jsonRequest)
