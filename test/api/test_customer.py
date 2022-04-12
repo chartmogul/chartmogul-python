@@ -425,7 +425,7 @@ class CustomerTestCase(unittest.TestCase):
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
-        self.assertEqual('b\'{"code": 400, "message": "Please pass \\\'uuid\\\' parameter"}\'', str(context.exception))
+        self.assertTrue("Please pass \\\'uuid\\\' parameter" in str(context.exception))
 
     @requests_mock.mock()
     def test_modify(self, mock_requests):
