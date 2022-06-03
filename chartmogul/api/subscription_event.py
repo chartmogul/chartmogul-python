@@ -9,8 +9,6 @@ class SubscriptionEvent(Resource):
     _path = "/subscription_events"
     _root_key = 'subscription_events'
     _many = namedtuple('SubscriptionEvents', [_root_key, 'meta'])
-    #["next_key","prev_key","before_key","page","total_pages"]
-
 
     class _Schema(Schema):
         id = fields.Int()
@@ -39,5 +37,3 @@ class SubscriptionEvent(Resource):
 SubscriptionEvent.all = SubscriptionEvent._method('all', 'get', '/subscription_events')
 SubscriptionEvent.destroy_modify_with_params = SubscriptionEvent._method('destroy_with_params', 'delete', '/subscription_events')
 SubscriptionEvent.modify_with_params = SubscriptionEvent._method('modify_with_params', 'patch', "/subscription_events")
-
-#_add_method(Ping, "ping", "get")
