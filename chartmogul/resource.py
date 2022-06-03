@@ -24,12 +24,14 @@ MAPPINGS = {
     'patch': 'patch',
     'remove': 'delete',
     'retrieve': 'get',
-    'update': 'put'
+    'update': 'put',
+    'destroy_with_params': 'delete',
+    'modify_with_params': 'patch'
 }
 
 LIST_PARAMS = ['current_page', 'total_pages',
                'has_more', 'per_page', 'page',
-               'summary', 'customer_uuid']
+               'summary', 'customer_uuid', 'meta']
 ESCAPED_QUERY_KEYS = {
     'start_date': 'start-date',
     'end_date': 'end-date'
@@ -160,6 +162,11 @@ class Resource(DataObject):
                 'destroy_all'] and 'data_source_uuid' not in kwargs and 'customer_uuid' not in kwargs:
             raise ArgumentMissingError(
                 "Please pass 'data_source_uuid' and 'customer_uuid' parameters")
+        if method in ['destroy_with_params'] and not('id' in kwargs['data'] or ('external_id' in kwargs['data'] and 'data_source_uuid' in kwargs['data'])):
+            raise ArgumentMissingError("Please pass 'id' parameter or 'data_source_uuid' and 'external_id'")
+        if method in ['modify_with_params'] and not('id' in kwargs['data'] or ('external_id' in kwargs['data'] and 'data_source_uuid' in kwargs['data'])):
+            raise ArgumentMissingError("Please pass 'id' parameter or 'data_source_uuid' and 'external_id'")
+
 
     @classmethod
     def _method(cls, method, http_verb, path=None):

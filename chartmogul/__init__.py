@@ -12,6 +12,7 @@ from .api.metrics import Metrics
 from .api.ping import Ping
 from .api.plan import Plan
 from .api.plan_group import PlanGroup
+from .api.subscription_event import SubscriptionEvent
 from .api.customers.subscription import CustomerSubscription
 from .api.customers.subscription import CustomerSubscription as Subscription
 from .api.tags import Tags
