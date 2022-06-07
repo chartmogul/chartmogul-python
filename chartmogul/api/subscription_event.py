@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE
-from ..resource import Resource, DataObject
+from ..resource import Resource
 from collections import namedtuple
+
 
 class SubscriptionEvent(Resource):
     """
