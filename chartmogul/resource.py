@@ -162,11 +162,8 @@ class Resource(DataObject):
                 'destroy_all'] and 'data_source_uuid' not in kwargs and 'customer_uuid' not in kwargs:
             raise ArgumentMissingError(
                 "Please pass 'data_source_uuid' and 'customer_uuid' parameters")
-        if method in ['destroy_with_params'] and not('id' in kwargs['data'] or ('external_id' in kwargs['data'] and 'data_source_uuid' in kwargs['data'])):
+        if method in ['destroy_with_params', 'modify_with_params'] and not('id' in kwargs['data'] or ('external_id' in kwargs['data'] and 'data_source_uuid' in kwargs['data'])):
             raise ArgumentMissingError("Please pass 'id' parameter or 'data_source_uuid' and 'external_id'")
-        if method in ['modify_with_params'] and not('id' in kwargs['data'] or ('external_id' in kwargs['data'] and 'data_source_uuid' in kwargs['data'])):
-            raise ArgumentMissingError("Please pass 'id' parameter or 'data_source_uuid' and 'external_id'")
-
 
     @classmethod
     def _method(cls, method, http_verb, path=None):
