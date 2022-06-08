@@ -242,11 +242,14 @@ chartmogul.Transaction.create(config, uuid='inv_745df1d4-819f-48ee-873d-b5204801
 import chartmogul
 chartmogul.SubscriptionEvent.all(config)
 chartmogul.SubscriptionEvent.create(config, data={})
-chartmogul.SubscriptionEvent.modify(config, id=73966836, data={
+chartmogul.SubscriptionEvent.modify_with_params(config, data={
+    'id' : 73966836,
     'currency' : 'EUR',
     'amount_in_cents' : 100
 })
-chartmogul.SubscriptionEvent.destroy(config, id=73966836)
+chartmogul.SubscriptionEvent.destroy_with_params(config, data={
+    'id' : 73966836
+})
 ```
 
 #### [Subscriptions](https://dev.chartmogul.com/docs/subscriptions)

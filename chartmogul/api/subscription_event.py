@@ -36,5 +36,5 @@ class SubscriptionEvent(Resource):
 
 
 SubscriptionEvent.all = SubscriptionEvent._method('all', 'get', '/subscription_events')
-SubscriptionEvent.destroy_modify_with_params = SubscriptionEvent._method('destroy_with_params', 'delete', '/subscription_events')
+SubscriptionEvent.destroy_with_params = SubscriptionEvent._method('destroy_with_params', 'delete', '/subscription_events')
 SubscriptionEvent.modify_with_params = SubscriptionEvent._method('modify_with_params', 'patch', "/subscription_events")
