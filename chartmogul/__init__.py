@@ -13,6 +13,7 @@ from .api.ping import Ping
 from .api.plan import Plan
 from .api.plan_group import PlanGroup
 from .api.customers.subscription import CustomerSubscription
+from .api.customers.subscription import CustomerSubscription as Subscription
 from .api.tags import Tags
 from .api.transaction import Transaction
 from .api.account import Account
