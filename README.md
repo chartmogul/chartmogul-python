@@ -241,7 +241,18 @@ chartmogul.Transaction.create(config, uuid='inv_745df1d4-819f-48ee-873d-b5204801
 ```python
 import chartmogul
 chartmogul.SubscriptionEvent.all(config)
-chartmogul.SubscriptionEvent.create(config, data={})
+chartmogul.SubscriptionEvent.create(config, data={
+    'external_id' : 'evnt_026',
+    'customer_external_id' : 'scus_022',
+    'data_source_uuid' : 'ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba',
+    'event_type' : 'subscription_start_scheduled',
+    'event_date' : '2022-03-30',
+    'effective_date' : '2022-04-01',
+    'subscription_external_id' : 'sub_0001',
+    'plan_external_id' : 'gol d_monthly',
+    'currency' : 'USD',
+    'amount_in_cents' : 1000
+})
 chartmogul.SubscriptionEvent.modify_with_params(config, data={
     'id' : 73966836,
     'currency' : 'EUR',
