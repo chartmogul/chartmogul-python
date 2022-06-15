@@ -242,8 +242,8 @@ chartmogul.Transaction.create(config, uuid='inv_745df1d4-819f-48ee-873d-b5204801
 import chartmogul
 
 chartmogul.Subscription.list_imported(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
-chartmogul.Subscription.cancel(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb' data={'cancelled_at': ''})
-chartmogul.Subscription.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb' data={'cancellation_dates': []})
+chartmogul.Subscription.cancel(config, uuid='sub_3995ee5a-bbdb-406b-a8ca-d207133fb9bb' data={'cancelled_at': ''})
+chartmogul.Subscription.modify(config, uuid='sub_3995ee5a-bbdb-406b-a8ca-d207133fb9bb' data={'cancellation_dates': []})
 ```
 
 ### [Metrics API](https://dev.chartmogul.com/docs/introduction-metrics-api)
@@ -274,7 +274,7 @@ chartmogul.Metrics.mrr_churn_rate(config, data={})
 chartmogul.Metrics.ltv(config, data={})
 
 chartmogul.CustomerActivity.all(config, uuid='')
-chartmogul.CustomerSubscription.all(config, uuid='')
+chartmogul.CustomerSubscription.all(config, uuid='cus_cf121bf8-db58-11ec-8575-43bda9fb67ad')
 chartmogul.Activity.all(config, start_date='2020-06-02T00:00:00Z')
 
 chartmogul.ActivitiesExport.create(config,data={})
