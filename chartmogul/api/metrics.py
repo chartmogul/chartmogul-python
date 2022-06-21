@@ -2,6 +2,16 @@ from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource, DataObject, _add_method
 from collections import namedtuple
 
+metrics = [
+    'customers',
+    'customer-churn-rate',
+    'arr',
+    'asp',
+    'mrr',
+    'arpa',
+    'mrr-churn-rate',
+    'ltv'
+]
 
 class Summary(DataObject):
     """
@@ -11,6 +21,14 @@ class Summary(DataObject):
         current = fields.Number()
         previous = fields.Number()
         percentage_change = fields.Number(data_key='percentage-change')
+        #All metrics percentage change
+        for metric in metrics:
+            pc = f"{metric}-percentage-change"
+            current_pc = f"current-{metric}"
+            previous_pc = f"previous-{metric}"
+            locals()[pc.replace("-", "_")] = fields.Number(data_key=pc)
+            locals()[current_pc.replace("-", "_")] = fields.Number(data_key=current_pc)
+            locals()[previous_pc.replace("-", "_")] = fields.Number(data_key=previous_pc)
 
         @post_load
         def make(self, data, **kwargs):
@@ -47,6 +65,10 @@ class Metrics(Resource):
         mrr_contraction = fields.Number(data_key='mrr-contraction')
         mrr_churn = fields.Number(data_key='mrr-churn')
         mrr_reactivation = fields.Number(data_key='mrr-reactivation')
+        percentage_change = fields.Number(data_key='percentage-change')
+        for metric in metrics:
+            pc = f"{metric}-percentage-change"
+            locals()[pc.replace("-", "_")] = fields.Number(data_key=pc)
 
         @post_load
         def make(self, data, **kwargs):
