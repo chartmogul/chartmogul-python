@@ -13,6 +13,7 @@ metrics = [
     'ltv'
 ]
 
+
 class Summary(DataObject):
     """
     Optional information about a series of metrics.
@@ -21,11 +22,11 @@ class Summary(DataObject):
         current = fields.Number()
         previous = fields.Number()
         percentage_change = fields.Number(data_key='percentage-change')
-        #All metrics percentage change
+        # All metrics percentage change
         for metric in metrics:
-            pc = f"{metric}-percentage-change"
-            current_pc = f"current-{metric}"
-            previous_pc = f"previous-{metric}"
+            pc = metric + '-percentage-change'
+            current_pc = 'current-' + metric
+            previous_pc = 'previous-' + metric
             locals()[pc.replace("-", "_")] = fields.Number(data_key=pc)
             locals()[current_pc.replace("-", "_")] = fields.Number(data_key=current_pc)
             locals()[previous_pc.replace("-", "_")] = fields.Number(data_key=previous_pc)
@@ -67,7 +68,7 @@ class Metrics(Resource):
         mrr_reactivation = fields.Number(data_key='mrr-reactivation')
         percentage_change = fields.Number(data_key='percentage-change')
         for metric in metrics:
-            pc = f"{metric}-percentage-change"
+            pc = metric + '-percentage-change'
             locals()[pc.replace("-", "_")] = fields.Number(data_key=pc)
 
         @post_load
