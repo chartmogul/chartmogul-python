@@ -22,4 +22,4 @@ class DataSource(Resource):
         def make(self, data, **kwargs):
             return DataSource(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)

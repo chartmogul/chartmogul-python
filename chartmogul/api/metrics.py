@@ -75,7 +75,7 @@ class Metrics(Resource):
         def make(self, data, **kwargs):
             return Metrics(**data)
 
-    _schema = _Schema()
+    _schema = _Schema(unknown=EXCLUDE)
 
     @classmethod
     def _many(cls, entries, **kwargs):
