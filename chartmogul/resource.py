@@ -149,20 +149,14 @@ class Resource(DataObject):
     def _validate_arguments(cls, method, kwargs):
         # This enforces user to pass argument, otherwise we could call
         # wrong URL.
-        if method in [
-            'destroy',
-            'cancel',
-            'retrieve',
-            'modify',
-                'update'] and 'uuid' not in kwargs:
+        if method in ['destroy','cancel','retrieve','modify','update'] and 'uuid' not in kwargs:
             raise ArgumentMissingError("Please pass 'uuid' parameter")
         if method in ['create', 'modify'] and 'data' not in kwargs:
             raise ArgumentMissingError("Please pass 'data' parameter")
-        if method in [
-                'destroy_all'] and 'data_source_uuid' not in kwargs and 'customer_uuid' not in kwargs:
-            raise ArgumentMissingError(
-                "Please pass 'data_source_uuid' and 'customer_uuid' parameters")
-        if method in ['destroy_with_params', 'modify_with_params'] and not('id' in kwargs['data'] or ('external_id' in kwargs['data'] and 'data_source_uuid' in kwargs['data'])):
+        if method in ['destroy_all'] and 'data_source_uuid' not in kwargs and 'customer_uuid' not in kwargs:
+            raise ArgumentMissingError("Please pass 'data_source_uuid' and 'customer_uuid' parameters")
+        if method in ['destroy_with_params', 'modify_with_params'] and not('id' in kwargs['data']['subscription_event']
+        or ('external_id' in kwargs['data']['subscription_event'] and 'data_source_uuid' in kwargs['data']['subscription_event'])):
             raise ArgumentMissingError("Please pass 'id' parameter or 'data_source_uuid' and 'external_id'")
 
     @classmethod
