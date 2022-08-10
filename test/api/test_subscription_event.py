@@ -101,7 +101,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_delete_subscription_event_with_id(self, mock_requests):
-        data = {"id": 7654321}
+        data = {"subscription_event": {"id": 7654321}}
         mock_requests.register_uri(
             'DELETE',
             ("https://api.chartmogul.com/v1/subscription_events"),
@@ -120,8 +120,10 @@ class SubscriptionEventTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_delete_subscription_event_with_ds_uuid_and_external_id(self, mock_requests):
         data = {
-            "data_source_uuid": "evnt_026",
-            "external_id": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba"
+            "subscription_event": {
+                "data_source_uuid": "evnt_026",
+                "external_id": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba"
+            }
         }
         mock_requests.register_uri(
             'DELETE',
@@ -141,8 +143,10 @@ class SubscriptionEventTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_modify_subscription_event_with_id(self, mock_requests):
         data={
-            "id": 7654321,
-            "amount_in_cents": 10
+            "subscription_event": {
+                "id": 7654321,
+                "amount_in_cents": 10
+            }
         }
         mock_requests.register_uri(
             'PATCH',
@@ -164,9 +168,11 @@ class SubscriptionEventTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_modify_subscription_event_with_ds_uuid_and_external_id(self, mock_requests):
         data={
-            "external_id": "evnt_026",
-            "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
-            "amount_in_cents": 10
+            "subscription_event": {
+                "external_id": "evnt_026",
+                "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+                "amount_in_cents": 10
+            }
         }
         mock_requests.register_uri(
             'PATCH',
@@ -188,8 +194,10 @@ class SubscriptionEventTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_modify_subscription_event_with_bad_params(self, mock_requests):
         data={
-            "external_id": "evnt_026",
-            "amount_in_cents": 10
+            "subscription_event": {
+                "external_id": "evnt_026",
+                "amount_in_cents": 10
+            }
         }
         mock_requests.register_uri(
             'PATCH',
