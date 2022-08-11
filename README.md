@@ -236,6 +236,37 @@ import chartmogul
 chartmogul.Transaction.create(config, uuid='inv_745df1d4-819f-48ee-873d-b5204801e021', data={})
 ```
 
+#### [SubscriptionEvents](https://dev.chartmogul.com/docs/subscription_events)
+
+```python
+import chartmogul
+chartmogul.SubscriptionEvent.all(config)
+chartmogul.SubscriptionEvent.create(config, data={ 
+  'subscription_event' : {
+    'external_id' : 'evnt_026',
+    'customer_external_id' : 'scus_022',
+    'data_source_uuid' : 'ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba',
+    'event_type' : 'subscription_start_scheduled',
+    'event_date' : '2022-03-30',
+    'effective_date' : '2022-04-01',
+    'subscription_external_id' : 'sub_0001',
+    'plan_external_id' : 'gol d_monthly',
+    'currency' : 'USD',
+    'amount_in_cents' : 1000,
+    'quantity': 1
+}})
+chartmogul.SubscriptionEvent.modify_with_params(config, data={
+'subscription_event' : {
+    'id' : 73966836,
+    'currency' : 'EUR',
+    'amount_in_cents' : 100
+}})
+chartmogul.SubscriptionEvent.destroy_with_params(config, data={
+'subscription_event' : {
+    'id' : 73966836
+}})
+```
+
 #### [Subscriptions](https://dev.chartmogul.com/docs/subscriptions)
 
 ```python
