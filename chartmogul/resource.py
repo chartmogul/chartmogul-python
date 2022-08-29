@@ -149,7 +149,7 @@ class Resource(DataObject):
     def _validate_arguments(cls, method, kwargs):
         # This enforces user to pass argument, otherwise we could call
         # wrong URL.
-        if method in ['destroy','cancel','retrieve','modify','update'] and 'uuid' not in kwargs:
+        if method in ['destroy', 'cancel', 'retrieve', 'modify', 'update'] and 'uuid' not in kwargs:
             raise ArgumentMissingError("Please pass 'uuid' parameter")
         if method in ['create', 'modify'] and 'data' not in kwargs:
             raise ArgumentMissingError("Please pass 'data' parameter")
