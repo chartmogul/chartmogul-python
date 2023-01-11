@@ -364,11 +364,11 @@ To work on the library:
 * Install dependencies: `pip3 install -r requirements.txt && python3 setup.py develop`
 * Fix bugs or add features. Make sure the changes pass the coding guidelines (use `pylama`).
 * Write tests for your new features. Use `requests_mock` for HTTP mocking.
-* Run tests with `python3 setup.py test` and check test coverage with:
-  * `pip3 install coverage`
-  * `coverage run ./setup.py test`
-  * `coverage html --include='chartmogul/*'`
-  * Find results in `htmlcov/index.html`
+  * To run test install requirement-test `pip3 install -r requirements-test.txt` and run with `python -m unittest`:
+    * `pip3 install coverage`
+    * `coverage run ./setup.py test`
+    * `coverage html --include='chartmogul/*'`
+    * Find results in `htmlcov/index.html`
 * If all tests are passed, push to the branch (`git push origin my-new-feature`)
 * Create a new Pull Request
 
