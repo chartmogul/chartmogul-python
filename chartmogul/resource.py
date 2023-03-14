@@ -38,8 +38,8 @@ LIST_PARAMS = [
     "summary",
     "customer_uuid",
     "data_source_uuid",
+    "cursor",
     "meta",
-    "cursor"
 ]
 ESCAPED_QUERY_KEYS = {"start_date": "start-date", "end_date": "end-date"}
 
@@ -200,36 +200,28 @@ class Resource(DataObject):
             )
 
     @classmethod
-    def _method(cls, method, http_verb, path=None, customClass=None):
+    def _method(callerClass, method, http_verb, path=None, useCallerClass=False):
         @classmethod
-        def fc(cls, config, **kwargs):
+        def fc(calleeClass, config, **kwargs):
             if config is None or not isinstance(config, Config):
                 raise ConfigurationError(
                     "First argument should be" " instance of chartmogul.Config class!"
                 )
 
-            klass = None
-            if customClass is None:
-                klass = cls
-            elif not issubclass(customClass, Resource):
-                raise ConfigurationError(
-                    "customClass should be an extension of chartmogul.Resource class!"
-                )
-            else:
-                klass = customClass
+            cls = callerClass if useCallerClass else calleeClass
 
             pathTemp = path  # due to Python closure
             if pathTemp is None:
-                pathTemp = klass._path
+                pathTemp = cls._path
 
-            klass._validate_arguments(method, kwargs)
+            cls._validate_arguments(method, kwargs)
 
             pathTemp = Resource._expandPath(pathTemp, kwargs)
             # UUID is always path parameter only.
             if "uuid" in kwargs:
                 del kwargs["uuid"]
 
-            return klass._request(config, method, http_verb, pathTemp, **kwargs)
+            return cls._request(config, method, http_verb, pathTemp, **kwargs)
 
         return fc
 

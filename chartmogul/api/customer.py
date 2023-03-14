@@ -77,5 +77,5 @@ class Customer(Resource):
 Customer.search = Customer._method('all', 'get', '/customers/search')
 Customer.merge = Customer._method('merge', 'post', '/customers/merges')
 Customer.connectSubscriptions = Customer._method('create', 'post', '/customers/{uuid}/connect_subscriptions')
-Customer.contacts = Contact._method('all', 'get', '/customers/{uuid}/contacts', Contact)
-Customer.createContact = Contact._method('create', 'post', '/customers/{uuid}/contacts', Contact)
+Customer.contacts = Contact._method('all', 'get', '/customers/{uuid}/contacts', useCallerClass=True)
+Customer.createContact = Contact._method('create', 'post', '/customers/{uuid}/contacts', useCallerClass=True)
