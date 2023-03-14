@@ -4,6 +4,7 @@ from json import dumps
 from promise import Promise
 from uritemplate import URITemplate
 
+from .api.config import Config
 from .errors import ArgumentMissingError, ConfigurationError, annotateHTTPError
 from .retry_request import requests_retry_session
 
@@ -202,6 +203,11 @@ class Resource(DataObject):
     def _method(cls, method, http_verb, path=None, customClass=None):
         @classmethod
         def fc(cls, config, **kwargs):
+            if config is None or not isinstance(config, Config):
+                raise ConfigurationError(
+                    "First argument should be" " instance of chartmogul.Config class!"
+                )
+
             klass = None
             if customClass is None:
                 klass = cls
