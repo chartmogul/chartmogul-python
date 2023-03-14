@@ -2,6 +2,7 @@ from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource
 from collections import namedtuple
 
+
 class Contact(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#contacts
@@ -31,5 +32,6 @@ class Contact(Resource):
             return Contact(**data)
 
     _schema = _Schema(unknown=EXCLUDE)
+
 
 Contact.merge = Contact._method("merge", "post", "/contacts/{into_uuid}/merge/{from_uuid}")

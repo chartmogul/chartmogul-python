@@ -4,7 +4,6 @@ from json import dumps
 from promise import Promise
 from uritemplate import URITemplate
 
-from .api.config import Config
 from .errors import ArgumentMissingError, ConfigurationError, annotateHTTPError
 from .retry_request import requests_retry_session
 
