@@ -73,6 +73,7 @@ class Customer(Resource):
 
     _schema = _Schema(unknown=EXCLUDE)
 
+
 Customer.search = Customer._method('all', 'get', '/customers/search')
 Customer.merge = Customer._method('merge', 'post', '/customers/merges')
 Customer.connectSubscriptions = Customer._method('create', 'post', '/customers/{uuid}/connect_subscriptions')
