@@ -1,5 +1,5 @@
 import unittest
-from chartmogul import Customer, Config
+from chartmogul import Customer, Contact, Config
 from chartmogul.api.customer import Attributes, Address
 from datetime import datetime
 from chartmogul import APIError
@@ -283,6 +283,49 @@ sentCreateExpected = {
     'zip': '0185128'
 }
 
+contact = {
+    "uuid": "con_00000000-0000-0000-0000-000000000000",
+    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "data_source_uuid": "ds_00000000-0000-0000-0000-000000000000",
+    "customer_external_id": "external_001",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "position": 9,
+    "title": "Title",
+    "email": "test@example.com",
+    "phone": "+1234567890",
+    "linked_in": "https://linkedin.com/not_found",
+    "twitter": "https://twitter.com/not_found",
+    "notes": "Heading\nBody\nFooter",
+    "custom": {
+      "MyStringAttribute": "Test",
+      "MyIntegerAttribute": 123
+    }
+}
+
+createContact = {
+    "data_source_uuid": "ds_00000000-0000-0000-0000-000000000000",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "position": 9,
+    "title": "Title",
+    "email": "test@example.com",
+    "phone": "+1234567890",
+    "linked_in": "https://linkedin.com/not_found",
+    "twitter": "https://twitter.com/not_found",
+    "notes": "Heading\nBody\nFooter",
+    "custom": [
+      { "key": "MyStringAttribute", "value": "Test" },
+      { "key": "MyIntegerAttribute", "value": 123 }
+    ]
+}
+
+allContacts = {
+    "entries": [contact],
+    "cursor": "MjAyMy0wMy0xMFQwMzo1MzoxNS44MTg1MjUwMDArMDA6MDAmY29uXzE2NDcwZjk4LWJlZjctMTFlZC05MjA4LTdiMDhhNDBmMzA0OQ==",
+    "has_more": False
+}
+
 
 class CustomerTestCase(unittest.TestCase):
     """
@@ -445,3 +488,39 @@ class CustomerTestCase(unittest.TestCase):
        self.assertEqual(mock_requests.call_count, 1, "expected call")
        self.assertEqual(mock_requests.last_request.qs, {})
        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+
+    @requests_mock.mock()
+    def test_contacts(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/customers/cus_00000000-0000-0000-0000-000000000000/contacts",
+            status_code=200,
+            json=allContacts
+        )
+
+        config = Config("token")
+        contacts = Customer.contacts(config, uuid="cus_00000000-0000-0000-0000-000000000000").get()
+        expected = Contact._many(**allContacts)
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.text, None)
+        self.assertEqual(sorted(dir(contacts)), sorted(dir(expected)))
+        self.assertTrue(isinstance(contacts.entries[0], Contact))
+
+    @requests_mock.mock()
+    def test_createContact(self, mock_requests):
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/customers/cus_00000000-0000-0000-0000-000000000000/contacts",
+            status_code=200,
+            json=contact
+        )
+
+        config = Config("token")
+        expected = Customer.createContact(config, uuid="cus_00000000-0000-0000-0000-000000000000", data=createContact).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.json(), createContact)
+        self.assertTrue(isinstance(expected, Contact))
