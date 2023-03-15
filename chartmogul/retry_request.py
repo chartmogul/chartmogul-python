@@ -19,7 +19,7 @@ def _retry_adapter(retries, backoff_factor):
         read=retries,
         connect=retries,
         status=retries,
-        method_whitelist=METHOD_WHITELIST,
+        allowed_methods=METHOD_WHITELIST,
         status_forcelist=STATUS_FORCELIST,
         backoff_factor=backoff_factor,
     )

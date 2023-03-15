@@ -9,6 +9,7 @@ from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import DataObject, Resource
 from collections import namedtuple
 from .attributes import Attributes
+from .contact import Contact
 
 
 class Address(DataObject):
@@ -76,3 +77,5 @@ class Customer(Resource):
 Customer.search = Customer._method('all', 'get', '/customers/search')
 Customer.merge = Customer._method('merge', 'post', '/customers/merges')
 Customer.connectSubscriptions = Customer._method('create', 'post', '/customers/{uuid}/connect_subscriptions')
+Customer.contacts = Contact._method('all', 'get', '/customers/{uuid}/contacts', useCallerClass=True)
+Customer.createContact = Contact._method('create', 'post', '/customers/{uuid}/contacts', useCallerClass=True)

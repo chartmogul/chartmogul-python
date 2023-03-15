@@ -37,6 +37,8 @@ LIST_PARAMS = [
     "page",
     "summary",
     "customer_uuid",
+    "data_source_uuid",
+    "cursor",
     "meta",
 ]
 ESCAPED_QUERY_KEYS = {"start_date": "start-date", "end_date": "end-date"}
@@ -198,13 +200,15 @@ class Resource(DataObject):
             )
 
     @classmethod
-    def _method(cls, method, http_verb, path=None):
+    def _method(callerClass, method, http_verb, path=None, useCallerClass=False):
         @classmethod
-        def fc(cls, config, **kwargs):
+        def fc(calleeClass, config, **kwargs):
             if config is None or not isinstance(config, Config):
                 raise ConfigurationError(
                     "First argument should be" " instance of chartmogul.Config class!"
                 )
+
+            cls = callerClass if useCallerClass else calleeClass
 
             pathTemp = path  # due to Python closure
             if pathTemp is None:
