@@ -304,6 +304,7 @@ contact = {
 }
 
 createContact = {
+    "uuid": "con_00000000-0000-0000-0000-000000000000",
     "data_source_uuid": "ds_00000000-0000-0000-0000-000000000000",
     "first_name": "First name",
     "last_name": "Last name",
