@@ -13,6 +13,7 @@ class Contact(Resource):
                        [_root_key, "has_more", "cursor"])
 
     class _Schema(Schema):
+        uuid = fields.String()
         customer_uuid = fields.String(allow_none=True)
         data_source_uuid = fields.String(allow_none=True)
         customer_external_id = fields.String(allow_none=True)
