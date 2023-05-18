@@ -33,7 +33,7 @@ ChartMogul API Python Client
 
 Provides convenient Python bindings for ChartMogul's API.
 
-:copyright: (c) 2019 by ChartMogul Ltd.
+:copyright: (c) 2023 by ChartMogul Ltd.
 :license: MIT, see LICENSE for more details.
 """
 
@@ -41,4 +41,4 @@ __title__ = 'chartmogul'
 __build__ = 0x000000
 __author__ = 'ChartMogul Ltd'
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2021 ChartMogul Ltd'
+__copyright__ = 'Copyright 2023 ChartMogul Ltd'

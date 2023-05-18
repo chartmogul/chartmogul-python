@@ -2,10 +2,9 @@ from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource
 from collections import namedtuple
 
-
 class SubscriptionEvent(Resource):
     """
-    https://dev.chartmogul.com/v1.0/reference#subscription_events
+    https://dev.chartmogul.com/reference/subscription-events
     """
     _path = "/subscription_events"
     _root_key = 'subscription_events'
@@ -16,8 +15,8 @@ class SubscriptionEvent(Resource):
         data_source_uuid = fields.String(required=True)
         customer_external_id = fields.String(required=True)
         event_type = fields.String(required=True)
-        event_date = fields.Date(required=True)
-        effective_date = fields.Date(required=True)
+        event_date = fields.String(required=True)
+        effective_date = fields.String(required=True)
         subscription_external_id = fields.String(allow_none=True)
         plan_external_id = fields.String(allow_none=True)
         currency = fields.String(allow_none=True)
