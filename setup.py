@@ -29,7 +29,7 @@ test_requirements = [
 
     'mock>=1.0.1',
     'requests-mock>=1.3.0',
-    'vcrpy>=1.11.1',
+    'vcrpy==1.11.1',
     'PyYAML>=5.1.2',
     'httpretty>=0.9.6',
     'wrapt>=1.11.2'
