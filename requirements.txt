@@ -4,4 +4,4 @@ promise>=1.0.1
 marshmallow>=3.10.0
 future>=0.18.3
 urllib3==1.26.15
-vcrpy<=2.0.0
+vcrpy<=4.0.0
