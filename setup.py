@@ -19,7 +19,7 @@ requires = [
     'promise>=1.0.1',
     'marshmallow>=3.10.0',
     'future>=0.18.3',
-    'urllib3==1.26.15'
+    'urllib3<2.0'
 ]
 test_requirements = [
     # This is needed to circumvent a vcrpy dependency problem And can be
