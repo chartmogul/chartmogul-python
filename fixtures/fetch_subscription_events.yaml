@@ -1,0 +1,78 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - chartmogul-python/3.1.2
+      content-type:
+      - application/json
+    method: GET
+    uri: https://api.chartmogul.com/v1/subscription_events
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA+2bXZOiOBSG/wvX7VS+P/wdfbVbUxRCUEGQhmDrdPV/3xC2dtepHRkJAbvKKm+U
+        Qzwkj29OXpOPoGk3TVzvK70/lqE6qVI3wfrPj2CfBGtMuUQCE/QSJJGOwubY1rEK27a7GCRNKDFM
+        oYzQKuZJuoJQJauNgnKVbjiPUkaTKJHBSxC3jT4Wqg7VWau6jA6hbYBDCTg0169yaJS+jivbw+Gn
+        mOt2ENn94Ni0Ux0i8wz//Y7+XvtYoXkEZdJGAOEVoCvIXwFbI7BG/A9zr0pTFev9Sf0cB/ArAGv7
+        snFdF4X6UnVtXSUeR2WsDgeVdK39TxJ1faxN3358mg6plUkmCSP964Taqkv4dsxbG5V6ry/Bun/Q
+        uK1rVcb/vI+KY2uy3Zdh3A9sH6ajc/iLS7XSdRR339t3WjdQ3U2fL9dIQD9IQMEA64byqmfvRyLP
+        i0bwJxLdb28uJIAfJBCkEDB3JLIs3V2a8UiwR1MJm9CAStiYxVQCSz9IECoRBRMgQTWrd96QQLNP
+        HF8ACeEHCSgQ7/Tecd7Y/mDYRSTobZGYnwib0IBI2JjlRIL7IYIhTlBXfboiEVfbs0N1+USiW1H0
+        hedvVpeY+UGCI8anmDc4T6pdNX7eII+mEjahAZWwMcupBPWDBKPUCIW7SuzqgorMGxLzr0G/ABLE
+        DxIQE47ciSCIxuVlPBH4tkjMT4RNaEAkbMxyIoH9EMEwR3gCV4LSfBN39tBIo+qJxP2lBPKEBAFi
+        CiSy8j19I+ORQI+mEjahAZWwMcuphCfvEhufindD6bjgIO8sSRxKiScS96uEJ++SAmjcS3ckUiYY
+        EuNVAj6aStiEBlTCxiymEsiTUcUwIXgCJHBxZmeHWmIAifmdqi+AhCdbgmEq4QROVYbzt62DSoDb
+        KjE/EjahAZWwMcuphCdbAgsMYDeUjrVE9l7k0sGpeiJxdy2BPNkS2FhVeILyMs0zWejRtQSUD6YS
+        fUK3VaKPWU4lPPkSxGzOYRMgIZDcvT+RMLuMZtstgZAfX4JALsQEuyVEqk+X8RMHFE+VuPdfL+TJ
+        l6AcCzGFSmRbpLt2xrmXQ0jMbmj3CQ1MHJbj5SYOj76EnOI/jktRoicSc04c0JMvATGXdIIVx1an
+        cZqNV4lH24wLbUIDKmFjFlMJ6GkHDSGSsAmQwLu3bONQSzyRuHsRCj2tOIyhjRkwv25HXyLfpCfq
+        oBKPthkX/sbOyz5mOZXwteKQUoAJ3Euc0wt2WIQOIDG7e/mQSHx/CQqlI3MKJSjNGZUwV+asyN/H
+        fKABpKrVqf+w37C3UemxVv0n/56cka8QralYQ/oNY2sRVtHWnIcxCxh91OZ4T/fWLH8I4p+ffwGd
+        9Me3YzQAAA==
+    headers:
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '1033'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 19 May 2023 12:58:15 GMT
+      ETag:
+      - W/"81eb5df6ece395240b6951a8223b5f5d"
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Vary:
+      - Accept-Encoding
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Frame-Options:
+      - DENY
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Request-Id:
+      - 7ac6e671676b1fe526cf0c67d988f7b1
+      X-Runtime:
+      - '0.128295'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

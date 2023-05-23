@@ -19,6 +19,7 @@ requires = [
     'promise>=1.0.1',
     'marshmallow>=3.10.0',
     'future>=0.18.3',
+    'urllib3<2.0'
 ]
 test_requirements = [
     # This is needed to circumvent a vcrpy dependency problem And can be
@@ -28,7 +29,7 @@ test_requirements = [
 
     'mock>=1.0.1',
     'requests-mock>=1.3.0',
-    'vcrpy>=1.11.1',
+    'vcrpy<3.0.0',
     'PyYAML>=5.1.2',
     'httpretty>=0.9.6',
     'wrapt>=1.11.2'
