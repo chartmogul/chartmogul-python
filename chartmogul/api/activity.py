@@ -5,11 +5,13 @@ from collections import namedtuple
 
 class Activity(Resource):
     """
-    https://dev.chartmogul.com/v1.0/reference#list-customer-subscriptions
+    https://dev.chartmogul.com/reference/list-activities
     """
-    _path = "/activities"
+    _path = '/activities'
     _root_key = 'entries'
-    _many = namedtuple('Activities', [_root_key, "has_more", "per_page"])
+    _many = namedtuple('Activities',
+                       [_root_key, 'has_more', 'per_page', 'cursor'],
+                       defaults=[None, None, None])
 
     class _Schema(Schema):
         activity_arr = fields.Number(data_key='activity-arr')

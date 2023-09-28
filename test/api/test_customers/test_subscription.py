@@ -100,8 +100,8 @@ class CustomerSubscriptionsTestCase(unittest.TestCase):
                       "cancellation_dates":[]
                     }
                   ],
-                  "current_page": 1,
-                  "total_pages": 1
+                  "cursor": "cursor==",
+                  "has_more": False
                 }
         )
         config = Config("token")  # is actually checked in mock
@@ -141,7 +141,8 @@ class CustomerSubscriptionsTestCase(unittest.TestCase):
                       ],
                     "has_more": False,
                     "per_page": 200,
-                    "page": 1
+                    "page": 1,
+                    "cursor": "cursor=="
                 }
         )
         config = Config("token")  # is actually checked in mock
@@ -151,3 +152,5 @@ class CustomerSubscriptionsTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(result.__class__.__name__, CustomerSubscription._many.__name__)
         self.assertEqual(result.entries[0].external_id, "sub_0001")
+        self.assertEqual(result.page, 1)
+        self.assertEqual(result.cursor, "cursor==")

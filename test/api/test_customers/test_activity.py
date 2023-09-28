@@ -34,7 +34,8 @@ class CustomerActivitiesTestCase(unittest.TestCase):
                     ],
                     "has_more":False,
                     "per_page":200,
-                    "page":1
+                    "page":1,
+                    "cursor": "cursor=="
                 }
         )
         config = Config("token")  # is actually checked in mock
@@ -44,3 +45,5 @@ class CustomerActivitiesTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(result.__class__.__name__, CustomerActivity._many.__name__)
         self.assertEqual(result.entries[0].id, 48730)
+        self.assertEqual(result.cursor, "cursor==")
+        self.assertFalse(result.has_more)

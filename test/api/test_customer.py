@@ -7,89 +7,94 @@ import requests_mock
 
 from pprint import pprint
 
-docsListSample = {
-    "entries": [
-        {
-            "id": 25647,
-            "uuid": "cus_de305d54-75b4-431b-adb2-eb6b9e546012",
-            "external_id": "34916129",
-            "external_ids": ["34916129"],
-            "data_source_uuid": "ds_610b7a84-c50f-11e6-8aab-97d6db98913a",
-            "data_source_uuids": ["ds_610b7a84-c50f-11e6-8aab-97d6db98913a"],
-            "name": "Example Company",
-            "company": "",
-            "email": "bob@examplecompany.com",
-            "status": "Active",
-            "lead_created_at": "2015-01-01T10:00:00-04:00",
-            "free_trial_started_at": "2015-01-09T10:00:00-04:00",
-            "customer-since": "2015-06-09T13:16:00-04:00",
-            "city": "Nowhereville",
-            "state": "Alaska",
-            "country": "US",
-            "zip": "0185128",
-            "attributes":{
-                "tags": ["engage", "unit loss", "discountable"],
-                "stripe":{
-                    "uid": 7,
-                    "coupon": True
+entry = {
+    "id": 25647,
+    "uuid": "cus_de305d54-75b4-431b-adb2-eb6b9e546012",
+    "external_id": "34916129",
+    "external_ids": ["34916129"],
+    "data_source_uuid": "ds_610b7a84-c50f-11e6-8aab-97d6db98913a",
+    "data_source_uuids": ["ds_610b7a84-c50f-11e6-8aab-97d6db98913a"],
+    "name": "Example Company",
+    "company": "",
+    "email": "bob@examplecompany.com",
+    "status": "Active",
+    "lead_created_at": "2015-01-01T10:00:00-04:00",
+    "free_trial_started_at": "2015-01-09T10:00:00-04:00",
+    "customer-since": "2015-06-09T13:16:00-04:00",
+    "city": "Nowhereville",
+    "state": "Alaska",
+    "country": "US",
+    "zip": "0185128",
+    "attributes":{
+        "tags": ["engage", "unit loss", "discountable"],
+        "stripe":{
+            "uid": 7,
+            "coupon": True
+        },
+        "clearbit": {
+            "company": {
+                "name": "Example Company",
+                "legalName": "Example Company Inc.",
+                "domain": "examplecompany.com",
+                "url": "http://examplecompany.com",
+                "category": {
+                    "sector": "Information Technology",
+                    "industryGroup": "Software and Services",
+                    "industry": "Software",
+                    "subIndustry": "Application Software"
                 },
-                "clearbit": {
-                    "company": {
-                        "name": "Example Company",
-                        "legalName": "Example Company Inc.",
-                        "domain": "examplecompany.com",
-                        "url": "http://examplecompany.com",
-                        "category": {
-                            "sector": "Information Technology",
-                            "industryGroup": "Software and Services",
-                            "industry": "Software",
-                            "subIndustry": "Application Software"
-                        },
-                        "metrics": {
-                            "raised": 1502450000,
-                            "employees": 1000,
-                            "googleRank": 7,
-                            "alexaGlobalRank": 2319,
-                            "marketCap": None
-                        },
-                    },
-                    "person": {
-                        "name": {
-                            "fullName": "Bob Kramer"
-                        },
-                        "employment": {
-                            "name": "Example Company"
-                        }
-                    }
+                "metrics": {
+                    "raised": 1502450000,
+                    "employees": 1000,
+                    "googleRank": 7,
+                    "alexaGlobalRank": 2319,
+                    "marketCap": None
                 },
-                "custom": {
-                    "CAC": 213,
-                    "utmCampaign": "social media 1",
-                    "convertedAt": "2015-09-08 00:00:00",
-                    "pro": False,
-                    "salesRep": "Gabi"
+            },
+            "person": {
+                "name": {
+                    "fullName": "Bob Kramer"
+                },
+                "employment": {
+                    "name": "Example Company"
                 }
-            },
-            "address": {
-                "address_zip": "0185128",
-                "city": "Nowhereville",
-                "country": "US",
-                "state": "Alaska"
-            },
-            "mrr": 3000.0,
-            "arr": 36000.0,
-            "billing-system-url": "https:\/\/dashboard.stripe.com\/customers\/cus_4Z2ZpyJFuQ0XMb",
-            "chartmogul-url": "https:\/\/app.chartmogul.com\/#customers\/25647-Example_Company",
-            "billing-system-type": "Stripe",
-            "currency": "USD",
-            "currency-sign": "$"
+            }
+        },
+        "custom": {
+            "CAC": 213,
+            "utmCampaign": "social media 1",
+            "convertedAt": "2015-09-08 00:00:00",
+            "pro": False,
+            "salesRep": "Gabi"
         }
-    ],
-    "has_more": True,
+    },
+    "address": {
+        "address_zip": "0185128",
+        "city": "Nowhereville",
+        "country": "US",
+        "state": "Alaska"
+    },
+    "mrr": 3000.0,
+    "arr": 36000.0,
+    "billing-system-url": "https:\/\/dashboard.stripe.com\/customers\/cus_4Z2ZpyJFuQ0XMb",
+    "chartmogul-url": "https:\/\/app.chartmogul.com\/#customers\/25647-Example_Company",
+    "billing-system-type": "Stripe",
+    "currency": "USD",
+    "currency-sign": "$"
+}
+
+allContactsOld = {
+    "entries": [entry],
     "per_page": 50,
     "page": 1,
     "current_page": 1,
-    "total_pages": 4
+    "total_pages": 4,
+}
+
+allContactsNew = {
+    "entries": [entry],
+    "cursor": "cursor==",
+    "has_more": True
 }
 
 deserializedCustomer = Customer(
@@ -321,26 +326,53 @@ createContact = {
     ]
 }
 
-allContacts = {
-    "entries": [contact],
-    "cursor": "MjAyMy0wMy0xMFQwMzo1MzoxNS44MTg1MjUwMDArMDA6MDAmY29uXzE2NDcwZjk4LWJlZjctMTFlZC05MjA4LTdiMDhhNDBmMzA0OQ==",
-    "has_more": False
-}
-
 
 class CustomerTestCase(unittest.TestCase):
     """
     Tests complex nested structure & assymetric create/retrieve schema.
     """
-
     @requests_mock.mock()
-    def test_all(self, mock_requests):
+    def test_all_old_pagination(self, mock_requests):
         mock_requests.register_uri(
             'GET',
             "https://api.chartmogul.com/v1/customers",
             request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
-            json=docsListSample
+            json=allContactsOld
+        )
+
+        config = Config("token")
+        customers = Customer.all(config).get()
+
+        expected = Customer._many(
+            entries=[deserializedCustomer],
+            per_page=50,
+            page=1,
+            current_page=1,
+            total_pages=4
+        )
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.text, None)
+        # Complete comparing too complicated, would need to:
+        #  1) sort all dictionaries,
+        #  2) use special class/library for timezones (Python has no default)
+        # self.assertEqual(str(customers), str(expected))
+        # => check only first level fields are OK
+        self.assertEqual(sorted(dir(customers)), sorted(dir(expected)))
+        self.assertEqual(sorted(customers.entries[0].attributes.stripe), sorted(expected.entries[0].attributes.stripe))
+        self.assertEqual(sorted(customers.entries[0].attributes.clearbit), sorted(expected.entries[0].attributes.clearbit))
+        self.assertTrue(isinstance(customers.entries[0], Customer))
+
+    @requests_mock.mock()
+    def test_all_new_pagination(self, mock_requests):
+        mock_requests.register_uri(
+            'GET',
+            "https://api.chartmogul.com/v1/customers",
+            request_headers={'Authorization': 'Basic dG9rZW46'},
+            status_code=200,
+            json=allContactsNew
         )
 
         config = Config("token")
@@ -349,10 +381,7 @@ class CustomerTestCase(unittest.TestCase):
         expected = Customer._many(
             entries=[deserializedCustomer],
             has_more=True,
-            per_page=50,
-            page=1,
-            current_page=1,
-            total_pages=4
+            cursor="cursor=="
         )
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -374,7 +403,7 @@ class CustomerTestCase(unittest.TestCase):
             'POST',
             "https://api.chartmogul.com/v1/customers",
             status_code=200,
-            json=docsListSample["entries"][0]
+            json=entry
         )
 
         config = Config("token")
@@ -384,12 +413,12 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.json(), sentCreateExpected)
 
     @requests_mock.mock()
-    def test_search(self, mock_requests):
+    def test_search_old_pagination(self, mock_requests):
         mock_requests.register_uri(
             'GET',
             "https://api.chartmogul.com/v1/customers/search?email=tralala@someemail.com",
             status_code=200,
-            json=docsListSample
+            json=allContactsOld
         )
 
         config = Config("token")
@@ -400,6 +429,28 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertTrue(isinstance(result, Customer._many))
         self.assertTrue(isinstance(result.entries[0], Customer))
+        self.assertEqual(result.current_page, 1)
+        self.assertEqual(result.total_pages, 4)
+
+    @requests_mock.mock()
+    def test_search_new_pagination(self, mock_requests):
+        mock_requests.register_uri(
+            'GET',
+            "https://api.chartmogul.com/v1/customers/search?email=tralala@someemail.com",
+            status_code=200,
+            json=allContactsNew
+        )
+
+        config = Config("token")
+        result = Customer.search(config, email='tralala@someemail.com').get()
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {
+                         'email': ['tralala@someemail.com']})
+        self.assertEqual(mock_requests.last_request.text, None)
+        self.assertTrue(isinstance(result, Customer._many))
+        self.assertTrue(isinstance(result.entries[0], Customer))
+        self.assertTrue(result.has_more)
+        self.assertEqual(result.cursor, "cursor==")
 
     @requests_mock.mock()
     def test_merge(self, mock_requests):
@@ -420,6 +471,7 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
         self.assertEqual(result, None)
+
     @requests_mock.mock()
     def test_connectSubscriptions(self, mock_requests):
         mock_requests.register_uri(
@@ -496,18 +548,20 @@ class CustomerTestCase(unittest.TestCase):
             "GET",
             "https://api.chartmogul.com/v1/customers/cus_00000000-0000-0000-0000-000000000000/contacts",
             status_code=200,
-            json=allContacts
+            json=allContactsNew
         )
 
         config = Config("token")
         contacts = Customer.contacts(config, uuid="cus_00000000-0000-0000-0000-000000000000").get()
-        expected = Contact._many(**allContacts)
+        expected = Contact._many(**allContactsNew)
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertEqual(sorted(dir(contacts)), sorted(dir(expected)))
         self.assertTrue(isinstance(contacts.entries[0], Contact))
+        self.assertEqual(contacts.cursor, "cursor==")
+        self.assertTrue(contacts.has_more)
 
     @requests_mock.mock()
     def test_createContact(self, mock_requests):

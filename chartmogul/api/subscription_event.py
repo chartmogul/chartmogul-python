@@ -7,9 +7,11 @@ class SubscriptionEvent(Resource):
     """
     https://dev.chartmogul.com/reference/subscription-events
     """
-    _path = "/subscription_events"
+    _path = '/subscription_events'
     _root_key = 'subscription_events'
-    _many = namedtuple('SubscriptionEvents', [_root_key, 'meta'])
+    _many = namedtuple('SubscriptionEvents',
+                       [_root_key, 'meta', 'has_more', 'cursor'],
+                       defaults=[None, None, None])
 
     class _Schema(Schema):
         id = fields.Int(required=True)

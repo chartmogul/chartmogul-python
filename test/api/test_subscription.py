@@ -10,7 +10,6 @@ class SubscriptionsTestCase(unittest.TestCase):
     """
     Tests cancel, because it has custom path.
     """
-
     @requests_mock.mock()
     def test_cancel_subscription(self, mock_requests):
         """ Test cancel (patch) subscription (cancelled_at).
@@ -100,8 +99,8 @@ class SubscriptionsTestCase(unittest.TestCase):
                       "cancellation_dates":[]
                     }
                   ],
-                  "current_page": 1,
-                  "total_pages": 1
+                  "has_more": False,
+                  "cursor": "cursor=="
                 }
         )
         config = Config("token")  # is actually checked in mock
@@ -111,3 +110,5 @@ class SubscriptionsTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(result.__class__.__name__, Subscription._many.__name__)
         self.assertEqual(result.customer_uuid, "some_uuid")
+        self.assertEqual(result.cursor, "cursor==")
+        self.assertFalse(result.has_more)

@@ -9,8 +9,7 @@ class Contact(Resource):
     """
     _path = "/contacts{/uuid}"
     _root_key = "entries"
-    _many = namedtuple("Contacts",
-                       [_root_key, "has_more", "cursor"])
+    _many = namedtuple("Contacts", [_root_key, "has_more", "cursor"])
 
     class _Schema(Schema):
         uuid = fields.String()

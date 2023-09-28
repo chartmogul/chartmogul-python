@@ -45,7 +45,7 @@ createContact = {
 
 allContacts = {
     "entries": [contact],
-    "cursor": "MjAyMy0wMy0xMFQwMzo1MzoxNS44MTg1MjUwMDArMDA6MDAmY29uXzE2NDcwZjk4LWJlZjctMTFlZC05MjA4LTdiMDhhNDBmMzA0OQ==",
+    "cursor": "cursor==",
     "has_more": False
 }
 
@@ -77,6 +77,8 @@ class ContactTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertEqual(dir(contacts), dir(expected))
         self.assertTrue(isinstance(contacts.entries[0], Contact))
+        self.assertFalse(contacts.has_more)
+        self.assertEqual(contacts.cursor, "cursor==")
 
     @requests_mock.mock()
     def test_create(self, mock_requests):

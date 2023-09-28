@@ -10,42 +10,62 @@ from chartmogul import APIError
 from chartmogul import ArgumentMissingError
 
 expected_sub_ev = {
-     "id": 7654321,
-     "external_id": "evnt_026",
-     "customer_external_id": "scus_022",
-     "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
-     "event_type": "subscription_start_scheduled",
-     "event_date": "2022-03-30 23:00:00.000",
-     "effective_date": "2022-04-01 23:00:00.000",
-     "subscription_external_id": "sub_0001",
-     "plan_external_id": "gol d_monthly",
-     "currency": "USD",
-     "amount_in_cents": 1000
+    "id": 7654321,
+    "external_id": "evnt_026",
+    "customer_external_id": "scus_022",
+    "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+    "event_type": "subscription_start_scheduled",
+    "event_date": "2022-03-30 23:00:00.000",
+    "effective_date": "2022-04-01 23:00:00.000",
+    "subscription_external_id": "sub_0001",
+    "plan_external_id": "gol d_monthly",
+    "currency": "USD",
+    "amount_in_cents": 1000
 }
 
-sub_ev_list_expected = {
+sub_ev_list_expected_old = {
     "subscription_events": [
-    {
-        "id": 7654321,
-        "external_id": "evnt_026",
-        "customer_external_id": "scus_022",
-        "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
-        "event_type": "subscription_start_scheduled",
-        "event_date": "2022-03-30 23:00:00.000",
-        "effective_date": "2022-04-01 23:00:00.000",
-        "subscription_external_id": "sub_0001",
-        "plan_external_id": "gol d_monthly",
-        "currency": "USD",
-        "amount_in_cents": 1000
-    }
+        {
+            "id": 7654321,
+            "external_id": "evnt_026",
+            "customer_external_id": "scus_022",
+            "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+            "event_type": "subscription_start_scheduled",
+            "event_date": "2022-03-30 23:00:00.000",
+            "effective_date": "2022-04-01 23:00:00.000",
+            "subscription_external_id": "sub_0001",
+            "plan_external_id": "gol d_monthly",
+            "currency": "USD",
+            "amount_in_cents": 1000
+        }
     ],
     "meta": {
         "next_key": 67048503,
         "prev_key": None,
         "before_key": "2022-04-10T22:27:35.834Z",
-         "page": 1,
+        "page": 1,
         "total_pages": 166
     }
+}
+
+sub_ev_list_expected_new = {
+    "subscription_events": [
+        {
+            "id": 7654321,
+            "external_id": "evnt_026",
+            "customer_external_id": "scus_022",
+            "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+            "event_type": "subscription_start_scheduled",
+            "event_date": "2022-03-30 23:00:00.000",
+            "effective_date": "2022-04-01 23:00:00.000",
+            "subscription_external_id": "sub_0001",
+            "plan_external_id": "gol d_monthly",
+            "currency": "USD",
+            "amount_in_cents": 1000
+        }
+    ],
+    "cursor": "cursor==",
+    "has_more": False
 }
 
 sub_ev_one = SubscriptionEvent(
@@ -215,13 +235,13 @@ class SubscriptionEventTestCase(unittest.TestCase):
             self.fail('ArgumentMissingError not raised')
 
     @requests_mock.mock()
-    def test_all_subscription_events(self, mock_requests):
+    def test_all_subscription_events_old_pagination(self, mock_requests):
         mock_requests.register_uri(
             'GET',
             "https://api.chartmogul.com/v1/subscription_events",
             request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
-            json=sub_ev_list_expected
+            json=sub_ev_list_expected_old
         )
 
         config = Config("token")
@@ -253,7 +273,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
             "&customer_external_id=scus_022&event_type=subscription_start_scheduled&plan_external_id=gol d_monthly",
             request_headers={'Authorization': 'Basic dG9rZW46'},
             status_code=200,
-            json=sub_ev_list_expected
+            json=sub_ev_list_expected_new
         )
 
         config = Config("token")
@@ -264,13 +284,8 @@ class SubscriptionEventTestCase(unittest.TestCase):
 
         expected = SubscriptionEvent._many(
             [SubscriptionEvent(**expected_sub_ev)],
-            meta={
-                "next_key": 67048503,
-                "prev_key": None,
-                "before_key": "2022-04-10T22:27:35.834Z",
-                "page": 1,
-                "total_pages": 166
-           }
+           has_more=True,
+           cursor="cursor=="
         )
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")

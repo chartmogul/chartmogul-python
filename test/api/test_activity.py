@@ -36,14 +36,17 @@ class ActivitiesTestCase(unittest.TestCase):
                             "uuid": "f1a49735-21c7-4e3f-9ddc-67927aaadcf4"
                         },
                     ],
-                    "has_more":False,
-                    "per_page":200,
+                    "has_more": False,
+                    "per_page": 200,
+                    "cursor": "cursor=="
                 }
         )
         config = Config("token")  # is actually checked in mock
         result = Activity.all(config).get()
 
-        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.call_count, 1, 'expected call')
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(result.__class__.__name__, Activity._many.__name__)
         self.assertEqual(result.entries[0].uuid, 'f1a49735-21c7-4e3f-9ddc-67927aaadcf4')
+        self.assertFalse(result.has_more)
+        self.assertEqual(result.cursor, 'cursor==')

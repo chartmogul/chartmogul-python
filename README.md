@@ -119,7 +119,7 @@ chartmogul.DataSource.destroy(config, uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb
 
 ```python
 chartmogul.Customer.create(config, data={})
-chartmogul.Customer.all(config, page=2, per_page=20)
+chartmogul.Customer.all(config, cursor='cursor==', per_page=20)
 chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.search(config, email='email@email.com')
 chartmogul.Customer.merge(config, data={
@@ -217,7 +217,7 @@ chartmogul.Plan.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb'
 chartmogul.Plan.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
     'name': 'new name'
 })
-chartmogul.Plan.all(config, page=2, external_id='')
+chartmogul.Plan.all(config, cursor='cursor==', external_id='')
 chartmogul.Plan.destroy(config, uuid='')
 ```
 
@@ -227,7 +227,7 @@ chartmogul.Plan.destroy(config, uuid='')
 chartmogul.PlanGroup.create(config, data={})
 chartmogul.PlanGroup.retrieve(config, uuid='plg_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.PlanGroup.modify(config, uuid='plg_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
-chartmogul.PlanGroup.all(config, page=2)
+chartmogul.PlanGroup.all(config, cursor='cursor==')
 chartmogul.PlanGroup.all(config, uuid='plg_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.PlanGroup.destroy(config, uuid='')
 ```
@@ -238,7 +238,7 @@ chartmogul.PlanGroup.destroy(config, uuid='')
 import chartmogul
 
 chartmogul.Invoice.create(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
-chartmogul.Invoice.all(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', page=2, per_page=10)
+chartmogul.Invoice.all(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='cursor==', per_page=10)
 chartmogul.Invoice.all(config, customer_uuid='cus_f466e33d-ff2b-4a11-8f85-417eb02157a7', external_id='INV0001')
 chartmogul.Invoice.retrieve(config, uuid='inv_22910fc6-c931-48e7-ac12-90d2cb5f0059')
 ```
