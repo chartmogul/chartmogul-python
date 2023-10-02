@@ -16,6 +16,8 @@ from .api.subscription import Subscription
 from .api.tags import Tags
 from .api.transaction import Transaction
 
+from .version import __version__
+
 # Deprecated
 import imp
 
@@ -25,13 +27,12 @@ ChartMogul API Python Client
 
 Provides convenient Python bindings for ChartMogul's API.
 
-:copyright: (c) 2019 by ChartMogul Ltd.
+:copyright: (c) 2023 by ChartMogul Ltd.
 :license: MIT, see LICENSE for more details.
 """
 
 __title__ = 'chartmogul'
-__version__ = '1.5.0'
 __build__ = 0x000000
 __author__ = 'ChartMogul Ltd'
 __license__ = 'MIT'
-__copyright__ = 'Copyright 2020 ChartMogul Ltd'
+__copyright__ = 'Copyright 2023 ChartMogul Ltd'

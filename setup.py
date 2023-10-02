@@ -34,7 +34,7 @@ test_requirements = [
     'wrapt>=1.11.2'
 ]
 
-with open('chartmogul/__init__.py', 'r') as fd:
+with open('chartmogul/version.py', 'r') as fd:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]',
                         fd.read(), re.MULTILINE).group(1)
 
