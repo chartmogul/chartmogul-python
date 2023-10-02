@@ -27,9 +27,16 @@ MAPPINGS = {
     'update': 'put'
 }
 
-LIST_PARAMS = ['current_page', 'total_pages',
-               'has_more', 'per_page', 'page',
-               'summary', 'customer_uuid']
+LIST_PARAMS = [
+    'current_page',
+    'total_pages',
+    'has_more',
+    'per_page',
+    'page',
+    'summary',
+    'cursor',
+    'customer_uuid'
+]
 ESCAPED_QUERY_KEYS = {
     'start_date': 'start-date',
     'end_date': 'end-date'

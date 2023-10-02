@@ -10,7 +10,11 @@ class Subscription(Resource):
     """
     _path = "/customers{/uuid}/subscriptions"
     _root_key = 'entries'
-    _many = namedtuple('Subscriptions', [_root_key, "has_more", "per_page", "page"])
+    _many = namedtuple(
+        'Subscriptions',
+        [_root_key, 'has_more', 'per_page', 'page', 'cursor'],
+        defaults=[None, None, None, None]
+    )
 
     class _Schema(Schema):
         id = fields.Int(allow_none=True)
@@ -45,11 +49,16 @@ class Subscription(Resource):
     @classmethod
     def _loadJSON(cls, jsonObj):
         if "subscriptions" in jsonObj:
-            _many = namedtuple('Subscriptions', ["subscriptions", "current_page", "total_pages", "customer_uuid"])
+            _many = namedtuple(
+                'Subscriptions',
+                ["subscriptions", "current_page", "total_pages", "customer_uuid", "has_more", "cursor"]
+            )
             return _many(cls._schema.load(jsonObj["subscriptions"], many=True),
-                         jsonObj["current_page"],
-                         jsonObj["total_pages"],
-                         jsonObj["customer_uuid"])
+                         jsonObj.get("current_page", None),
+                         jsonObj.get("total_pages", None),
+                         jsonObj["customer_uuid"],
+                         jsonObj.get("has_more", None),
+                         jsonObj.get("cursor", None))
         else:
             return super(Subscription, cls)._loadJSON(jsonObj)
 

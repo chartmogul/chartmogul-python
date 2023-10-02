@@ -10,7 +10,11 @@ class PlanGroup(Resource):
     """
     _path = "/plan_groups{/uuid}"
     _root_key = 'plan_groups'
-    _many = namedtuple('PlanGroups', [_root_key, "current_page", "total_pages"])
+    _many = namedtuple(
+        'PlanGroups',
+        [_root_key, 'current_page', 'total_pages', 'has_more', 'cursor'],
+        defaults=[None, None, None, None]
+    )
 
     class _Schema(Schema):
         uuid = fields.String()

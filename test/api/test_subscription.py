@@ -11,7 +11,6 @@ class SubscriptionsTestCase(unittest.TestCase):
     """
     Tests cancel, because it has custom path.
     """
-
     @requests_mock.mock()
     def test_cancel_subscription(self, mock_requests):
         """ Test cancel (patch) subscription (cancelled_at).
@@ -81,7 +80,7 @@ class SubscriptionsTestCase(unittest.TestCase):
         }).__dict__)
 
     @requests_mock.mock()
-    def test_list_imported_subscriptions(self, mock_requests):
+    def test_list_imported_subscriptions_old_pagination(self, mock_requests):
         """ Test listing (get) subscriptions.
         """
         mock_requests.register_uri(
@@ -112,3 +111,40 @@ class SubscriptionsTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(result.__class__.__name__, Subscription._many.__name__)
         self.assertEqual(result.customer_uuid, "some_uuid")
+        self.assertEqual(result.current_page, 1)
+        self.assertEqual(result.total_pages, 1)
+
+    @requests_mock.mock()
+    def test_list_imported_subscriptions_new_pagination(self, mock_requests):
+        """ Test listing (get) subscriptions.
+        """
+        mock_requests.register_uri(
+            'GET',
+            "https://api.chartmogul.com/v1/import/customers/some_uuid/subscriptions",
+            request_headers={'Authorization': 'Basic dG9rZW46c2VjcmV0'},
+            status_code=200,
+            json={
+                  "customer_uuid": "some_uuid",
+                  "subscriptions":[
+                    {
+                      "uuid": "sub_e6bc5407-e258-4de0-bb43-61faaf062035",
+                      "external_id": "sub_0001",
+                      "subscription_set_external_id": "sub_set_0001",
+                      "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
+                      "data_source_uuid": "ds_fef05d54-47b4-431b-aed2-eb6b9e545430",
+                      "cancellation_dates":[]
+                    }
+                  ],
+                  "has_more": False,
+                  "cursor": "cursor=="
+                }
+        )
+        config = Config("token", "secret")  # is actually checked in mock
+        result = Subscription.list_imported(config, uuid="some_uuid").get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(result.__class__.__name__, Subscription._many.__name__)
+        self.assertEqual(result.customer_uuid, "some_uuid")
+        self.assertEqual(result.cursor, "cursor==")
+        self.assertFalse(result.has_more)
