@@ -37,7 +37,11 @@ class Invoice(Resource):
     """
     _path = "/import/customers{/uuid}/invoices"
     _root_key = 'invoices'
-    _many = namedtuple('Invoices', [_root_key, "current_page", "total_pages", "customer_uuid"])
+    _many = namedtuple(
+        'Invoices',
+        [_root_key, 'current_page', 'total_pages', 'cursor', 'has_more', 'customer_uuid'],
+        defaults=[None, None, None, None, None]
+    )
     _many.__new__.__defaults__ = (None,) * len(_many._fields)
 
     class _Schema(Schema):

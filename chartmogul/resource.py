@@ -9,6 +9,7 @@ from uritemplate import URITemplate
 from .api.config import Config
 from .errors import APIError, ArgumentMissingError, ConfigurationError, annotateHTTPError
 from .retry_request import requests_retry_session
+from .version import __version__
 
 """
 HTTP verb mapping. Based on nodejs library.
@@ -27,9 +28,16 @@ MAPPINGS = {
     'update': 'put'
 }
 
-LIST_PARAMS = ['current_page', 'total_pages',
-               'has_more', 'per_page', 'page',
-               'summary', 'customer_uuid']
+LIST_PARAMS = [
+    'current_page',
+    'total_pages',
+    'has_more',
+    'per_page',
+    'page',
+    'summary',
+    'cursor',
+    'customer_uuid'
+]
 ESCAPED_QUERY_KEYS = {
     'start_date': 'start-date',
     'end_date': 'end-date'
@@ -125,7 +133,10 @@ class Resource(DataObject):
             resolve(getattr(requests_retry_session(config.max_retries, config.backoff_factor), http_verb)(
                 config.uri + path,
                 data=data,
-                headers={'content-type': 'application/json'},
+                headers={
+                    'content-type': 'application/json',
+                    'User-Agent': 'chartmogul-python/' + __version__
+                },
                 params=params,
                 auth=config.auth,
                 timeout=config.request_timeout)

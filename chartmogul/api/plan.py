@@ -9,7 +9,11 @@ class Plan(Resource):
     """
     _path = "/plans{/uuid}"
     _root_key = 'plans'
-    _many = namedtuple('Plans', [_root_key, "current_page", "total_pages"])
+    _many = namedtuple(
+        'Plans',
+        [_root_key, 'current_page', 'total_pages', 'has_more', 'cursor'],
+        defaults=[None, None, None, None]
+    )
 
     class _Schema(Schema):
         uuid = fields.String()

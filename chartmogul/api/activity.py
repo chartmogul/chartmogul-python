@@ -9,7 +9,11 @@ class Activity(Resource):
     """
     _path = "/customers{/uuid}/activities"
     _root_key = 'entries'
-    _many = namedtuple('Activities', [_root_key, "has_more", "per_page", "page"])
+    _many = namedtuple(
+        'Activities',
+        [_root_key, 'has_more', 'per_page', 'page', 'cursor'],
+        defaults=[None, None, None, None]
+    )
 
     class _Schema(Schema):
         id = fields.Int()
