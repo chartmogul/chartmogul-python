@@ -7,11 +7,12 @@ class SubscriptionEvent(Resource):
     """
     https://dev.chartmogul.com/reference/subscription-events
     """
-    _path = '/subscription_events'
-    _root_key = 'subscription_events'
-    _many = namedtuple('SubscriptionEvents',
-                       [_root_key, 'meta', 'has_more', 'cursor'],
-                       defaults=[None, None, None])
+
+    _path = "/subscription_events"
+    _root_key = "subscription_events"
+    _many = namedtuple(
+        "SubscriptionEvents", [_root_key, "meta", "has_more", "cursor"], defaults=[None, None, None]
+    )
 
     class _Schema(Schema):
         id = fields.Int(required=True)
@@ -37,6 +38,10 @@ class SubscriptionEvent(Resource):
     _schema = _Schema(unknown=EXCLUDE)
 
 
-SubscriptionEvent.all = SubscriptionEvent._method('all', 'get', '/subscription_events')
-SubscriptionEvent.destroy_with_params = SubscriptionEvent._method('destroy_with_params', 'delete', '/subscription_events')
-SubscriptionEvent.modify_with_params = SubscriptionEvent._method('modify_with_params', 'patch', "/subscription_events")
+SubscriptionEvent.all = SubscriptionEvent._method("all", "get", "/subscription_events")
+SubscriptionEvent.destroy_with_params = SubscriptionEvent._method(
+    "destroy_with_params", "delete", "/subscription_events"
+)
+SubscriptionEvent.modify_with_params = SubscriptionEvent._method(
+    "modify_with_params", "patch", "/subscription_events"
+)

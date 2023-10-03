@@ -7,6 +7,7 @@ class Contact(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#contacts
     """
+
     _path = "/contacts{/uuid}"
     _root_key = "entries"
     _many = namedtuple("Contacts", [_root_key, "has_more", "cursor"])

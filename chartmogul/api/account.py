@@ -6,6 +6,7 @@ class Account(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#account
     """
+
     _path = "/account"
 
     class _Schema(Schema):

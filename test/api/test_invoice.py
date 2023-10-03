@@ -33,7 +33,7 @@ requestData = {
                     "quantity": 1,
                     "discount_code": "PSO86",
                     "discount_amount_in_cents": 1000,
-                    "tax_amount_in_cents": 900
+                    "tax_amount_in_cents": 900,
                 },
                 {
                     "type": "one_time",
@@ -46,8 +46,8 @@ requestData = {
                     "discount_description": "Special 20 % discount",
                     "transaction_fees_in_cents": 50,
                     "transaction_fees_currency": "CZK",
-                    "event_order": 5
-                }
+                    "event_order": 5,
+                },
             ],
             "transactions": [
                 {
@@ -55,33 +55,33 @@ requestData = {
                     "date": datetime(2015, 11, 5, 0, 4, 3),
                     "type": "payment",
                     "result": "successful",
-                    "amount_in_cents": 7500
+                    "amount_in_cents": 7500,
                 }
-            ]
+            ],
         }
     ]
 }
 
 requestSerialized = {
-    u"invoices": [
+    "invoices": [
         {
-            u"external_id": u"INV0001",
-            u"date": u"2015-11-01T00:00:00",
-            u"currency": u"USD",
-            u"due_date": u"2015-11-15T00:00:00",
-            u"customer_external_id": u"ext-id",
-            u"line_items": [
+            "external_id": "INV0001",
+            "date": "2015-11-01T00:00:00",
+            "currency": "USD",
+            "due_date": "2015-11-15T00:00:00",
+            "customer_external_id": "ext-id",
+            "line_items": [
                 {
-                    u"type": "subscription",
-                    u"subscription_external_id": "sub_0001",
-                    u"plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
-                    u"service_period_start": "2015-11-01T00:00:00",
-                    u"service_period_end": "2015-12-01T00:00:00",
-                    u"amount_in_cents": 5000,
-                    u"quantity": 1,
-                    u"discount_code": "PSO86",
-                    u"discount_amount_in_cents": 1000,
-                    u"tax_amount_in_cents": 900
+                    "type": "subscription",
+                    "subscription_external_id": "sub_0001",
+                    "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
+                    "service_period_start": "2015-11-01T00:00:00",
+                    "service_period_end": "2015-12-01T00:00:00",
+                    "amount_in_cents": 5000,
+                    "quantity": 1,
+                    "discount_code": "PSO86",
+                    "discount_amount_in_cents": 1000,
+                    "tax_amount_in_cents": 900,
                 },
                 {
                     "type": "one_time",
@@ -94,17 +94,17 @@ requestSerialized = {
                     "discount_description": "Special 20 % discount",
                     "transaction_fees_in_cents": 50,
                     "transaction_fees_currency": "CZK",
-                    "event_order": 5
-                }
+                    "event_order": 5,
+                },
             ],
             "transactions": [
                 {
                     "date": "2015-11-05T00:04:03",
                     "type": "payment",
                     "result": "successful",
-                    "amount_in_cents": 7500
+                    "amount_in_cents": 7500,
                 }
-            ]
+            ],
         }
     ]
 }
@@ -132,7 +132,7 @@ responseData = {
                     "discount_code": "PSO86",
                     "discount_amount_in_cents": 1000,
                     "tax_amount_in_cents": 900,
-                    "account_code": None
+                    "account_code": None,
                 },
                 {
                     "uuid": "li_0cc8c112-beac-416d-af11-f35744ca4e83",
@@ -149,8 +149,8 @@ responseData = {
                     "discount_description": "Special 20 % discount",
                     "transaction_fees_in_cents": 50,
                     "transaction_fees_currency": "CZK",
-                    "event_order": 5
-                }
+                    "event_order": 5,
+                },
             ],
             "transactions": [
                 {
@@ -159,128 +159,128 @@ responseData = {
                     "type": "payment",
                     "date": "2015-11-05T00:04:03.000Z",
                     "result": "successful",
-                    "amount_in_cents": 7500
+                    "amount_in_cents": 7500,
                 }
-            ]
+            ],
         }
     ]
 }
 
 oldInvoiceListExample = {
     "invoices": [
-    {
-      "uuid": "inv_565c73b2-85b9-49c9-a25e-2b7df6a677c9",
-      "customer_uuid": "cus_f466e33d-ff2b-4a11-8f85-417eb02157a7",
-      "external_id": "INV0001",
-      "date": "2015-11-01T00:00:00.000Z",
-      "due_date": "2015-11-15T00:00:00.000Z",
-      "currency": "USD",
-      "line_items": [
         {
-          "uuid": "li_d72e6843-5793-41d0-bfdf-0269514c9c56",
-          "external_id": None,
-          "type": "subscription",
-          "subscription_uuid": "sub_e6bc5407-e258-4de0-bb43-61faaf062035",
-          "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
-          "prorated": False,
-          "service_period_start": "2015-11-01T00:00:00.000Z",
-          "service_period_end": "2015-12-01T00:00:00.000Z",
-          "amount_in_cents": 5000,
-          "quantity": 1,
-          "discount_code": "PSO86",
-          "discount_amount_in_cents": 1000,
-          "tax_amount_in_cents": 900,
-          "account_code": None
-        },
-        {
-          "uuid": "li_0cc8c112-beac-416d-af11-f35744ca4e83",
-          "external_id": None,
-          "type": "one_time",
-          "description": "Setup Fees",
-          "amount_in_cents": 2500,
-          "quantity": 1,
-          "discount_code": "PSO86",
-          "discount_amount_in_cents": 500,
-          "tax_amount_in_cents": 450,
-          "account_code": None,
-          "discount_description": "Special 20 % discount",
-          "transaction_fees_in_cents": 50,
-          "transaction_fees_currency": "CZK",
-          "event_order": 5
+            "uuid": "inv_565c73b2-85b9-49c9-a25e-2b7df6a677c9",
+            "customer_uuid": "cus_f466e33d-ff2b-4a11-8f85-417eb02157a7",
+            "external_id": "INV0001",
+            "date": "2015-11-01T00:00:00.000Z",
+            "due_date": "2015-11-15T00:00:00.000Z",
+            "currency": "USD",
+            "line_items": [
+                {
+                    "uuid": "li_d72e6843-5793-41d0-bfdf-0269514c9c56",
+                    "external_id": None,
+                    "type": "subscription",
+                    "subscription_uuid": "sub_e6bc5407-e258-4de0-bb43-61faaf062035",
+                    "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
+                    "prorated": False,
+                    "service_period_start": "2015-11-01T00:00:00.000Z",
+                    "service_period_end": "2015-12-01T00:00:00.000Z",
+                    "amount_in_cents": 5000,
+                    "quantity": 1,
+                    "discount_code": "PSO86",
+                    "discount_amount_in_cents": 1000,
+                    "tax_amount_in_cents": 900,
+                    "account_code": None,
+                },
+                {
+                    "uuid": "li_0cc8c112-beac-416d-af11-f35744ca4e83",
+                    "external_id": None,
+                    "type": "one_time",
+                    "description": "Setup Fees",
+                    "amount_in_cents": 2500,
+                    "quantity": 1,
+                    "discount_code": "PSO86",
+                    "discount_amount_in_cents": 500,
+                    "tax_amount_in_cents": 450,
+                    "account_code": None,
+                    "discount_description": "Special 20 % discount",
+                    "transaction_fees_in_cents": 50,
+                    "transaction_fees_currency": "CZK",
+                    "event_order": 5,
+                },
+            ],
+            "transactions": [
+                {
+                    "uuid": "tr_879d560a-1bec-41bb-986e-665e38a2f7bc",
+                    "external_id": None,
+                    "type": "payment",
+                    "date": "2015-11-05T00:14:23.000Z",
+                    "result": "successful",
+                }
+            ],
         }
-      ],
-      "transactions": [
-        {
-          "uuid": "tr_879d560a-1bec-41bb-986e-665e38a2f7bc",
-          "external_id": None,
-          "type": "payment",
-          "date": "2015-11-05T00:14:23.000Z",
-          "result": "successful"
-        }
-      ]
-    }
     ],
     "current_page": 1,
-    "total_pages": 1
+    "total_pages": 1,
 }
 
 
 newInvoiceListExample = {
     "invoices": [
-    {
-      "uuid": "inv_565c73b2-85b9-49c9-a25e-2b7df6a677c9",
-      "customer_uuid": "cus_f466e33d-ff2b-4a11-8f85-417eb02157a7",
-      "external_id": "INV0001",
-      "date": "2015-11-01T00:00:00.000Z",
-      "due_date": "2015-11-15T00:00:00.000Z",
-      "currency": "USD",
-      "line_items": [
         {
-          "uuid": "li_d72e6843-5793-41d0-bfdf-0269514c9c56",
-          "external_id": None,
-          "type": "subscription",
-          "subscription_uuid": "sub_e6bc5407-e258-4de0-bb43-61faaf062035",
-          "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
-          "prorated": False,
-          "service_period_start": "2015-11-01T00:00:00.000Z",
-          "service_period_end": "2015-12-01T00:00:00.000Z",
-          "amount_in_cents": 5000,
-          "quantity": 1,
-          "discount_code": "PSO86",
-          "discount_amount_in_cents": 1000,
-          "tax_amount_in_cents": 900,
-          "account_code": None
-        },
-        {
-          "uuid": "li_0cc8c112-beac-416d-af11-f35744ca4e83",
-          "external_id": None,
-          "type": "one_time",
-          "description": "Setup Fees",
-          "amount_in_cents": 2500,
-          "quantity": 1,
-          "discount_code": "PSO86",
-          "discount_amount_in_cents": 500,
-          "tax_amount_in_cents": 450,
-          "account_code": None,
-          "discount_description": "Special 20 % discount",
-          "transaction_fees_in_cents": 50,
-          "transaction_fees_currency": "CZK",
-          "event_order": 5
+            "uuid": "inv_565c73b2-85b9-49c9-a25e-2b7df6a677c9",
+            "customer_uuid": "cus_f466e33d-ff2b-4a11-8f85-417eb02157a7",
+            "external_id": "INV0001",
+            "date": "2015-11-01T00:00:00.000Z",
+            "due_date": "2015-11-15T00:00:00.000Z",
+            "currency": "USD",
+            "line_items": [
+                {
+                    "uuid": "li_d72e6843-5793-41d0-bfdf-0269514c9c56",
+                    "external_id": None,
+                    "type": "subscription",
+                    "subscription_uuid": "sub_e6bc5407-e258-4de0-bb43-61faaf062035",
+                    "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
+                    "prorated": False,
+                    "service_period_start": "2015-11-01T00:00:00.000Z",
+                    "service_period_end": "2015-12-01T00:00:00.000Z",
+                    "amount_in_cents": 5000,
+                    "quantity": 1,
+                    "discount_code": "PSO86",
+                    "discount_amount_in_cents": 1000,
+                    "tax_amount_in_cents": 900,
+                    "account_code": None,
+                },
+                {
+                    "uuid": "li_0cc8c112-beac-416d-af11-f35744ca4e83",
+                    "external_id": None,
+                    "type": "one_time",
+                    "description": "Setup Fees",
+                    "amount_in_cents": 2500,
+                    "quantity": 1,
+                    "discount_code": "PSO86",
+                    "discount_amount_in_cents": 500,
+                    "tax_amount_in_cents": 450,
+                    "account_code": None,
+                    "discount_description": "Special 20 % discount",
+                    "transaction_fees_in_cents": 50,
+                    "transaction_fees_currency": "CZK",
+                    "event_order": 5,
+                },
+            ],
+            "transactions": [
+                {
+                    "uuid": "tr_879d560a-1bec-41bb-986e-665e38a2f7bc",
+                    "external_id": None,
+                    "type": "payment",
+                    "date": "2015-11-05T00:14:23.000Z",
+                    "result": "successful",
+                }
+            ],
         }
-      ],
-      "transactions": [
-        {
-          "uuid": "tr_879d560a-1bec-41bb-986e-665e38a2f7bc",
-          "external_id": None,
-          "type": "payment",
-          "date": "2015-11-05T00:14:23.000Z",
-          "result": "successful"
-        }
-      ]
-    }
     ],
     "cursor": "cursor==",
-    "has_more": False
+    "has_more": False,
 }
 
 
@@ -292,47 +292,47 @@ retrieveInvoiceExample = {
     "currency": "USD",
     "line_items": [
         {
-          "uuid": "li_d72e6843-5793-41d0-bfdf-0269514c9c56",
-          "external_id": None,
-          "type": "subscription",
-          "subscription_uuid": "sub_e6bc5407-e258-4de0-bb43-61faaf062035",
-          "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
-          "prorated": False,
-          "service_period_start": "2015-11-01T00:00:00.000Z",
-          "service_period_end": "2015-12-01T00:00:00.000Z",
-          "amount_in_cents": 5000,
-          "quantity": 1,
-          "discount_code": "PSO86",
-          "discount_amount_in_cents": 1000,
-          "tax_amount_in_cents": 900,
-          "account_code": None
+            "uuid": "li_d72e6843-5793-41d0-bfdf-0269514c9c56",
+            "external_id": None,
+            "type": "subscription",
+            "subscription_uuid": "sub_e6bc5407-e258-4de0-bb43-61faaf062035",
+            "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
+            "prorated": False,
+            "service_period_start": "2015-11-01T00:00:00.000Z",
+            "service_period_end": "2015-12-01T00:00:00.000Z",
+            "amount_in_cents": 5000,
+            "quantity": 1,
+            "discount_code": "PSO86",
+            "discount_amount_in_cents": 1000,
+            "tax_amount_in_cents": 900,
+            "account_code": None,
         },
         {
-          "uuid": "li_0cc8c112-beac-416d-af11-f35744ca4e83",
-          "external_id": None,
-          "type": "one_time",
-          "description": "Setup Fees",
-          "amount_in_cents": 2500,
-          "quantity": 1,
-          "discount_code": "PSO86",
-          "discount_amount_in_cents": 500,
-          "tax_amount_in_cents": 450,
-          "account_code": None,
-          "discount_description": "Special 20 % discount",
-          "transaction_fees_in_cents": 50,
-          "transaction_fees_currency": "CZK",
-          "event_order": 5
-        }
+            "uuid": "li_0cc8c112-beac-416d-af11-f35744ca4e83",
+            "external_id": None,
+            "type": "one_time",
+            "description": "Setup Fees",
+            "amount_in_cents": 2500,
+            "quantity": 1,
+            "discount_code": "PSO86",
+            "discount_amount_in_cents": 500,
+            "tax_amount_in_cents": 450,
+            "account_code": None,
+            "discount_description": "Special 20 % discount",
+            "transaction_fees_in_cents": 50,
+            "transaction_fees_currency": "CZK",
+            "event_order": 5,
+        },
     ],
     "transactions": [
         {
-          "uuid": "tr_879d560a-1bec-41bb-986e-665e38a2f7bc",
-          "external_id": None,
-          "type": "payment",
-          "date": "2015-11-05T00:14:23.000Z",
-          "result": "successful"
+            "uuid": "tr_879d560a-1bec-41bb-986e-665e38a2f7bc",
+            "external_id": None,
+            "type": "payment",
+            "date": "2015-11-05T00:14:23.000Z",
+            "result": "successful",
         }
-    ]
+    ],
 }
 
 
@@ -340,16 +340,17 @@ class InvoiceTestCase(unittest.TestCase):
     """
     Tests most important Import API part and its nested schemas.
     """
+
     maxDiff = None
 
     @requests_mock.mock()
     def test_create(self, mock_requests):
         mock_requests.register_uri(
-            'POST',
+            "POST",
             "https://api.chartmogul.com/v1/import/customers/UUID/invoices",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=responseData
+            json=responseData,
         )
 
         config = Config("token")  # is actually checked in mock
@@ -364,16 +365,16 @@ class InvoiceTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_list_has_customer_uuid(self, mock_requests):
-        responseData['customer_uuid'] = 'UUID'
-        responseData['total_pages'] = 1
-        responseData['current_page'] = 1
+        responseData["customer_uuid"] = "UUID"
+        responseData["total_pages"] = 1
+        responseData["current_page"] = 1
 
         mock_requests.register_uri(
-            'GET',
+            "GET",
             "https://api.chartmogul.com/v1/import/customers/UUID/invoices",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=responseData
+            json=responseData,
         )
 
         config = Config("token")  # is actually checked in mock
@@ -393,78 +394,84 @@ class InvoiceTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_new_list_old_pagination(self, mock_requests):
         mock_requests.register_uri(
-            'GET',
-            ("https://api.chartmogul.com/v1/invoices"
-            "?external_id=INV0001&customer_uuid=cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
-            request_headers={'Authorization': 'Basic dG9rZW46'},
-            headers={'Content-Type': 'application/json'},
+            "GET",
+            (
+                "https://api.chartmogul.com/v1/invoices"
+                "?external_id=INV0001&customer_uuid=cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"
+            ),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
             status_code=200,
-            json=oldInvoiceListExample
+            json=oldInvoiceListExample,
         )
 
         config = Config("token")  # is actually checked in mock
-        result = Invoice.all(config,
-                             customer_uuid='cus_f466e33d-ff2b-4a11-8f85-417eb02157a7',
-                             external_id='INV0001').get()
+        result = Invoice.all(
+            config, customer_uuid="cus_f466e33d-ff2b-4a11-8f85-417eb02157a7", external_id="INV0001"
+        ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         cu = []
-        cu.append('cus_f466e33d-ff2b-4a11-8f85-417eb02157a7')
+        cu.append("cus_f466e33d-ff2b-4a11-8f85-417eb02157a7")
         ei = []
-        ei.append('inv0001')
-        self.assertEqual(mock_requests.last_request.qs, {'customer_uuid': cu,'external_id': ei})
+        ei.append("inv0001")
+        self.assertEqual(mock_requests.last_request.qs, {"customer_uuid": cu, "external_id": ei})
         # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice._many))
         self.assertEqual(len(result.invoices), 1)
 
-        self.assertEqual(result.invoices[0].customer_uuid, 'cus_f466e33d-ff2b-4a11-8f85-417eb02157a7')
+        self.assertEqual(
+            result.invoices[0].customer_uuid, "cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"
+        )
         self.assertEqual(result.current_page, 1)
         self.assertEqual(result.total_pages, 1)
 
     @requests_mock.mock()
     def test_new_list_new_pagination(self, mock_requests):
         mock_requests.register_uri(
-            'GET',
-            ("https://api.chartmogul.com/v1/invoices"
-            "?external_id=INV0001&customer_uuid=cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
-            request_headers={'Authorization': 'Basic dG9rZW46'},
-            headers={'Content-Type': 'application/json'},
+            "GET",
+            (
+                "https://api.chartmogul.com/v1/invoices"
+                "?external_id=INV0001&customer_uuid=cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"
+            ),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
             status_code=200,
-            json=newInvoiceListExample
+            json=newInvoiceListExample,
         )
 
         config = Config("token")  # is actually checked in mock
-        result = Invoice.all(config,
-                             customer_uuid='cus_f466e33d-ff2b-4a11-8f85-417eb02157a7',
-                             external_id='INV0001').get()
+        result = Invoice.all(
+            config, customer_uuid="cus_f466e33d-ff2b-4a11-8f85-417eb02157a7", external_id="INV0001"
+        ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         cu = []
-        cu.append('cus_f466e33d-ff2b-4a11-8f85-417eb02157a7')
+        cu.append("cus_f466e33d-ff2b-4a11-8f85-417eb02157a7")
         ei = []
-        ei.append('inv0001')
-        self.assertEqual(mock_requests.last_request.qs, {'customer_uuid': cu,'external_id': ei})
+        ei.append("inv0001")
+        self.assertEqual(mock_requests.last_request.qs, {"customer_uuid": cu, "external_id": ei})
         # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice._many))
         self.assertEqual(len(result.invoices), 1)
 
-        self.assertEqual(result.invoices[0].customer_uuid, 'cus_f466e33d-ff2b-4a11-8f85-417eb02157a7')
+        self.assertEqual(
+            result.invoices[0].customer_uuid, "cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"
+        )
         self.assertFalse(result.has_more)
         self.assertEqual(result.cursor, "cursor==")
 
     @requests_mock.mock()
     def test_delete(self, mock_requests):
         mock_requests.register_uri(
-            'DELETE',
-            ("https://api.chartmogul.com/v1/invoices"
-            "/inv_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
-            request_headers={'Authorization': 'Basic dG9rZW46'},
-            status_code=204
+            "DELETE",
+            ("https://api.chartmogul.com/v1/invoices" "/inv_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=204,
         )
 
         config = Config("token")  # is actually checked in mock
-        result = Invoice.destroy(config,
-                             uuid='inv_f466e33d-ff2b-4a11-8f85-417eb02157a7').get()
+        result = Invoice.destroy(config, uuid="inv_f466e33d-ff2b-4a11-8f85-417eb02157a7").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
@@ -473,37 +480,40 @@ class InvoiceTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_delete_not_found(self, mock_requests):
         mock_requests.register_uri(
-            'DELETE',
-            ("https://api.chartmogul.com/v1/invoices"
-            "/inv_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
-            request_headers={'Authorization': 'Basic dG9rZW46'},
-            headers={'Content-Type': 'application/json'},
+            "DELETE",
+            ("https://api.chartmogul.com/v1/invoices" "/inv_f466e33d-ff2b-4a11-8f85-417eb02157a7"),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
             status_code=404,
-            json={'error': 'Invoice not found'}
+            json={"error": "Invoice not found"},
         )
 
         config = Config("token")  # is actually checked in mock
         with self.assertRaises(APIError) as context:
-            result = Invoice.destroy(config, uuid='inv_f466e33d-ff2b-4a11-8f85-417eb02157a7').get()
+            result = Invoice.destroy(config, uuid="inv_f466e33d-ff2b-4a11-8f85-417eb02157a7").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
 
     @requests_mock.mock()
     def test_delete_all(self, mock_requests):
         mock_requests.register_uri(
-            'DELETE',
-            ("https://api.chartmogul.com/v1/data_sources"
-            "/ds_f466e33d-ff2b-4a11-8f85-417eb02157a7/customers"
-            "/cus_f466e33d-ff2b-4a11-8f85-417eb02157a7/invoices"),
-            request_headers={'Authorization': 'Basic dG9rZW46'},
-            headers={'Content-Type': 'application/json'},
-            status_code=204
+            "DELETE",
+            (
+                "https://api.chartmogul.com/v1/data_sources"
+                "/ds_f466e33d-ff2b-4a11-8f85-417eb02157a7/customers"
+                "/cus_f466e33d-ff2b-4a11-8f85-417eb02157a7/invoices"
+            ),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=204,
         )
 
         config = Config("token")  # is actually checked in mock
-        result = Invoice.destroy_all(config,
-                             data_source_uuid='ds_f466e33d-ff2b-4a11-8f85-417eb02157a7',
-                             customer_uuid='cus_f466e33d-ff2b-4a11-8f85-417eb02157a7').get()
+        result = Invoice.destroy_all(
+            config,
+            data_source_uuid="ds_f466e33d-ff2b-4a11-8f85-417eb02157a7",
+            customer_uuid="cus_f466e33d-ff2b-4a11-8f85-417eb02157a7",
+        ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
@@ -512,20 +522,20 @@ class InvoiceTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_retrieve_invoice(self, mock_requests):
         mock_requests.register_uri(
-            'GET',
+            "GET",
             ("https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059"),
-            request_headers={'Authorization': 'Basic dG9rZW46'},
-            headers={'Content-Type': 'application/json'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
             status_code=200,
-            json=retrieveInvoiceExample
+            json=retrieveInvoiceExample,
         )
 
         config = Config("token")  # is actually checked in mock
-        result = Invoice.retrieve(config, uuid='inv_22910fc6-c931-48e7-ac12-90d2cb5f0059').get()
+        result = Invoice.retrieve(config, uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
 
         # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice))
 
-        self.assertEqual(result.uuid, 'inv_22910fc6-c931-48e7-ac12-90d2cb5f0059')
+        self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")

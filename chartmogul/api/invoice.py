@@ -5,7 +5,6 @@ from collections import namedtuple
 
 
 class LineItem(DataObject):
-
     class _Schema(Schema):
         uuid = fields.String()
         external_id = fields.String(allow_none=True)
@@ -38,11 +37,14 @@ class Invoice(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#invoices
     """
+
     _path = "/import/customers{/uuid}/invoices"
-    _root_key = 'invoices'
-    _many = namedtuple('Invoices',
+    _root_key = "invoices"
+    _many = namedtuple(
+        "Invoices",
         [_root_key, "current_page", "total_pages", "cursor", "has_more", "customer_uuid"],
-        defaults=[None, None, None, None, None])
+        defaults=[None, None, None, None, None],
+    )
     _many.__new__.__defaults__ = (None,) * len(_many._fields)
 
     class _Schema(Schema):
@@ -71,13 +73,15 @@ class Invoice(Resource):
         Actually uses two different endpoints, where it dispatches the call depends on whether
         customer uuid is given with the old parameter name ('uuid') or not.
         """
-        if 'uuid' in kwargs:
+        if "uuid" in kwargs:
             return super(Invoice, cls).all(config, **kwargs)
         else:
             return cls.all_any(config, **kwargs)
 
 
-Invoice.all_any = Invoice._method('all', 'get', '/invoices')
-Invoice.destroy = Invoice._method('destroy', 'delete', '/invoices{/uuid}')
-Invoice.destroy_all = Invoice._method('destroy_all', 'delete', '/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices')
-Invoice.retrieve = Invoice._method('retrieve', 'get', '/invoices{/uuid}')
+Invoice.all_any = Invoice._method("all", "get", "/invoices")
+Invoice.destroy = Invoice._method("destroy", "delete", "/invoices{/uuid}")
+Invoice.destroy_all = Invoice._method(
+    "destroy_all", "delete", "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices"
+)
+Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")

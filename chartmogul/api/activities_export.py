@@ -5,7 +5,6 @@ from collections import namedtuple
 
 
 class ExportParams(DataObject):
-
     class _Schema(Schema):
         kind = fields.String()
         params = fields.Dict(allow_none=True)
@@ -19,8 +18,9 @@ class ActivitiesExport(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#
     """
+
     _path = "/activities_export"
-    _many = namedtuple('ActivitiesExport', ["id", "status", "file_url", "expires_at", "created_at"])
+    _many = namedtuple("ActivitiesExport", ["id", "status", "file_url", "expires_at", "created_at"])
 
     class _Schema(Schema):
         # Create
@@ -45,11 +45,13 @@ class ActivitiesExport(Resource):
     @classmethod
     def _validate_arguments(cls, method, kwargs):
         # This enforces user to pass correct argument
-        if method in ['retrieve'] and 'id' not in kwargs:
-            raise ArgumentMissingError("Please pass 'id' parameter to retrieve your export request status")
-        if method in ['create'] and 'data' not in kwargs:
+        if method in ["retrieve"] and "id" not in kwargs:
+            raise ArgumentMissingError(
+                "Please pass 'id' parameter to retrieve your export request status"
+            )
+        if method in ["create"] and "data" not in kwargs:
             raise ArgumentMissingError("Please pass 'data' parameter")
 
 
-ActivitiesExport.create = ActivitiesExport._method('create', 'post', '/activities_export')
-ActivitiesExport.retrieve = ActivitiesExport._method('retrieve', 'get', '/activities_export/{id}')
+ActivitiesExport.create = ActivitiesExport._method("create", "post", "/activities_export")
+ActivitiesExport.retrieve = ActivitiesExport._method("retrieve", "get", "/activities_export/{id}")

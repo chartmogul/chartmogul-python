@@ -6,6 +6,7 @@ class Ping(Resource):
     """
     https://dev.chartmogul.com/docs/authentication
     """
+
     _path = "/ping"
 
     class _Schema(Schema):

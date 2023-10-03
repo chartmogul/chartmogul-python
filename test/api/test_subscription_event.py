@@ -20,7 +20,7 @@ expected_sub_ev = {
     "subscription_external_id": "sub_0001",
     "plan_external_id": "gol d_monthly",
     "currency": "USD",
-    "amount_in_cents": 1000
+    "amount_in_cents": 1000,
 }
 
 sub_ev_list_expected_old = {
@@ -36,7 +36,7 @@ sub_ev_list_expected_old = {
             "subscription_external_id": "sub_0001",
             "plan_external_id": "gol d_monthly",
             "currency": "USD",
-            "amount_in_cents": 1000
+            "amount_in_cents": 1000,
         }
     ],
     "meta": {
@@ -44,8 +44,8 @@ sub_ev_list_expected_old = {
         "prev_key": None,
         "before_key": "2022-04-10T22:27:35.834Z",
         "page": 1,
-        "total_pages": 166
-    }
+        "total_pages": 166,
+    },
 }
 
 sub_ev_list_expected_new = {
@@ -61,29 +61,29 @@ sub_ev_list_expected_new = {
             "subscription_external_id": "sub_0001",
             "plan_external_id": "gol d_monthly",
             "currency": "USD",
-            "amount_in_cents": 1000
+            "amount_in_cents": 1000,
         }
     ],
     "cursor": "cursor==",
-    "has_more": False
+    "has_more": False,
 }
 
 sub_ev_one = SubscriptionEvent(
-     id=7654321,
-     external_id="evnt_026",
-     customer_external_id="scus_022",
-     data_source_uuid="ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
-     event_type="subscription_start_scheduled",
-     event_date="2022-03-30 23:00:00.000",
-     effective_date="2022-04-01 23:00:00.000",
-     subscription_external_id="sub_0001",
-     plan_external_id="gol d_monthly",
-     currency="USD",
-     amount_in_cents=1000
+    id=7654321,
+    external_id="evnt_026",
+    customer_external_id="scus_022",
+    data_source_uuid="ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+    event_type="subscription_start_scheduled",
+    event_date="2022-03-30 23:00:00.000",
+    effective_date="2022-04-01 23:00:00.000",
+    subscription_external_id="sub_0001",
+    plan_external_id="gol d_monthly",
+    currency="USD",
+    amount_in_cents=1000,
 )
 
-class SubscriptionEventTestCase(unittest.TestCase):
 
+class SubscriptionEventTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_create_subscription_event(self, mock_requests):
         sent = {
@@ -96,42 +96,38 @@ class SubscriptionEventTestCase(unittest.TestCase):
             "subscription_external_id": "sub_0001",
             "plan_external_id": "gold_monthly",
             "currency": "USD",
-            "amount_in_cents": 1000
+            "amount_in_cents": 1000,
         }
         mock_requests.register_uri(
-            'POST',
+            "POST",
             "https://api.chartmogul.com/v1/subscription_events",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=expected_sub_ev
+            json=expected_sub_ev,
         )
         config = Config("token")  # is actually checked in mock
-        sub_ev = SubscriptionEvent.create(
-            config,
-            uuid = "UUID",
-            data = sent
-        ).get()
+        sub_ev = SubscriptionEvent.create(config, uuid="UUID", data=sent).get()
         expected = SubscriptionEvent(**expected_sub_ev)
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), sent)
         self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
-        self.assertEqual(sub_ev.id,expected.id)
-        self.assertEqual(sub_ev.external_id,expected.external_id)
+        self.assertEqual(sub_ev.id, expected.id)
+        self.assertEqual(sub_ev.external_id, expected.external_id)
 
     @requests_mock.mock()
     def test_delete_subscription_event_with_id(self, mock_requests):
         data = {"subscription_event": {"id": 7654321}}
         mock_requests.register_uri(
-            'DELETE',
+            "DELETE",
             ("https://api.chartmogul.com/v1/subscription_events"),
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=204,
-            json = data
+            json=data,
         )
 
         config = Config("token")  # is actually checked in mock
-        result = SubscriptionEvent.destroy_with_params(config, data = data).get()
+        result = SubscriptionEvent.destroy_with_params(config, data=data).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
@@ -142,19 +138,19 @@ class SubscriptionEventTestCase(unittest.TestCase):
         data = {
             "subscription_event": {
                 "data_source_uuid": "evnt_026",
-                "external_id": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba"
+                "external_id": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
             }
         }
         mock_requests.register_uri(
-            'DELETE',
+            "DELETE",
             ("https://api.chartmogul.com/v1/subscription_events"),
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=204,
-            json = data
+            json=data,
         )
 
         config = Config("token")  # is actually checked in mock
-        result = SubscriptionEvent.destroy_with_params(config, data = data).get()
+        result = SubscriptionEvent.destroy_with_params(config, data=data).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
@@ -162,21 +158,16 @@ class SubscriptionEventTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_modify_subscription_event_with_id(self, mock_requests):
-        data={
-            "subscription_event": {
-                "id": 7654321,
-                "amount_in_cents": 10
-            }
-        }
+        data = {"subscription_event": {"id": 7654321, "amount_in_cents": 10}}
         mock_requests.register_uri(
-            'PATCH',
+            "PATCH",
             "https://api.chartmogul.com/v1/subscription_events",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=expected_sub_ev
+            json=expected_sub_ev,
         )
         config = Config("token")  # is actually checked in mock
-        sub_ev = SubscriptionEvent.modify_with_params(config, data = data).get()
+        sub_ev = SubscriptionEvent.modify_with_params(config, data=data).get()
 
         expected = SubscriptionEvent(**expected_sub_ev)
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -187,19 +178,19 @@ class SubscriptionEventTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_modify_subscription_event_with_ds_uuid_and_external_id(self, mock_requests):
-        data={
+        data = {
             "subscription_event": {
                 "external_id": "evnt_026",
                 "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
-                "amount_in_cents": 10
+                "amount_in_cents": 10,
             }
         }
         mock_requests.register_uri(
-            'PATCH',
+            "PATCH",
             "https://api.chartmogul.com/v1/subscription_events",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=expected_sub_ev
+            json=expected_sub_ev,
         )
         config = Config("token")  # is actually checked in mock
         sub_ev = SubscriptionEvent.modify_with_params(config, data=data).get()
@@ -207,24 +198,19 @@ class SubscriptionEventTestCase(unittest.TestCase):
         expected = SubscriptionEvent(**expected_sub_ev)
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
-        self.assertEqual(mock_requests.last_request.json(),data)
+        self.assertEqual(mock_requests.last_request.json(), data)
         self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
         self.assertEqual(sub_ev.id, 7654321)
 
     @requests_mock.mock()
     def test_modify_subscription_event_with_bad_params(self, mock_requests):
-        data={
-            "subscription_event": {
-                "external_id": "evnt_026",
-                "amount_in_cents": 10
-            }
-        }
+        data = {"subscription_event": {"external_id": "evnt_026", "amount_in_cents": 10}}
         mock_requests.register_uri(
-            'PATCH',
+            "PATCH",
             "https://api.chartmogul.com/v1/subscription_events",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=400,
-            json=expected_sub_ev
+            json=expected_sub_ev,
         )
         config = Config("token")  # is actually checked in mock
         try:
@@ -232,16 +218,16 @@ class SubscriptionEventTestCase(unittest.TestCase):
         except ArgumentMissingError:
             pass
         else:
-            self.fail('ArgumentMissingError not raised')
+            self.fail("ArgumentMissingError not raised")
 
     @requests_mock.mock()
     def test_all_subscription_events_old_pagination(self, mock_requests):
         mock_requests.register_uri(
-            'GET',
+            "GET",
             "https://api.chartmogul.com/v1/subscription_events",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=sub_ev_list_expected_old
+            json=sub_ev_list_expected_old,
         )
 
         config = Config("token")
@@ -254,48 +240,58 @@ class SubscriptionEventTestCase(unittest.TestCase):
                 "prev_key": None,
                 "before_key": "2022-04-10T22:27:35.834Z",
                 "page": 1,
-                "total_pages": 166
-           }
+                "total_pages": 166,
+            },
         )
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertEqual(sorted(dir(subscription_events)), sorted(dir(expected)))
-        self.assertEqual(sorted(subscription_events.subscription_events[0].external_id), sorted(expected.subscription_events[0].external_id))
+        self.assertEqual(
+            sorted(subscription_events.subscription_events[0].external_id),
+            sorted(expected.subscription_events[0].external_id),
+        )
         self.assertTrue(isinstance(subscription_events.subscription_events[0], SubscriptionEvent))
 
     @requests_mock.mock()
     def test_all_subscription_events_with_filters(self, mock_requests):
         mock_requests.register_uri(
-            'GET',
+            "GET",
             "https://api.chartmogul.com/v1/subscription_events?external_id=evnt_026"
             "&customer_external_id=scus_022&event_type=subscription_start_scheduled&plan_external_id=gol d_monthly",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=sub_ev_list_expected_new
+            json=sub_ev_list_expected_new,
         )
 
         config = Config("token")
-        subscription_events = SubscriptionEvent.all(config, external_id="evnt_026",
-                                                    customer_external_id="scus_022",
-                                                    event_type="subscription_start_scheduled",
-                                                    plan_external_id="gol d_monthly").get()
+        subscription_events = SubscriptionEvent.all(
+            config,
+            external_id="evnt_026",
+            customer_external_id="scus_022",
+            event_type="subscription_start_scheduled",
+            plan_external_id="gol d_monthly",
+        ).get()
 
         expected = SubscriptionEvent._many(
-            [SubscriptionEvent(**expected_sub_ev)],
-           has_more=True,
-           cursor="cursor=="
+            [SubscriptionEvent(**expected_sub_ev)], has_more=True, cursor="cursor=="
         )
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        self.assertEqual(mock_requests.last_request.qs, {
-            'customer_external_id': ['scus_022'],
-            'event_type': ['subscription_start_scheduled'],
-            'external_id': ['evnt_026'],
-            'plan_external_id': ['gol d_monthly']
-        })
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {
+                "customer_external_id": ["scus_022"],
+                "event_type": ["subscription_start_scheduled"],
+                "external_id": ["evnt_026"],
+                "plan_external_id": ["gol d_monthly"],
+            },
+        )
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertEqual(sorted(dir(subscription_events)), sorted(dir(expected)))
-        self.assertEqual(sorted(subscription_events.subscription_events[0].external_id), sorted(expected.subscription_events[0].external_id))
+        self.assertEqual(
+            sorted(subscription_events.subscription_events[0].external_id),
+            sorted(expected.subscription_events[0].external_id),
+        )
         self.assertTrue(isinstance(subscription_events.subscription_events[0], SubscriptionEvent))

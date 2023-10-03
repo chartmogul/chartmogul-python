@@ -18,10 +18,7 @@ contact = {
     "linked_in": "https://linkedin.com/not_found",
     "twitter": "https://twitter.com/not_found",
     "notes": "Heading\nBody\nFooter",
-    "custom": {
-      "MyStringAttribute": "Test",
-      "MyIntegerAttribute": 123
-    }
+    "custom": {"MyStringAttribute": "Test", "MyIntegerAttribute": 123},
 }
 
 createContact = {
@@ -38,16 +35,12 @@ createContact = {
     "twitter": "https://twitter.com/not_found",
     "notes": "Heading\nBody\nFooter",
     "custom": [
-      { "key": "MyStringAttribute", "value": "Test" },
-      { "key": "MyIntegerAttribute", "value": 123 }
-    ]
+        {"key": "MyStringAttribute", "value": "Test"},
+        {"key": "MyIntegerAttribute", "value": 123},
+    ],
 }
 
-allContacts = {
-    "entries": [contact],
-    "cursor": "cursor==",
-    "has_more": False
-}
+allContacts = {"entries": [contact], "cursor": "cursor==", "has_more": False}
 
 
 class ContactTestCase(unittest.TestCase):
@@ -61,19 +54,27 @@ class ContactTestCase(unittest.TestCase):
             "GET",
             "https://api.chartmogul.com/v1/contacts?cursor=Ym9veWFo&per_page=1&data_source_uuid=ds_00000000-0000-0000-0000-000000000000",
             status_code=200,
-            json=allContacts
+            json=allContacts,
         )
 
         config = Config("token")
-        contacts = Contact.all(config, data_source_uuid="ds_00000000-0000-0000-0000-000000000000", cursor="Ym9veWFo", per_page=1).get()
+        contacts = Contact.all(
+            config,
+            data_source_uuid="ds_00000000-0000-0000-0000-000000000000",
+            cursor="Ym9veWFo",
+            per_page=1,
+        ).get()
         expected = Contact._many(**allContacts)
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        self.assertEqual(mock_requests.last_request.qs, {
-          "cursor": ["ym9vewfo"],
-          "per_page": ["1"],
-          "data_source_uuid": ["ds_00000000-0000-0000-0000-000000000000"]
-        })
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {
+                "cursor": ["ym9vewfo"],
+                "per_page": ["1"],
+                "data_source_uuid": ["ds_00000000-0000-0000-0000-000000000000"],
+            },
+        )
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertEqual(dir(contacts), dir(expected))
         self.assertTrue(isinstance(contacts.entries[0], Contact))
@@ -83,10 +84,7 @@ class ContactTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_create(self, mock_requests):
         mock_requests.register_uri(
-            "POST",
-            "https://api.chartmogul.com/v1/contacts",
-            status_code=200,
-            json=contact
+            "POST", "https://api.chartmogul.com/v1/contacts", status_code=200, json=contact
         )
 
         config = Config("token")
@@ -101,11 +99,15 @@ class ContactTestCase(unittest.TestCase):
             "POST",
             "https://api.chartmogul.com/v1/contacts/con_00000000-0000-0000-0000-000000000000/merge/con_00000000-0000-0000-0000-000000000001",
             status_code=200,
-            json=contact
+            json=contact,
         )
 
         config = Config("token")
-        expected = Contact.merge(config, into_uuid="con_00000000-0000-0000-0000-000000000000", from_uuid="con_00000000-0000-0000-0000-000000000001").get()
+        expected = Contact.merge(
+            config,
+            into_uuid="con_00000000-0000-0000-0000-000000000000",
+            from_uuid="con_00000000-0000-0000-0000-000000000001",
+        ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
@@ -113,23 +115,23 @@ class ContactTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_modify(self, mock_requests):
-       mock_requests.register_uri(
-           "PATCH",
-           "https://api.chartmogul.com/v1/contacts/con_00000000-0000-0000-0000-000000000000",
-           status_code=200,
-           json=contact
-       )
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/contacts/con_00000000-0000-0000-0000-000000000000",
+            status_code=200,
+            json=contact,
+        )
 
-       jsonRequest = {
-         "email": "test2@example.com"
-       }
-       config = Config("token")
-       expected = Contact.modify(config, uuid="con_00000000-0000-0000-0000-000000000000", data=jsonRequest).get()
+        jsonRequest = {"email": "test2@example.com"}
+        config = Config("token")
+        expected = Contact.modify(
+            config, uuid="con_00000000-0000-0000-0000-000000000000", data=jsonRequest
+        ).get()
 
-       self.assertEqual(mock_requests.call_count, 1, "expected call")
-       self.assertEqual(mock_requests.last_request.qs, {})
-       self.assertEqual(mock_requests.last_request.json(), jsonRequest)
-       self.assertTrue(isinstance(expected, Contact))
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertTrue(isinstance(expected, Contact))
 
     @requests_mock.mock()
     def test_retrieve(self, mock_requests):
@@ -137,7 +139,7 @@ class ContactTestCase(unittest.TestCase):
             "GET",
             "https://api.chartmogul.com/v1/contacts/con_00000000-0000-0000-0000-000000000000",
             status_code=200,
-            json=contact
+            json=contact,
         )
 
         config = Config("token")
@@ -153,7 +155,7 @@ class ContactTestCase(unittest.TestCase):
             "DELETE",
             "https://api.chartmogul.com/v1/contacts/con_00000000-0000-0000-0000-000000000000",
             status_code=200,
-            json={}
+            json={},
         )
 
         config = Config("token")

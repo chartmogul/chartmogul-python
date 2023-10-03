@@ -6,6 +6,7 @@ class Attributes(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#customer-attributes
     """
+
     _path = "/customers{/uuid}/attributes"
 
     class _Schema(Schema):

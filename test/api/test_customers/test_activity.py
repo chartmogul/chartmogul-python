@@ -10,33 +10,34 @@ class CustomerActivitiesTestCase(unittest.TestCase):
     """
     Tests CustomerActivities
     """
+
     @requests_mock.mock()
     def test_all(self, mock_requests):
         mock_requests.register_uri(
-            'GET',
+            "GET",
             "https://api.chartmogul.com/v1/customers/some_uuid/activities",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json={
-                    "entries":[
-                        {
-                            "activity-arr": 24000,
-                            "activity-mrr": 2000,
-                            "activity-mrr-movement": 2000,
-                            "currency": "USD",
-                            "currency-sign": "$",
-                            "date": "2015-06-09T13:16:00-04:00",
-                            "description": "purchased the Silver Monthly plan (1)",
-                            "id": 48730,
-                            "type": "new_biz",
-                            "subscription-external-id": "1"
-                        }
-                    ],
-                    "has_more":False,
-                    "per_page":200,
-                    "page":1,
-                    "cursor": "cursor=="
-                }
+                "entries": [
+                    {
+                        "activity-arr": 24000,
+                        "activity-mrr": 2000,
+                        "activity-mrr-movement": 2000,
+                        "currency": "USD",
+                        "currency-sign": "$",
+                        "date": "2015-06-09T13:16:00-04:00",
+                        "description": "purchased the Silver Monthly plan (1)",
+                        "id": 48730,
+                        "type": "new_biz",
+                        "subscription-external-id": "1",
+                    }
+                ],
+                "has_more": False,
+                "per_page": 200,
+                "page": 1,
+                "cursor": "cursor==",
+            },
         )
         config = Config("token")  # is actually checked in mock
         result = CustomerActivity.all(config, uuid="some_uuid").get()

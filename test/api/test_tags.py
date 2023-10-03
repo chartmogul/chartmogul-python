@@ -12,18 +12,14 @@ class TagsTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_add(self, mock_requests):
-        requestData = {
-          "tags": ["important", "Prio1"]
-         }
-        expected_dict = {
-            "tags": [u"engage", u"unit loss", u"discountable", u"important", u"Prio1"]
-        }
+        requestData = {"tags": ["important", "Prio1"]}
+        expected_dict = {"tags": ["engage", "unit loss", "discountable", "important", "Prio1"]}
         mock_requests.register_uri(
-            'POST',
+            "POST",
             "https://api.chartmogul.com/v1/customers/UUID/attributes/tags",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=expected_dict
+            json=expected_dict,
         )
         config = Config("token")  # is actually checked in mock
         tags = Tags.add(config, uuid="UUID", data=requestData).get()

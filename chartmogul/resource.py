@@ -116,7 +116,7 @@ class Resource(DataObject):
         if "_root_key" in dir(cls) is not None and cls._root_key in jsonObj:
             return cls._many(
                 cls._schema.load(jsonObj[cls._root_key], many=True),
-                **{key: jsonObj[key] for key in LIST_PARAMS if key in jsonObj}
+                **{key: jsonObj[key] for key in LIST_PARAMS if key in jsonObj},
             )
         else:
             return cls._schema.load(jsonObj)
@@ -143,9 +143,7 @@ class Resource(DataObject):
             Promise(
                 lambda resolve, _: resolve(
                     getattr(
-                        requests_retry_session(
-                            config.max_retries, config.backoff_factor
-                        ),
+                        requests_retry_session(config.max_retries, config.backoff_factor),
                         http_verb,
                     )(
                         config.uri + path,
@@ -173,10 +171,7 @@ class Resource(DataObject):
     def _validate_arguments(cls, method, kwargs):
         # This enforces user to pass argument, otherwise we could call
         # wrong URL.
-        if (
-            method in ["destroy", "cancel", "retrieve", "modify", "update"]
-            and "uuid" not in kwargs
-        ):
+        if method in ["destroy", "cancel", "retrieve", "modify", "update"] and "uuid" not in kwargs:
             raise ArgumentMissingError("Please pass 'uuid' parameter")
         if method in ["create", "modify"] and "data" not in kwargs:
             raise ArgumentMissingError("Please pass 'data' parameter")
