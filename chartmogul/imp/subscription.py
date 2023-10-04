@@ -5,7 +5,9 @@ from warnings import warn
 class Subscription(SubsNew):
     @classmethod
     def all(cls, *args, **kwargs):
-        warn("chartmogul.imp namespace is deprecated, use chartmogul.CustomerSubscription.list_imported!")
+        warn(
+            "chartmogul.imp namespace is deprecated, use chartmogul.CustomerSubscription.list_imported!"
+        )
         return super(Subscription, cls).list_imported(*args, **kwargs)
 
     @classmethod

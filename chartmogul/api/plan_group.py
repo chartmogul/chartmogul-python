@@ -8,9 +8,14 @@ class PlanGroup(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#plan_groups
     """
+
     _path = "/plan_groups{/uuid}"
-    _root_key = 'plan_groups'
-    _many = namedtuple('PlanGroups', [_root_key, "current_page", "total_pages"])
+    _root_key = "plan_groups"
+    _many = namedtuple(
+        "PlanGroups",
+        [_root_key, "current_page", "total_pages", "has_more", "cursor"],
+        defaults=[None, None, None, None],
+    )
 
     class _Schema(Schema):
         uuid = fields.String()
@@ -29,10 +34,10 @@ class PlanGroup(Resource):
         Actually uses two different endpoints, where it dispatches the call depends on whether
         uuid is given in the param or not.
         """
-        if 'uuid' in kwargs:
+        if "uuid" in kwargs:
             return PlanGroupPlans.all(config, **kwargs)
         else:
             return cls.all_any(config, **kwargs)
 
 
-PlanGroup.all_any = PlanGroup._method('all', 'get', '/plan_groups')
+PlanGroup.all_any = PlanGroup._method("all", "get", "/plan_groups")

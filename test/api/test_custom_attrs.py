@@ -6,36 +6,30 @@ from pprint import pprint
 
 # First case data
 dictData = {
-    'custom': [
-        {'type': 'String', 'key': 'channel',
-            'value': 'Facebook'},
-        {'type': 'Integer',
-            'key': 'age', 'value': 8},
-        {'type': 'Timestamp',
-            'key': 'convertedAt', 'value': datetime(2015, 9, 8, 0, 0, 0)}
+    "custom": [
+        {"type": "String", "key": "channel", "value": "Facebook"},
+        {"type": "Integer", "key": "age", "value": 8},
+        {"type": "Timestamp", "key": "convertedAt", "value": datetime(2015, 9, 8, 0, 0, 0)},
     ]
 }
 
 jsonData = {
-    'custom': [
-        {'type': 'String', 'key': 'channel',
-            'value': 'Facebook'},
-        {'type': 'Integer',
-            'key': 'age', 'value': 8},
-        {'type': 'Timestamp',
-            'key': 'convertedAt', 'value': '2015-09-08 00:00:00'}
+    "custom": [
+        {"type": "String", "key": "channel", "value": "Facebook"},
+        {"type": "Integer", "key": "age", "value": 8},
+        {"type": "Timestamp", "key": "convertedAt", "value": "2015-09-08 00:00:00"},
     ]
 }
 
 simpleJSONResult = {
-    'custom': {
-        'CAC': 213,
-        'utmCampaign': 'social media 1',
-        'convertedAt': '2015-09-08 00:00:00',
-        'pro': False,
-        'salesRep': 'Gabi',
-        'channel': 'Facebook',
-        'age': 8
+    "custom": {
+        "CAC": 213,
+        "utmCampaign": "social media 1",
+        "convertedAt": "2015-09-08 00:00:00",
+        "pro": False,
+        "salesRep": "Gabi",
+        "channel": "Facebook",
+        "age": 8,
     }
 }
 
@@ -43,9 +37,7 @@ simpleJSONResult = {
 
 jsonRequest2 = {
     "email": "adam@smith.com",
-    "custom": [
-             {"type": "String", "key": "channel", "value": "Facebook"}
-    ]
+    "custom": [{"type": "String", "key": "channel", "value": "Facebook"}],
 }
 
 jsonResponse2 = {
@@ -60,16 +52,10 @@ jsonResponse2 = {
             "status": "Active",
             "attributes": {
                 "tags": ["important", "Prio1"],
-                "stripe": {
-                    "coupon": True
-                },
-                "clearbit": {
-                    "name": "Acme"
-                },
-                "custom": {
-                    "channel": "Facebook"
-                }
-            }
+                "stripe": {"coupon": True},
+                "clearbit": {"name": "Acme"},
+                "custom": {"channel": "Facebook"},
+            },
         },
         {
             "id": 13456,
@@ -81,17 +67,11 @@ jsonResponse2 = {
             "status": "Active",
             "attributes": {
                 "tags": ["important", "Prio1"],
-                "stripe": {
-                    "coupon": False
-                },
-                "clearbit": {
-                    "name": "Umbrella Corp."
-                },
-                "custom": {
-                    "channel": "Facebook"
-                }
-            }
-        }
+                "stripe": {"coupon": False},
+                "clearbit": {"name": "Umbrella Corp."},
+                "custom": {"channel": "Facebook"},
+            },
+        },
     ]
 }
 
@@ -104,44 +84,40 @@ class CustomAttributesTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_add(self, mock_requests):
         mock_requests.register_uri(
-            'POST',
-            'https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom',
+            "POST",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
             status_code=200,
-            json=simpleJSONResult
+            json=simpleJSONResult,
         )
 
         expected = CustomAttributes(**simpleJSONResult)
 
-        config = Config('token')
-        result = CustomAttributes.add(config,
-                                      uuid='CUSTOMER_UUID',
-                                      data=jsonData).get()
+        config = Config("token")
+        result = CustomAttributes.add(config, uuid="CUSTOMER_UUID", data=jsonData).get()
 
-        self.assertEqual(mock_requests.call_count, 1, 'expected call')
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonData)
         self.assertTrue(isinstance(result, CustomAttributes))
-        self.assertEqual(result.custom['CAC'], expected.custom['CAC'])
-        self.assertEqual(result.custom['utmCampaign'], expected.custom['utmCampaign'])
-        self.assertEqual(result.custom['convertedAt'], expected.custom['convertedAt'])
-        self.assertEqual(result.custom['pro'], expected.custom['pro'])
-        self.assertEqual(result.custom['salesRep'], expected.custom['salesRep'])
+        self.assertEqual(result.custom["CAC"], expected.custom["CAC"])
+        self.assertEqual(result.custom["utmCampaign"], expected.custom["utmCampaign"])
+        self.assertEqual(result.custom["convertedAt"], expected.custom["convertedAt"])
+        self.assertEqual(result.custom["pro"], expected.custom["pro"])
+        self.assertEqual(result.custom["salesRep"], expected.custom["salesRep"])
 
     @requests_mock.mock()
     def test_add_to_email(self, mock_requests):
         mock_requests.register_uri(
-            'POST',
-            'https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom',
+            "POST",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
             status_code=200,
-            json=jsonResponse2
+            json=jsonResponse2,
         )
 
-        config = Config('token')
-        result = CustomAttributes.add(config,
-                                      uuid='CUSTOMER_UUID',
-                                      data=jsonRequest2).get()
+        config = Config("token")
+        result = CustomAttributes.add(config, uuid="CUSTOMER_UUID", data=jsonRequest2).get()
 
-        self.assertEqual(mock_requests.call_count, 1, 'expected call')
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest2)
         # No comparison, because unicode strings, dates, serialization order etc.

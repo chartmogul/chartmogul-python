@@ -13,7 +13,6 @@ from .contact import Contact
 
 
 class Address(DataObject):
-
     class _Schema(Schema):
         address_zip = fields.String(allow_none=True)
         city = fields.String(allow_none=True)
@@ -29,10 +28,14 @@ class Customer(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#customers
     """
+
     _path = "/customers{/uuid}"
-    _root_key = 'entries'
-    _many = namedtuple('Customers',
-                       [_root_key, "has_more", "per_page", "page", "current_page", "total_pages"])
+    _root_key = "entries"
+    _many = namedtuple(
+        "Customers",
+        [_root_key, "has_more", "per_page", "page", "current_page", "total_pages", "cursor"],
+        defaults=[None, None, None, None, None, None],
+    )
 
     class _Schema(Schema):
         # All operations
@@ -74,8 +77,12 @@ class Customer(Resource):
     _schema = _Schema(unknown=EXCLUDE)
 
 
-Customer.search = Customer._method('all', 'get', '/customers/search')
-Customer.merge = Customer._method('merge', 'post', '/customers/merges')
-Customer.connectSubscriptions = Customer._method('create', 'post', '/customers/{uuid}/connect_subscriptions')
-Customer.contacts = Contact._method('all', 'get', '/customers/{uuid}/contacts', useCallerClass=True)
-Customer.createContact = Contact._method('create', 'post', '/customers/{uuid}/contacts', useCallerClass=True)
+Customer.search = Customer._method("all", "get", "/customers/search")
+Customer.merge = Customer._method("merge", "post", "/customers/merges")
+Customer.connectSubscriptions = Customer._method(
+    "create", "post", "/customers/{uuid}/connect_subscriptions"
+)
+Customer.contacts = Contact._method("all", "get", "/customers/{uuid}/contacts", useCallerClass=True)
+Customer.createContact = Contact._method(
+    "create", "post", "/customers/{uuid}/contacts", useCallerClass=True
+)

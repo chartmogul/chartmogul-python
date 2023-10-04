@@ -13,16 +13,16 @@ class PingTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_ping(self, mock_requests):
         mock_requests.register_uri(
-            'GET',
+            "GET",
             "https://api.chartmogul.com/v1/ping",
-            request_headers={'Authorization': 'Basic dG9rZW46'},
+            request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json={"data": "pong!"}
+            json={"data": "pong!"},
         )
 
         config = Config("token")  # is actually checked in mock
         pong = Ping.ping(config).get()
-        expected = Ping(**{"data": u"pong!"})
+        expected = Ping(**{"data": "pong!"})
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.text, None)

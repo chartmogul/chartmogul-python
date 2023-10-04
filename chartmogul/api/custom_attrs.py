@@ -8,6 +8,7 @@ class CustomAttributes(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#custom-attributes
     """
+
     _path = "/customers{/uuid}/attributes/custom"
 
     class _Schema(Schema):
@@ -17,7 +18,7 @@ class CustomAttributes(Resource):
         def make(self, data, **kwargs):
             return CustomAttributes(**data)
 
-    _customers = namedtuple('Customers', ['entries'])
+    _customers = namedtuple("Customers", ["entries"])
     _schema = _Schema(unknown=EXCLUDE)
 
     @classmethod
@@ -30,8 +31,8 @@ class CustomAttributes(Resource):
         if response.status_code == 204:
             return None
         jsonObj = response.json()
-        if 'entries' in jsonObj:
-            customers = Customer._schema.load(jsonObj['entries'], many=True)
+        if "entries" in jsonObj:
+            customers = Customer._schema.load(jsonObj["entries"], many=True)
             return cls._customers(customers)
         else:
             return cls._schema.load(jsonObj)

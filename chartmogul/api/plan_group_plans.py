@@ -7,9 +7,14 @@ class PlanGroupPlans(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#plan_groups
     """
+
     _path = "/plan_groups{/uuid}/plans"
-    _root_key = 'plans'
-    _many = namedtuple('PlanGroupPlans', [_root_key, "current_page", "total_pages"])
+    _root_key = "plans"
+    _many = namedtuple(
+        "PlanGroupPlans",
+        [_root_key, "current_page", "total_pages", "has_more", "cursor"],
+        defaults=[None, None, None, None],
+    )
 
     class _Schema(Schema):
         uuid = fields.String()

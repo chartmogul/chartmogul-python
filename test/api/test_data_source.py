@@ -15,13 +15,15 @@ class DataSourceTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_create(self, mock_requests):
         mock_requests.register_uri(
-            'POST',
+            "POST",
             "https://api.chartmogul.com/v1/data_sources",
             status_code=200,
-            json={"name": "test",
-                  "uuid": "my_uuid",
-                  "created_at": "2016-01-10T15:34:05.144Z",
-                  "status": "never_imported"}
+            json={
+                "name": "test",
+                "uuid": "my_uuid",
+                "created_at": "2016-01-10T15:34:05.144Z",
+                "status": "never_imported",
+            },
         )
 
         config = Config("token")
@@ -33,55 +35,72 @@ class DataSourceTestCase(unittest.TestCase):
         # Direct comparison impossible because of tzinfo difference between 2.7 and 3.3+
         self.assertTrue(isinstance(ds, DataSource))
         self.assertTrue(isinstance(ds.created_at, datetime))
-        self.assertEqual(ds.uuid, u"my_uuid")
+        self.assertEqual(ds.uuid, "my_uuid")
 
     @requests_mock.mock()
     def test_retrieve(self, mock_requests):
         mock_requests.register_uri(
-            'GET',
+            "GET",
             "https://api.chartmogul.com/v1/data_sources/my_uuid",
             status_code=200,
-            json={"name": "test",
-                  "uuid": "my_uuid",
-                  "created_at": "2016-01-10T15:34:05Z",
-                  "status": "never_imported"}
+            json={
+                "name": "test",
+                "uuid": "my_uuid",
+                "created_at": "2016-01-10T15:34:05Z",
+                "status": "never_imported",
+            },
         )
 
         config = Config("token")
         ds = DataSource.retrieve(config, uuid="my_uuid").get()
-        expected = DataSource(**{"name": u"test",
-                                 "uuid": u"my_uuid",
-                                 "created_at": datetime(2016, 1, 10, 15, 34, 5),
-                                 "status": u"never_imported"})
+        expected = DataSource(
+            **{
+                "name": "test",
+                "uuid": "my_uuid",
+                "created_at": datetime(2016, 1, 10, 15, 34, 5),
+                "status": "never_imported",
+            }
+        )
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertTrue(isinstance(ds, DataSource))
         self.assertTrue(isinstance(ds.created_at, datetime))
-        self.assertEqual(ds.name, u"test")
+        self.assertEqual(ds.name, "test")
 
     @requests_mock.mock()
     def test_all(self, mock_requests):
         mock_requests.register_uri(
-            'GET',
+            "GET",
             "https://api.chartmogul.com/v1/data_sources",
             status_code=200,
-            json={"data_sources": [
-                {"name": "test",
-                 "uuid": "my_uuid",
-                 "created_at": "2016-01-10T15:34:05Z",
-                 "status": "never_imported"}
-            ]}
+            json={
+                "data_sources": [
+                    {
+                        "name": "test",
+                        "uuid": "my_uuid",
+                        "created_at": "2016-01-10T15:34:05Z",
+                        "status": "never_imported",
+                    }
+                ]
+            },
         )
 
         config = Config("token")
         ds = DataSource.all(config).get()
-        expected = DataSource._many(data_sources=[
-            DataSource(**{"name": u"test",
-                          "uuid": u"my_uuid",
-                          "created_at": datetime(2016, 1, 10, 15, 34, 5),
-                          "status": u"never_imported"})])
+        expected = DataSource._many(
+            data_sources=[
+                DataSource(
+                    **{
+                        "name": "test",
+                        "uuid": "my_uuid",
+                        "created_at": datetime(2016, 1, 10, 15, 34, 5),
+                        "status": "never_imported",
+                    }
+                )
+            ]
+        )
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
@@ -91,9 +110,7 @@ class DataSourceTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_destroy(self, mock_requests):
         mock_requests.register_uri(
-            'DELETE',
-            "https://api.chartmogul.com/v1/data_sources/my_uuid",
-            status_code=204
+            "DELETE", "https://api.chartmogul.com/v1/data_sources/my_uuid", status_code=204
         )
 
         config = Config("token")
