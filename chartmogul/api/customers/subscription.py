@@ -11,11 +11,7 @@ class CustomerSubscription(Resource):
 
     _path = "/customers{/uuid}/subscriptions"
     _root_key = "entries"
-    _many = namedtuple(
-        "Subscriptions",
-        [_root_key, "has_more", "per_page", "page", "cursor"],
-        defaults=[None, None, None, None],
-    )
+    _many = namedtuple("Subscriptions", [_root_key, "has_more", "cursor"], defaults=[None, None])
 
     class _Schema(Schema):
         id = fields.Int(allow_none=True)
@@ -52,19 +48,10 @@ class CustomerSubscription(Resource):
         if "subscriptions" in jsonObj:
             _many = namedtuple(
                 "Subscriptions",
-                [
-                    "subscriptions",
-                    "current_page",
-                    "total_pages",
-                    "customer_uuid",
-                    "has_more",
-                    "cursor",
-                ],
+                ["subscriptions", "has_more", "cursor", "customer_uuid"],
             )
             return _many(
                 cls._schema.load(jsonObj["subscriptions"], many=True),
-                current_page=jsonObj.get("current_page", None),
-                total_pages=jsonObj.get("total_pages", None),
                 customer_uuid=jsonObj.get("customer_uuid", None),
                 has_more=jsonObj.get("has_more", None),
                 cursor=jsonObj.get("cursor", None),

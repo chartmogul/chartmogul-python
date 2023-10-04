@@ -42,8 +42,8 @@ class Invoice(Resource):
     _root_key = "invoices"
     _many = namedtuple(
         "Invoices",
-        [_root_key, "current_page", "total_pages", "cursor", "has_more", "customer_uuid"],
-        defaults=[None, None, None, None, None],
+        [_root_key, "cursor", "has_more", "customer_uuid"],
+        defaults=[None, None, None],
     )
     _many.__new__.__defaults__ = (None,) * len(_many._fields)
 
@@ -82,6 +82,8 @@ class Invoice(Resource):
 Invoice.all_any = Invoice._method("all", "get", "/invoices")
 Invoice.destroy = Invoice._method("destroy", "delete", "/invoices{/uuid}")
 Invoice.destroy_all = Invoice._method(
-    "destroy_all", "delete", "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices"
+    "destroy_all",
+    "delete",
+    "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")

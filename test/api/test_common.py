@@ -4,7 +4,13 @@ from datetime import date, datetime
 import requests_mock
 from requests.exceptions import HTTPError
 
-from chartmogul import DataSource, Config, APIError, ArgumentMissingError
+from chartmogul import (
+    DataSource,
+    Config,
+    APIError,
+    ArgumentMissingError,
+    DeprecatedArgumentError,
+)
 
 
 class CommonTestCase(unittest.TestCase):
@@ -15,7 +21,9 @@ class CommonTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_forget_uuid_destroy(self, mock_requests):
         mock_requests.register_uri(
-            "DELETE", "https://api.chartmogul.com/v1/data_sources/my_uuid", status_code=204
+            "DELETE",
+            "https://api.chartmogul.com/v1/data_sources/my_uuid",
+            status_code=204,
         )
         mock_requests.register_uri(
             "DELETE",
@@ -59,12 +67,37 @@ class CommonTestCase(unittest.TestCase):
             self.fail("ArgumentMissingError not raised")
 
     @requests_mock.mock()
+    def test_page_parameter_deprecated(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/data_sources?page=1",
+            status_code=400,
+            json={
+                "code": 400,
+                "message": 'Parameter "page" is deprecated',
+                "param": "page",
+            },
+        )
+
+        config = Config("token")
+        try:
+            DataSource.all(config, page=1).get()
+        except DeprecatedArgumentError:
+            pass
+        else:
+            self.fail("DeprecatedArgumentError not raised")
+
+    @requests_mock.mock()
     def test_api_incorrect(self, mock_requests):
         mock_requests.register_uri(
             "POST",
             "https://api.chartmogul.com/v1/data_sources",
             status_code=400,
-            json={"code": 400, "message": 'Parameter "name" is missing', "param": "name"},
+            json={
+                "code": 400,
+                "message": 'Parameter "name" is missing',
+                "param": "name",
+            },
         )
 
         config = Config("token")

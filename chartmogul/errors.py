@@ -14,6 +14,10 @@ class ArgumentMissingError(Exception):
     pass
 
 
+class DeprecatedArgumentError(Exception):
+    pass
+
+
 def annotateHTTPError(err):
     if isinstance(err, HTTPError):
         raise_from(APIError(err.response.content), err)

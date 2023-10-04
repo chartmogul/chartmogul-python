@@ -5,7 +5,12 @@ from promise import Promise
 from uritemplate import URITemplate
 
 from .api.config import Config
-from .errors import ArgumentMissingError, ConfigurationError, annotateHTTPError
+from .errors import (
+    ArgumentMissingError,
+    ConfigurationError,
+    annotateHTTPError,
+    DeprecatedArgumentError,
+)
 from .retry_request import requests_retry_session
 
 from .version import __version__
@@ -29,18 +34,7 @@ MAPPINGS = {
     "modify_with_params": "patch",
 }
 
-LIST_PARAMS = [
-    "current_page",
-    "total_pages",
-    "has_more",
-    "per_page",
-    "page",
-    "summary",
-    "customer_uuid",
-    "data_source_uuid",
-    "cursor",
-    "meta",
-]
+LIST_PARAMS = ["has_more", "summary", "customer_uuid", "data_source_uuid", "cursor"]
 ESCAPED_QUERY_KEYS = {"start_date": "start-date", "end_date": "end-date"}
 
 
@@ -175,6 +169,8 @@ class Resource(DataObject):
             raise ArgumentMissingError("Please pass 'uuid' parameter")
         if method in ["create", "modify"] and "data" not in kwargs:
             raise ArgumentMissingError("Please pass 'data' parameter")
+        if method == "all" and "page" in kwargs:
+            raise DeprecatedArgumentError("The 'page' parameter is deprecated")
         if (
             method in ["destroy_all"]
             and "data_source_uuid" not in kwargs

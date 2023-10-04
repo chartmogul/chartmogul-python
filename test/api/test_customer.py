@@ -76,15 +76,7 @@ entry = {
     "currency-sign": "$",
 }
 
-allContactsOld = {
-    "entries": [entry],
-    "per_page": 50,
-    "page": 1,
-    "current_page": 1,
-    "total_pages": 4,
-}
-
-allContactsNew = {"entries": [entry], "cursor": "cursor==", "has_more": True}
+allContacts = {"entries": [entry], "cursor": "cursor==", "has_more": True}
 
 deserializedCustomer = Customer(
     id=25647,
@@ -294,49 +286,13 @@ class CustomerTestCase(unittest.TestCase):
     """
 
     @requests_mock.mock()
-    def test_all_old_pagination(self, mock_requests):
+    def test_all(self, mock_requests):
         mock_requests.register_uri(
             "GET",
             "https://api.chartmogul.com/v1/customers",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=allContactsOld,
-        )
-
-        config = Config("token")
-        customers = Customer.all(config).get()
-
-        expected = Customer._many(
-            entries=[deserializedCustomer], per_page=50, page=1, current_page=1, total_pages=4
-        )
-
-        self.assertEqual(mock_requests.call_count, 1, "expected call")
-        self.assertEqual(mock_requests.last_request.qs, {})
-        self.assertEqual(mock_requests.last_request.text, None)
-        # Complete comparing too complicated, would need to:
-        #  1) sort all dictionaries,
-        #  2) use special class/library for timezones (Python has no default)
-        # self.assertEqual(str(customers), str(expected))
-        # => check only first level fields are OK
-        self.assertEqual(sorted(dir(customers)), sorted(dir(expected)))
-        self.assertEqual(
-            sorted(customers.entries[0].attributes.stripe),
-            sorted(expected.entries[0].attributes.stripe),
-        )
-        self.assertEqual(
-            sorted(customers.entries[0].attributes.clearbit),
-            sorted(expected.entries[0].attributes.clearbit),
-        )
-        self.assertTrue(isinstance(customers.entries[0], Customer))
-
-    @requests_mock.mock()
-    def test_all_new_pagination(self, mock_requests):
-        mock_requests.register_uri(
-            "GET",
-            "https://api.chartmogul.com/v1/customers",
-            request_headers={"Authorization": "Basic dG9rZW46"},
-            status_code=200,
-            json=allContactsNew,
+            json=allContacts,
         )
 
         config = Config("token")
@@ -366,7 +322,10 @@ class CustomerTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_create(self, mock_requests):
         mock_requests.register_uri(
-            "POST", "https://api.chartmogul.com/v1/customers", status_code=200, json=entry
+            "POST",
+            "https://api.chartmogul.com/v1/customers",
+            status_code=200,
+            json=entry,
         )
 
         config = Config("token")
@@ -376,31 +335,12 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.json(), sentCreateExpected)
 
     @requests_mock.mock()
-    def test_search_old_pagination(self, mock_requests):
+    def test_search(self, mock_requests):
         mock_requests.register_uri(
             "GET",
             "https://api.chartmogul.com/v1/customers/search?email=tralala@someemail.com",
             status_code=200,
-            json=allContactsOld,
-        )
-
-        config = Config("token")
-        result = Customer.search(config, email="tralala@someemail.com").get()
-        self.assertEqual(mock_requests.call_count, 1, "expected call")
-        self.assertEqual(mock_requests.last_request.qs, {"email": ["tralala@someemail.com"]})
-        self.assertEqual(mock_requests.last_request.text, None)
-        self.assertTrue(isinstance(result, Customer._many))
-        self.assertTrue(isinstance(result.entries[0], Customer))
-        self.assertEqual(result.current_page, 1)
-        self.assertEqual(result.total_pages, 4)
-
-    @requests_mock.mock()
-    def test_search_new_pagination(self, mock_requests):
-        mock_requests.register_uri(
-            "GET",
-            "https://api.chartmogul.com/v1/customers/search?email=tralala@someemail.com",
-            status_code=200,
-            json=allContactsNew,
+            json=allContacts,
         )
 
         config = Config("token")
@@ -507,12 +447,12 @@ class CustomerTestCase(unittest.TestCase):
             "GET",
             "https://api.chartmogul.com/v1/customers/cus_00000000-0000-0000-0000-000000000000/contacts",
             status_code=200,
-            json=allContactsNew,
+            json=allContacts,
         )
 
         config = Config("token")
         contacts = Customer.contacts(config, uuid="cus_00000000-0000-0000-0000-000000000000").get()
-        expected = Contact._many(**allContactsNew)
+        expected = Contact._many(**allContacts)
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})

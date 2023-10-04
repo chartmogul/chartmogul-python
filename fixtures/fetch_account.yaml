@@ -1,0 +1,60 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      User-Agent:
+      - chartmogul-python/4.0.0
+      content-type:
+      - application/json
+    method: GET
+    uri: https://api.chartmogul.com/v1/account
+  response:
+    body:
+      string: '{"name":"Chartmogul Test","currency":"EUR","time_zone":"Europe/Lisbon","week_start_on":"monday"}'
+    headers:
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Headers:
+      - Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Accept,Authorization
+      Access-Control-Allow-Methods:
+      - GET, OPTIONS
+      Access-Control-Allow-Origin:
+      - '*'
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '96'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sun, 10 Sep 2023 20:18:46 GMT
+      ETag:
+      - W/"4c95c647e6119fa4820a4ca4d344ec3d"
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Download-Options:
+      - noopen
+      X-Frame-Options:
+      - DENY
+      X-Permitted-Cross-Domain-Policies:
+      - none
+      X-Request-Id:
+      - a388e7b97b3cdbb5aceba74e80d345fc
+      X-Runtime:
+      - '0.022753'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

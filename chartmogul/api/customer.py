@@ -31,11 +31,7 @@ class Customer(Resource):
 
     _path = "/customers{/uuid}"
     _root_key = "entries"
-    _many = namedtuple(
-        "Customers",
-        [_root_key, "has_more", "per_page", "page", "current_page", "total_pages", "cursor"],
-        defaults=[None, None, None, None, None, None],
-    )
+    _many = namedtuple("Customers", [_root_key, "has_more", "cursor"], defaults=[None, None])
 
     class _Schema(Schema):
         # All operations

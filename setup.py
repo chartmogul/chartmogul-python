@@ -14,28 +14,26 @@ if sys.argv[-1] == "publish":
     sys.exit()
 
 requires = [
-    "requests>=2.10.0",
-    "uritemplate>=3.0.0",
-    "promise>=1.0.1",
-    "marshmallow>=3.10.0",
+    "requests>=2.31.0",
+    "uritemplate>=4.1.1",
+    "promise>=2.3.0",
+    "marshmallow>=3.19.0",
     "future>=0.18.3",
-    "urllib3<2.0",
+    "urllib3<=2.0.4",
 ]
 test_requirements = [
-    # This is needed to circumvent a vcrpy dependency problem And can be
-    # deleted once it is solved.
-    'yarl; python_version>"3.5"',
-    'yarl<1.4; python_version=="3.5"',
-    "mock>=1.0.1",
-    "requests-mock>=1.3.0",
-    "vcrpy<3.0.0",
-    "PyYAML>=5.1.2",
-    "httpretty>=0.9.6",
-    "wrapt>=1.11.2",
+    "mock>=5.1.0",
+    "requests-mock>=1.11.0",
+    "vcrpy>=4.4.0",
+    "PyYAML>=6.0.1",
+    "httpretty>=1.1.4",
+    "wrapt>=1.15.0",
 ]
 
 with open("chartmogul/version.py", "r") as fd:
-    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE).group(1)
+    version = re.search(
+        r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE
+    ).group(1)
 
 if not version:
     raise RuntimeError("Cannot find version information")
@@ -49,12 +47,15 @@ setup(
     author_email="petr@chartmogul.com",
     url="https://chartmogul.com",
     download_url=github_url + "/tarball/v" + version,
-    packages=["chartmogul", "chartmogul.api", "chartmogul.imp", "chartmogul.api.customers"],
+    packages=[
+        "chartmogul",
+        "chartmogul.api",
+        "chartmogul.api.customers",
+    ],
     package_data={"": ["LICENSE", "NOTICE"], "chartmogul": ["*.pem"]},
     package_dir={
         "chartmogul": "chartmogul",
         "chartmogul.api": "chartmogul/api",
-        "chartmogul.imp": "chartmogul/imp",
         "chartmogul.api.customers": "chartmogul/api/customers",
     },
     include_package_data=True,
@@ -67,9 +68,10 @@ setup(
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
 )
