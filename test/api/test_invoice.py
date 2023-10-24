@@ -166,66 +166,7 @@ responseData = {
     ]
 }
 
-oldInvoiceListExample = {
-    "invoices": [
-        {
-            "uuid": "inv_565c73b2-85b9-49c9-a25e-2b7df6a677c9",
-            "customer_uuid": "cus_f466e33d-ff2b-4a11-8f85-417eb02157a7",
-            "external_id": "INV0001",
-            "date": "2015-11-01T00:00:00.000Z",
-            "due_date": "2015-11-15T00:00:00.000Z",
-            "currency": "USD",
-            "line_items": [
-                {
-                    "uuid": "li_d72e6843-5793-41d0-bfdf-0269514c9c56",
-                    "external_id": None,
-                    "type": "subscription",
-                    "subscription_uuid": "sub_e6bc5407-e258-4de0-bb43-61faaf062035",
-                    "plan_uuid": "pl_eed05d54-75b4-431b-adb2-eb6b9e543206",
-                    "prorated": False,
-                    "service_period_start": "2015-11-01T00:00:00.000Z",
-                    "service_period_end": "2015-12-01T00:00:00.000Z",
-                    "amount_in_cents": 5000,
-                    "quantity": 1,
-                    "discount_code": "PSO86",
-                    "discount_amount_in_cents": 1000,
-                    "tax_amount_in_cents": 900,
-                    "account_code": None,
-                },
-                {
-                    "uuid": "li_0cc8c112-beac-416d-af11-f35744ca4e83",
-                    "external_id": None,
-                    "type": "one_time",
-                    "description": "Setup Fees",
-                    "amount_in_cents": 2500,
-                    "quantity": 1,
-                    "discount_code": "PSO86",
-                    "discount_amount_in_cents": 500,
-                    "tax_amount_in_cents": 450,
-                    "account_code": None,
-                    "discount_description": "Special 20 % discount",
-                    "transaction_fees_in_cents": 50,
-                    "transaction_fees_currency": "CZK",
-                    "event_order": 5,
-                },
-            ],
-            "transactions": [
-                {
-                    "uuid": "tr_879d560a-1bec-41bb-986e-665e38a2f7bc",
-                    "external_id": None,
-                    "type": "payment",
-                    "date": "2015-11-05T00:14:23.000Z",
-                    "result": "successful",
-                }
-            ],
-        }
-    ],
-    "current_page": 1,
-    "total_pages": 1,
-}
-
-
-newInvoiceListExample = {
+invoiceListExample = {
     "invoices": [
         {
             "uuid": "inv_565c73b2-85b9-49c9-a25e-2b7df6a677c9",
@@ -366,8 +307,8 @@ class InvoiceTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_list_has_customer_uuid(self, mock_requests):
         responseData["customer_uuid"] = "UUID"
-        responseData["total_pages"] = 1
-        responseData["current_page"] = 1
+        responseData["cursor"] = None
+        responseData["has_more"] = False
 
         mock_requests.register_uri(
             "GET",
@@ -388,8 +329,8 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result.invoices[0], Invoice))
         self.assertEqual(result.invoices[0].uuid, "inv_565c73b2-85b9-49c9-a25e-2b7df6a677c9")
         self.assertEqual(result.customer_uuid, "UUID")
-        self.assertEqual(result.total_pages, 1)
-        self.assertEqual(result.current_page, 1)
+        self.assertEqual(result.cursor, None)
+        self.assertFalse(result.has_more)
 
     @requests_mock.mock()
     def test_new_list_old_pagination(self, mock_requests):
@@ -402,12 +343,14 @@ class InvoiceTestCase(unittest.TestCase):
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=200,
-            json=oldInvoiceListExample,
+            json=invoiceListExample,
         )
 
         config = Config("token")  # is actually checked in mock
         result = Invoice.all(
-            config, customer_uuid="cus_f466e33d-ff2b-4a11-8f85-417eb02157a7", external_id="INV0001"
+            config,
+            customer_uuid="cus_f466e33d-ff2b-4a11-8f85-417eb02157a7",
+            external_id="INV0001",
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -423,43 +366,8 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertEqual(
             result.invoices[0].customer_uuid, "cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"
         )
-        self.assertEqual(result.current_page, 1)
-        self.assertEqual(result.total_pages, 1)
-
-    @requests_mock.mock()
-    def test_new_list_new_pagination(self, mock_requests):
-        mock_requests.register_uri(
-            "GET",
-            (
-                "https://api.chartmogul.com/v1/invoices"
-                "?external_id=INV0001&customer_uuid=cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"
-            ),
-            request_headers={"Authorization": "Basic dG9rZW46"},
-            headers={"Content-Type": "application/json"},
-            status_code=200,
-            json=newInvoiceListExample,
-        )
-
-        config = Config("token")  # is actually checked in mock
-        result = Invoice.all(
-            config, customer_uuid="cus_f466e33d-ff2b-4a11-8f85-417eb02157a7", external_id="INV0001"
-        ).get()
-
-        self.assertEqual(mock_requests.call_count, 1, "expected call")
-        cu = []
-        cu.append("cus_f466e33d-ff2b-4a11-8f85-417eb02157a7")
-        ei = []
-        ei.append("inv0001")
-        self.assertEqual(mock_requests.last_request.qs, {"customer_uuid": cu, "external_id": ei})
-        # Struct too complex to do 1:1 comparison
-        self.assertTrue(isinstance(result, Invoice._many))
-        self.assertEqual(len(result.invoices), 1)
-
-        self.assertEqual(
-            result.invoices[0].customer_uuid, "cus_f466e33d-ff2b-4a11-8f85-417eb02157a7"
-        )
-        self.assertFalse(result.has_more)
         self.assertEqual(result.cursor, "cursor==")
+        self.assertFalse(result.has_more)
 
     @requests_mock.mock()
     def test_delete(self, mock_requests):

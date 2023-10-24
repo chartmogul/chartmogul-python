@@ -29,7 +29,7 @@
 
 ## Installation
 
-This library requires Python 3.5 to 3.9. It was last tested against Python 2.7 in version 1.3.0.
+This library requires Python 3.8 to 3.12. It was last tested against Python 2.7 in version 1.3.0.
 
 ```sh
 pip3 install chartmogul
@@ -376,6 +376,8 @@ To work on the library:
 
 * Fork it
 * Create your feature branch (`git checkout -b my-new-feature`)
+* Setup a virtual environment (`python -m venv <directory>`)
+* Activate the virtual environment (`source <directory>/bin/activate`)
 * Install dependencies: `pip3 install -r requirements.txt && python3 setup.py develop`
 * Fix bugs or add features. Make sure the changes pass the coding guidelines (use `pylama`).
 * Write tests for your new features. Use `requests_mock` for HTTP mocking.

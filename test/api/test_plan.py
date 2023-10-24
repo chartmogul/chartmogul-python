@@ -10,10 +10,8 @@ class PlanTestCase(unittest.TestCase):
     Tests cursor query parameters & modify (patch a plan).
     """
 
-    maxDiff = None
-
     @requests_mock.mock()
-    def test_cursor_list_plans_old_pagination(self, mock_requests):
+    def test_cursor_list_plans(self, mock_requests):
         expected_plan_dict = {
             "uuid": "whatever_uuid",
             "data_source_uuid": "some_uuid",
@@ -25,60 +23,35 @@ class PlanTestCase(unittest.TestCase):
         mock_requests.register_uri(
             "GET",
             (
-                "https://api.chartmogul.com/v1/plans?page=5"
+                "https://api.chartmogul.com/v1/plans?"
                 "&per_page=12&data_source_uuid=some_uuid&external_id=custom_filter"
             ),
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json={"plans": [expected_plan_dict], "current_page": 5, "total_pages": 18},
+            json={
+                "plans": [expected_plan_dict],
+                "cursor": "cursor==",
+                "has_more": False,
+            },
         )
         config = Config("token")  # is actually checked in mock
         plan = Plan.all(
-            config, page=5, per_page=12, data_source_uuid="some_uuid", external_id="custom_filter"
+            config,
+            per_page=12,
+            data_source_uuid="some_uuid",
+            external_id="custom_filter",
         ).get()
-        expected = Plan._many([Plan(**expected_plan_dict)], current_page=5, total_pages=18)
+        expected = Plan._many([Plan(**expected_plan_dict)], cursor="cursor==", has_more=False)
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(
             mock_requests.last_request.qs,
             {
                 "data_source_uuid": ["some_uuid"],
                 "external_id": ["custom_filter"],
-                "page": ["5"],
                 "per_page": ["12"],
             },
         )
         self.assertEqual(mock_requests.last_request.text, None)
-        self.assertEqual(str(plan), str(expected))
-
-    @requests_mock.mock()
-    def test_cursor_list_plans_new_pagination(self, mock_requests):
-        expected_plan_dict = {
-            "uuid": "whatever_uuid",
-            "data_source_uuid": "some_uuid",
-            "name": "some plan",
-            "interval_count": 2,
-            "interval_unit": "moonshines",
-            "external_id": "custom_filter",
-        }
-        mock_requests.register_uri(
-            "GET",
-            (
-                "https://api.chartmogul.com/v1/plans?cursor=cursor=="
-                "&per_page=12&data_source_uuid=some_uuid&external_id=custom_filter"
-            ),
-            request_headers={"Authorization": "Basic dG9rZW46"},
-            status_code=200,
-            json={"plans": [expected_plan_dict], "has_more": True, "cursor": "cursor=="},
-        )
-        config = Config("token")  # is actually checked in mock
-        plan = Plan.all(
-            config,
-            cursor="cursor==",
-            per_page=12,
-            data_source_uuid="some_uuid",
-            external_id="custom_filter",
-        ).get()
-        expected = Plan._many([Plan(**expected_plan_dict)], has_more=True, cursor="cursor==")
         self.assertEqual(str(plan), str(expected))
 
     @requests_mock.mock()

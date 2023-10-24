@@ -30,7 +30,9 @@ class CustomerSubscriptionsTestCase(unittest.TestCase):
         )
         config = Config("token")  # is actually checked in mock
         result = CustomerSubscription.cancel(
-            config, uuid="some_uuid", data={"cancelled_at": datetime(2016, 1, 15, 0, 0, 0)}
+            config,
+            uuid="some_uuid",
+            data={"cancelled_at": datetime(2016, 1, 15, 0, 0, 0)},
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -110,6 +112,8 @@ class CustomerSubscriptionsTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(result.__class__.__name__, CustomerSubscription._many.__name__)
         self.assertEqual(result.customer_uuid, "some_uuid")
+        self.assertEqual(result.cursor, "cursor==")
+        self.assertFalse(result.has_more)
 
     @requests_mock.mock()
     def test_all(self, mock_requests):
@@ -139,7 +143,6 @@ class CustomerSubscriptionsTestCase(unittest.TestCase):
                 ],
                 "has_more": False,
                 "per_page": 200,
-                "page": 1,
                 "cursor": "cursor==",
             },
         )
@@ -150,5 +153,5 @@ class CustomerSubscriptionsTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(result.__class__.__name__, CustomerSubscription._many.__name__)
         self.assertEqual(result.entries[0].external_id, "sub_0001")
-        self.assertEqual(result.page, 1)
         self.assertEqual(result.cursor, "cursor==")
+        self.assertFalse(result.has_more)

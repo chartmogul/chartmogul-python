@@ -11,7 +11,7 @@ class SubscriptionEvent(Resource):
     _path = "/subscription_events"
     _root_key = "subscription_events"
     _many = namedtuple(
-        "SubscriptionEvents", [_root_key, "meta", "has_more", "cursor"], defaults=[None, None, None]
+        "SubscriptionEvents", [_root_key, "has_more", "cursor"], defaults=[None, None]
     )
 
     class _Schema(Schema):

@@ -8,7 +8,6 @@ Subpackages
 
     chartmogul.api
     chartmogul.enrichment
-    chartmogul.imp
     chartmogul.metrics
 
 Submodules

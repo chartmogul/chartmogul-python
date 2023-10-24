@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 from .api.config import Config
-from .errors import APIError, ConfigurationError, ArgumentMissingError
+from .errors import (
+    APIError,
+    ConfigurationError,
+    ArgumentMissingError,
+    DeprecatedArgumentError,
+)
 
 from .api.customers.activity import CustomerActivity
 from .api.attributes import Attributes
@@ -23,9 +28,6 @@ from .api.activity import Activity
 from .api.activities_export import ActivitiesExport
 
 from .version import __version__
-
-# Deprecated
-import imp
 
 
 """

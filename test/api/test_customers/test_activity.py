@@ -35,7 +35,6 @@ class CustomerActivitiesTestCase(unittest.TestCase):
                 ],
                 "has_more": False,
                 "per_page": 200,
-                "page": 1,
                 "cursor": "cursor==",
             },
         )

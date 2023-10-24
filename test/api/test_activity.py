@@ -38,7 +38,6 @@ class ActivitiesTestCase(unittest.TestCase):
                     },
                 ],
                 "has_more": False,
-                "per_page": 200,
                 "cursor": "cursor==",
             },
         )

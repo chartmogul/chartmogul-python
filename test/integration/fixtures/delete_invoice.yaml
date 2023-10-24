@@ -11,7 +11,7 @@ interactions:
       Content-Length:
       - '2'
       User-Agent:
-      - chartmogul-python/3.1.1
+      - chartmogul-python/4.0.0
       content-type:
       - application/json
     method: POST

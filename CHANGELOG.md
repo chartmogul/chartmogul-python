@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [4.0.0] - 2023-10-04
+
+### Added
+- v4.0.0 upgrade instructions.
+- Support for Python 3.12.
+
+### Removed
+- Support for old pagination using `page` query params.
+- Deprecated `imp` module.
+- Support for Python 3.7.
+
 ## [3.1.3] - 2023-09-27
 
 ### Added
