@@ -42,7 +42,7 @@ class CustomerNoteTestCase(unittest.TestCase):
         config = Config("token")
         notes = CustomerNote.all(
             config,
-            data_source_uuid="ds_00000000-0000-0000-0000-000000000000",
+            customer_uuid="cus_00000000-0000-0000-0000-000000000000",
             cursor="Ym9veWFo",
             per_page=1,
         ).get()

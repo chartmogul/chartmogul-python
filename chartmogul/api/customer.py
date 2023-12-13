@@ -10,6 +10,7 @@ from ..resource import DataObject, Resource
 from collections import namedtuple
 from .attributes import Attributes
 from .contact import Contact
+from .customer_note import CustomerNote
 
 
 class Address(DataObject):
@@ -82,5 +83,5 @@ Customer.contacts = Contact._method("all", "get", "/customers/{uuid}/contacts", 
 Customer.createContact = Contact._method(
     "create", "post", "/customers/{uuid}/contacts", useCallerClass=True
 )
-Customer.notes = Customer._method("all", "get", "/customer_notes?customer_uuid={uuid}")
-Customer.createNote = Customer._method("create", "post", "/customer_notes")
+Customer.notes = CustomerNote._method("all", "get", "/customer_notes?customer_uuid={uuid}", useCallerClass=True)
+Customer.createNote = CustomerNote._method("create", "post", "/customer_notes", useCallerClass=True)

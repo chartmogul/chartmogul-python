@@ -1,5 +1,5 @@
 import unittest
-from chartmogul import Customer, Contact, Config, CusotmerNote
+from chartmogul import Customer, Contact, Config, CustomerNote
 from chartmogul.api.customer import Attributes, Address
 from datetime import datetime
 from chartmogul import APIError
@@ -280,12 +280,11 @@ createContact = {
 }
 
 note = {
-    "uuid": "note_00000000-0000-0000-0000-000000000000",
     "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
     "type": "note",
     "text": "This is a note",
     "call_duration": 0,
-    "author": "John Doe (john@example.com)",
+    "author_email": "john@example.com",
     "created_at": "2015-06-09T13:16:00-04:00",
     "updated_at": "2015-06-09T13:16:00-04:00"
 }
@@ -294,10 +293,21 @@ createNote = {
     "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
     "type": "note",
     "text": "This is a note",
-    "authoer_email": "john@xample.com"
+    "author_email": "john@xample.com"
 }
 
-allNotes = {"entries": [note], "cursor": "cursor==", "has_more": True}
+noteEntry = {
+    "uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "type": "note",
+    "text": "This is a note",
+    "call_duration": 0,
+    "author_email": "john@example.com",
+    "created_at": "2015-06-09T13:16:00-04:00",
+    "updated_at": "2015-06-09T13:16:00-04:00"
+}
+
+allNotes = {"entries": [noteEntry], "cursor": "cursor==", "has_more": True}
 
 class CustomerTestCase(unittest.TestCase):
     """
@@ -514,10 +524,10 @@ class CustomerTestCase(unittest.TestCase):
         expected = Customer._many(**allNotes)
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.qs, {'customer_uuid': ['cus_00000000-0000-0000-0000-000000000000']})
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertEqual(sorted(dir(notes)), sorted(dir(expected)))
-        self.assertTrue(isinstance(notes.entries[0], dict))
+        self.assertTrue(isinstance(notes.entries[0], CustomerNote))
         self.assertEqual(notes.cursor, "cursor==")
         self.assertTrue(notes.has_more)
 
@@ -532,10 +542,10 @@ class CustomerTestCase(unittest.TestCase):
 
         config = Config("token")
         expected = Customer.createNote(
-            config, data=note
+            config, data=createNote
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), createNote)
-        self.assertTrue(isinstance(expected, CusotmerNote)
+        self.assertTrue(isinstance(expected, CustomerNote))
