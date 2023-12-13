@@ -11,6 +11,7 @@ from .api.customers.activity import CustomerActivity
 from .api.attributes import Attributes
 from .api.custom_attrs import CustomAttributes
 from .api.customer import Customer
+from .api.customer_note import CustomerNote
 from .api.contact import Contact
 from .api.data_source import DataSource
 from .api.invoice import Invoice

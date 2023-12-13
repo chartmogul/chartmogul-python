@@ -82,3 +82,5 @@ Customer.contacts = Contact._method("all", "get", "/customers/{uuid}/contacts", 
 Customer.createContact = Contact._method(
     "create", "post", "/customers/{uuid}/contacts", useCallerClass=True
 )
+Customer.notes = Customer._method("all", "get", "/customer_notes?customer_uuid={uuid}")
+Customer.createNote = Customer._method("create", "post", "/customer_notes")
