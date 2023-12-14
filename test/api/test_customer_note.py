@@ -19,7 +19,7 @@ createNote = {
     "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
     "type": "note",
     "text": "This is a note",
-    "authoer_email": "john@xample.com"
+    "author_email": "john@example.com"
 }
 
 allNotes = {"entries": [note], "cursor": "cursor==", "has_more": False}
@@ -34,7 +34,7 @@ class CustomerNoteTestCase(unittest.TestCase):
     def test_all(self, mock_requests):
         mock_requests.register_uri(
             "GET",
-            "https://api.chartmogul.com/v1/customer_notes?cursor=Ym9veWFo&per_page=1&customer_uuid=cus_00000000-0000-0000-0000-000000000000",
+            "https://api.chartmogul.com/v1/customer_notes?cursor=ym9vewfo&per_page=1&customer_uuid=cus_00000000-0000-0000-0000-000000000000",
             status_code=200,
             json=allNotes,
         )
@@ -43,7 +43,7 @@ class CustomerNoteTestCase(unittest.TestCase):
         notes = CustomerNote.all(
             config,
             customer_uuid="cus_00000000-0000-0000-0000-000000000000",
-            cursor="Ym9veWFo",
+            cursor="ym9vewfo",
             per_page=1,
         ).get()
         expected = CustomerNote._many(**allNotes)
@@ -70,27 +70,39 @@ class CustomerNoteTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        CustomerNote.create(config, data=createNote).get()
+        expected = CustomerNote.create(config, data=createNote).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), createNote)
+        self.assertTrue(expected, note)
 
     @requests_mock.mock()
     def test_patch(self, mock_requests):
+        new_note = {
+            "uuid": "note_00000000-0000-0000-0000-000000000000",
+            "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+            "type": "note",
+            "text": "new text",
+            "call_duration": 0,
+            "author": "John Doe (john@example.com')"
+        }
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/customer_notes/note_00000000-0000-0000-0000-000000000000",
             status_code=200,
-            json=note,
+            json=new_note,
         )
 
+        new_text = {"text": "new text"}
+
         config = Config("token")
-        CustomerNote.patch(
-            config, uuid="note_00000000-0000-0000-0000-000000000000", data=createNote
+        expected = CustomerNote.patch(
+            config, uuid="note_00000000-0000-0000-0000-000000000000", data=new_text
         ).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
-        self.assertEqual(mock_requests.last_request.json(), createNote)
+        self.assertEqual(mock_requests.last_request.json(), new_text)
+        self.assertTrue(isinstance(expected, CustomerNote))
 
     @requests_mock.mock()
     def test_retrieve(self, mock_requests):
@@ -116,12 +128,13 @@ class CustomerNoteTestCase(unittest.TestCase):
             "DELETE",
             "https://api.chartmogul.com/v1/customer_notes/note_00000000-0000-0000-0000-000000000000",
             status_code=200,
-            json=note,
+            json={},
         )
 
         config = Config("token")
-        CustomerNote.destroy(
+        expected = CustomerNote.destroy(
             config, uuid="note_00000000-0000-0000-0000-000000000000"
         ).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertTrue(expected, {})

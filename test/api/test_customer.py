@@ -514,17 +514,22 @@ class CustomerTestCase(unittest.TestCase):
     def test_notes(self, mock_requests):
         mock_requests.register_uri(
             "GET",
-            "https://api.chartmogul.com/v1/customer_notes?customer_uuid=cus_00000000-0000-0000-0000-000000000000",
+            "https://api.chartmogul.com/v1/customer_notes?customer_uuid=cus_00000000-0000-0000-0000-000000000000&cursor=ym9vewfo&per_page=1",
             status_code=200,
             json=allNotes,
         )
 
         config = Config("token")
-        notes = Customer.notes(config, uuid="cus_00000000-0000-0000-0000-000000000000").get()
+        notes = Customer.notes(
+            config,
+            uuid="cus_00000000-0000-0000-0000-000000000000",
+            cursor="ym9vewfo",
+            per_page=1,
+            ).get()
         expected = Customer._many(**allNotes)
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        self.assertEqual(mock_requests.last_request.qs, {'customer_uuid': ['cus_00000000-0000-0000-0000-000000000000']})
+        self.assertEqual(mock_requests.last_request.qs, {'customer_uuid': ['cus_00000000-0000-0000-0000-000000000000'], 'cursor': ['ym9vewfo'], 'per_page': ['1']})
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertEqual(sorted(dir(notes)), sorted(dir(expected)))
         self.assertTrue(isinstance(notes.entries[0], CustomerNote))

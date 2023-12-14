@@ -14,13 +14,13 @@ class CustomerNote(Resource):
 
     class _Schema(Schema):
         uuid = fields.String()
-        customer_uuid = fields.String(allow_none=True)
-        type = fields.String(allow_none=True)
-        text = fields.String(allow_none=True)
-        author_email = fields.String(allow_none=True)
-        call_duration = fields.Int(allow_none=True)
-        created_at = fields.DateTime(allow_none=True)
-        updated_at = fields.DateTime(allow_none=True)
+        customer_uuid = fields.String()
+        type = fields.String()
+        text = fields.String()
+        author = fields.String()
+        call_duration = fields.Int()
+        created_at = fields.DateTime()
+        updated_at = fields.DateTime()
 
         @post_load
         def make(self, data, **kwargs):
