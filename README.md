@@ -146,6 +146,8 @@ chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8
 })
 chartmogul.Customer.contacts(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
 chartmogul.Customer.createContact(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+chartmogul.Customer.notes(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
+chartmogul.Customer.createNote(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 ```
 
 #### [Contacts](https://dev.chartmogul.com/docs/contacts)
@@ -159,6 +161,15 @@ chartmogul.Contact.modify(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb
   "email": "test@example.com"
 })
 chartmogul.Contact.destroy(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+```
+
+#### [Customer Notes](https://dev.chartmogul.com/docs/customer_notes)
+```python
+chartmogul.CustomerNote.create(config, data={})
+chartmogul.CustomerNote.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.CustomerNote.retrieve(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.CustomerNote.patch(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.CustomerNote.destroy(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
 
 #### [Customer Attributes](https://dev.chartmogul.com/docs/customer-attributes)
@@ -256,7 +267,7 @@ chartmogul.Transaction.create(config, uuid='inv_745df1d4-819f-48ee-873d-b5204801
 ```python
 import chartmogul
 chartmogul.SubscriptionEvent.all(config)
-chartmogul.SubscriptionEvent.create(config, data={ 
+chartmogul.SubscriptionEvent.create(config, data={
   'subscription_event' : {
     'external_id' : 'evnt_026',
     'customer_external_id' : 'scus_022',
