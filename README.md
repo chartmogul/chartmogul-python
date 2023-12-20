@@ -147,7 +147,7 @@ chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8
 chartmogul.Customer.contacts(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
 chartmogul.Customer.createContact(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 chartmogul.Customer.notes(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
-chartmogul.Customer.createrNote(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+chartmogul.Customer.createNote(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 ```
 
 #### [Contacts](https://dev.chartmogul.com/docs/contacts)
