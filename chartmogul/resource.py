@@ -191,7 +191,7 @@ class Resource(DataObject):
             )
 
     @classmethod
-    def _method(callerClass, method, http_verb, path=None, useCallerClass=False):
+    def _method(callerClass, method, http_verb, path=None, useCallerClass=False, useUUIDFor=None):
         @classmethod
         def fc(calleeClass, config, **kwargs):
             if config is None or not isinstance(config, Config):
@@ -208,6 +208,10 @@ class Resource(DataObject):
             cls._validate_arguments(method, kwargs)
 
             pathTemp = Resource._expandPath(pathTemp, kwargs)
+
+            if useUUIDFor is not None and 'data' in kwargs.keys():
+                kwargs["data"][useUUIDFor] = kwargs["uuid"]
+
             # UUID is always path parameter only.
             if "uuid" in kwargs:
                 del kwargs["uuid"]

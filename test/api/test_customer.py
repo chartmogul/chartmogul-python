@@ -290,7 +290,6 @@ note = {
 }
 
 createNote = {
-    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
     "type": "note",
     "text": "This is a note",
     "author_email": "john@xample.com"
@@ -547,7 +546,7 @@ class CustomerTestCase(unittest.TestCase):
 
         config = Config("token")
         expected = Customer.createNote(
-            config, data=createNote
+            config, uuid="cus_00000000-0000-0000-0000-000000000000", data=createNote
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
