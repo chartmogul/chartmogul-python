@@ -30,6 +30,7 @@ class SubscriptionEvent(Resource):
         tax_amount_in_cents = fields.Int(allow_none=True)
         retracted_event_id = fields.String(allow_none=True)
         external_id = fields.String(allow_none=True)
+        event_order = fields.Int(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
