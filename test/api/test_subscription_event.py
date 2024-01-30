@@ -21,6 +21,7 @@ expected_sub_ev = {
     "plan_external_id": "gol d_monthly",
     "currency": "USD",
     "amount_in_cents": 1000,
+    "event_order": 123,
 }
 
 sub_ev_list_expected = {
@@ -37,6 +38,7 @@ sub_ev_list_expected = {
             "plan_external_id": "gol d_monthly",
             "currency": "USD",
             "amount_in_cents": 1000,
+            "event_order": 123,
         }
     ],
     "cursor": "cursor==",
