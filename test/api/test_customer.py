@@ -74,6 +74,7 @@ entry = {
     "billing-system-type": "Stripe",
     "currency": "USD",
     "currency-sign": "$",
+    "website_url": "https://chartmogul.com",
 }
 
 allContacts = {"entries": [entry], "cursor": "cursor==", "has_more": True}
@@ -140,6 +141,7 @@ deserializedCustomer = Customer(
     billing_system_type="Stripe",
     currency="USD",
     currency_sign="$",
+    website_url="https://chartmogul.com",
 )
 
 createCustomer = {
@@ -191,6 +193,7 @@ createCustomer = {
             {"key": "salesRep", "value": "Gabi", "type": "String"},
         ],
     },
+    "website_url": "https://chartmogul.com"
 }
 
 sentCreateExpected = {
@@ -242,6 +245,7 @@ sentCreateExpected = {
     "name": "Example Company",
     "state": "Alaska",
     "zip": "0185128",
+    "website_url": "https://chartmogul.com",
 }
 
 contact = {
