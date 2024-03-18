@@ -11,6 +11,7 @@ from collections import namedtuple
 from .attributes import Attributes
 from .contact import Contact
 from .customer_note import CustomerNote
+from .opportunity import Opportunity
 
 
 class Address(DataObject):
@@ -86,3 +87,5 @@ Customer.createContact = Contact._method(
 )
 Customer.notes = CustomerNote._method("all", "get", "/customer_notes?customer_uuid={uuid}", useCallerClass=True)
 Customer.createNote = CustomerNote._method("create", "post", "/customer_notes", useCallerClass=True, useUUIDFor="customer_uuid")
+Customer.opportunities = Opportunity._method("all", "get", "/opportunities?customer_uuid={uuid}", useCallerClass=True)
+Customer.createOpportunity = Opportunity._method("create", "post", "/opportunities", useCallerClass=True, useUUIDFor="customer_uuid")

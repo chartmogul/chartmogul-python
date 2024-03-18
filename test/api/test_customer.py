@@ -1,5 +1,5 @@
 import unittest
-from chartmogul import Customer, Contact, Config, CustomerNote
+from chartmogul import Customer, Contact, Config, CustomerNote, Opportunity
 from chartmogul.api.customer import Attributes, Address
 from datetime import datetime
 from chartmogul import APIError
@@ -312,6 +312,56 @@ noteEntry = {
 
 allNotes = {"entries": [noteEntry], "cursor": "cursor==", "has_more": True}
 
+opportunity = {
+    "uuid": "00000000-0000-0000-0000-000000000000",
+    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "owner": "test1@example.org",
+    "pipeline": "New business 1",
+    "pipeline_stage": "Discovery",
+    "estimated_close_date": "2023-12-22",
+    "currency": "USD",
+    "amount_in_cents": 100,
+    "type": "recurring",
+    "forecast_category": "pipeline",
+    "win_likelihood": 3,
+    "custom": {"from_campain": "true"},
+    "created_at": "2024-03-13T07:33:28.356Z",
+    "updated_at": "2024-03-13T07:33:28.356Z"
+}
+
+createOpportunity = {
+    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "owner": "test1@example.org",
+    "pipeline": "New business 1",
+    "pipeline_stage": "Discovery",
+    "estimated_close_date": "2023-12-22",
+    "currency": "USD",
+    "amount_in_cents": 100,
+    "type": "recurring",
+    "forecast_category": "pipeline",
+    "win_likelihood": 3,
+    "custom": {"from_campain": "true"},
+}
+
+opportunityEntry = {
+    "uuid": "00000000-0000-0000-0000-000000000000",
+    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "owner": "test1@example.org",
+    "pipeline": "New business 1",
+    "pipeline_stage": "Discovery",
+    "estimated_close_date": "2023-12-22",
+    "currency": "USD",
+    "amount_in_cents": 100,
+    "type": "recurring",
+    "forecast_category": "pipeline",
+    "win_likelihood": 3,
+    "custom": {"from_campain": "true"},
+    "created_at": "2024-03-13T07:33:28.356Z",
+    "updated_at": "2024-03-13T07:33:28.356Z"
+}
+
+allOpportunities = {"entries": [opportunityEntry], "cursor": "cursor==", "has_more": True}
+
 class CustomerTestCase(unittest.TestCase):
     """
     Tests complex nested structure & assymetric create/retrieve schema.
@@ -557,3 +607,48 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), createNote)
         self.assertTrue(isinstance(expected, CustomerNote))
+
+    @requests_mock.mock()
+    def test_opportunities(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/opportunities?customer_uuid=cus_00000000-0000-0000-0000-000000000000&cursor=ym9vewfo&per_page=1",
+            status_code=200,
+            json=allOpportunities,
+        )
+
+        config = Config("token")
+        opportunities = Customer.opportunities(
+            config,
+            uuid="cus_00000000-0000-0000-0000-000000000000",
+            cursor="ym9vewfo",
+            per_page=1,
+            ).get()
+        expected = Customer._many(**allOpportunities)
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {'customer_uuid': ['cus_00000000-0000-0000-0000-000000000000'], 'cursor': ['ym9vewfo'], 'per_page': ['1']})
+        self.assertEqual(mock_requests.last_request.text, None)
+        self.assertEqual(sorted(dir(opportunities)), sorted(dir(expected)))
+        self.assertTrue(isinstance(opportunities.entries[0], Opportunity))
+        self.assertEqual(opportunities.cursor, "cursor==")
+        self.assertTrue(opportunities.has_more)
+
+    @requests_mock.mock()
+    def test_createOpportunity(self, mock_requests):
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/opportunities",
+            status_code=200,
+            json=opportunity,
+        )
+
+        config = Config("token")
+        expected = Customer.createOpportunity(
+            config, uuid="cus_00000000-0000-0000-0000-000000000000", data=createOpportunity
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.json(), createOpportunity)
+        self.assertTrue(isinstance(expected, Opportunity))
