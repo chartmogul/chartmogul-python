@@ -2,8 +2,6 @@ import unittest
 from chartmogul import Opportunity, Config
 import requests_mock
 
-from pprint import pprint
-
 opportunity = {
     "uuid": "00000000-0000-0000-0000-000000000000",
     "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",

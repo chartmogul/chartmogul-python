@@ -622,8 +622,7 @@ class CustomerTestCase(unittest.TestCase):
             config,
             uuid="cus_00000000-0000-0000-0000-000000000000",
             cursor="ym9vewfo",
-            per_page=1,
-            ).get()
+            per_page=1).get()
         expected = Customer._many(**allOpportunities)
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")

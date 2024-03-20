@@ -29,7 +29,6 @@ class Opportunity(Resource):
         created_at = fields.DateTime()
         updated_at = fields.DateTime()
 
-
         @post_load
         def make(self, data, **kwargs):
             return Opportunity(**data)
