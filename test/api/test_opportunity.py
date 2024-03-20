@@ -30,7 +30,7 @@ createOpportunity = {
     "type": "recurring",
     "forecast_category": "pipeline",
     "win_likelihood": 3,
-    "custom": {"from_campain": "true"},
+    "custom": {"key": "from_campain", "value": "true"},
 }
 
 
