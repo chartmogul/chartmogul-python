@@ -324,7 +324,7 @@ opportunity = {
     "type": "recurring",
     "forecast_category": "pipeline",
     "win_likelihood": 3,
-    "custom": {"from_campain": "true"},
+    "custom": {"from_campaign": True},
     "created_at": "2024-03-13T07:33:28.356Z",
     "updated_at": "2024-03-13T07:33:28.356Z"
 }
@@ -340,7 +340,7 @@ createOpportunity = {
     "type": "recurring",
     "forecast_category": "pipeline",
     "win_likelihood": 3,
-    "custom": {"key": "from_campain", "value": "true"},
+    "custom": {"key": "from_campaign", "value": True},
 }
 
 opportunityEntry = {
@@ -355,12 +355,13 @@ opportunityEntry = {
     "type": "recurring",
     "forecast_category": "pipeline",
     "win_likelihood": 3,
-    "custom": {"from_campain": "true"},
+    "custom": {"from_campaign": True},
     "created_at": "2024-03-13T07:33:28.356Z",
     "updated_at": "2024-03-13T07:33:28.356Z"
 }
 
 allOpportunities = {"entries": [opportunityEntry], "cursor": "cursor==", "has_more": True}
+
 
 class CustomerTestCase(unittest.TestCase):
     """
