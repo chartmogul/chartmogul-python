@@ -148,6 +148,8 @@ chartmogul.Customer.contacts(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb
 chartmogul.Customer.createContact(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 chartmogul.Customer.notes(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
 chartmogul.Customer.createNote(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+chartmogul.Customer.opporunities(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
+chartmogul.Customer.createOpportunity(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 ```
 
 #### [Contacts](https://dev.chartmogul.com/docs/contacts)
@@ -170,6 +172,16 @@ chartmogul.CustomerNote.all(config, cursor='aabbcc', per_page=20, customer_uuid=
 chartmogul.CustomerNote.retrieve(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.CustomerNote.patch(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.CustomerNote.destroy(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+```
+
+#### [Opportunities](https://dev.chartmogul.com/docs/opportunities)
+
+```python
+chartmogul.Opportunity.create(config, data={})
+chartmogul.Opportunity.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Opportunity.retrieve(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Opportunity.patch(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Opportunity.destroy(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
 
 #### [Customer Attributes](https://dev.chartmogul.com/docs/customer-attributes)
