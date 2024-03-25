@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [4.3.0] - 2024-03-25
+- Adds support for Opportunities (https://dev.chartmogul.com/reference/opportunities)
+
 ## [4.2.1] - 2024-01-15
 - Fix customer website_url, add missing allow_none=True
 
