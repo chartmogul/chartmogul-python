@@ -19,7 +19,7 @@ requires = [
     "promise>=2.3.0",
     "marshmallow>=3.19.0",
     "future>=0.18.3",
-    "urllib3>=2.2.2",
+    "urllib3==1.26.19",
 ]
 test_requirements = [
     "mock>=5.1.0",
