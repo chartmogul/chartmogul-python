@@ -19,12 +19,11 @@ requires = [
     "promise>=2.3.0",
     "marshmallow>=3.19.0",
     "future>=0.18.3",
-    "urllib3==1.26.19",
+    "urllib3==2.2.2",
 ]
 test_requirements = [
     "mock>=5.1.0",
     "requests-mock>=1.11.0",
-    "vcrpy>=4.4.0",
     "PyYAML>=6.0.1",
     "httpretty>=1.1.4",
     "wrapt>=1.15.0",
