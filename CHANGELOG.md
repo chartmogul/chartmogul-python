@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [4.3.2] - 2024-06-26
+- Remove VCR dependencies
+- Replaced unit tests that depended on VCR using `request_mock`
+- Updated urllib3 to latest secure version
+
 ## [4.3.1] - 2024-06-20
 - Update the urllib3 dependency to a secure version
 
