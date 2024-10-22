@@ -78,6 +78,7 @@ class Customer(Resource):
 
 Customer.search = Customer._method("all", "get", "/customers/search")
 Customer.merge = Customer._method("merge", "post", "/customers/merges")
+Customer.unmerge = Customer._method("unmerge", "post", "/customers/unmerges")
 Customer.connectSubscriptions = Customer._method(
     "create", "post", "/customers/{uuid}/connect_subscriptions"
 )

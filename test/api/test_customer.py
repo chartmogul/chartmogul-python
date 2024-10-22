@@ -453,6 +453,26 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
         self.assertEqual(result, None)
+    
+    @requests_mock.mock()
+    def test_unmerge(self, mock_requests):
+        mock_requests.register_uri(
+            "POST", "https://api.chartmogul.com/v1/customers/unmerges", status_code=202
+        )
+
+        jsonRequest = {
+            "customer_uuid": "cus_cd9e5f29-6299-40e5-b343-0bd1ed228b4f",
+            "data_source_uuid": "ds_788ec6ae-dd51-11ee-bd46-a3ec952dc041",
+            "external_id": "cus_O075O8NH0LrtG8",
+            "move_to_new_customer": []
+        }
+
+        config = Config("token")
+        result = Customer.unmerge(config, data=jsonRequest).get()
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result, None)
 
     @requests_mock.mock()
     def test_connectSubscriptions(self, mock_requests):
