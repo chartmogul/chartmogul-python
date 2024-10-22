@@ -406,7 +406,7 @@ To work on the library:
 * Write tests for your new features. Use `requests_mock` for HTTP mocking.
   * To run test install requirement-test `pip3 install -r requirements-test.txt` and run with `python -m unittest`:
     * `pip3 install coverage`
-    * `coverage run ./setup.py test`
+    * `coverage run -m unittest`
     * `coverage html --include='chartmogul/*'`
     * Find results in `htmlcov/index.html`
 * If all tests are passed, push to the branch (`git push origin my-new-feature`)
