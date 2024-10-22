@@ -48,7 +48,7 @@ jobs:
             ${{ runner.os }}-
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel coverage requests-mock
+          python -m pip install --upgrade pip setuptools wheel coverage requests-mock httpretty
           pip install -r requirements.txt
       - name: Set ENV for codeclimate (pull_request)
         continue-on-error: true
