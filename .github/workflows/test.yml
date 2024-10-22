@@ -48,8 +48,8 @@ jobs:
             ${{ runner.os }}-
       - name: Install dependencies
         run: |
-          python3 -m pip3 install --upgrade pip3 setuptools wheel coverage
-          pip3 install -r requirements.txt
+          python -m pip install --upgrade pip3 setuptools wheel coverage requests-mock
+          pip install -r requirements.txt
       - name: Set ENV for codeclimate (pull_request)
         continue-on-error: true
         run: |
