@@ -150,6 +150,18 @@ chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8
     }
   ]
 })
+chartmogul.Customer.disconnectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  'subscriptions': [
+    {
+      "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
+      "external_id": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0"
+    },
+    {
+      "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
+      "external_id": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4"
+    }
+  ]
+})
 chartmogul.Customer.contacts(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
 chartmogul.Customer.createContact(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 chartmogul.Customer.notes(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
@@ -433,7 +445,8 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/chartm
 Make sure that:
 1. you have prepared `~/.pypirc` with credentials,
 2. a higher version has been set in `chartmogul/__init__.py`,
-3. Test & build package `python3 setup.py test sdist`
+3. Run tests `python3 -m unittest`
+4. Build package `python3 setup.py sdist`
 4. release works `twine upload --repository-url https://test.pypi.org/legacy/ dist/*`,
 5. release to production `twine upload dist/*`,
 

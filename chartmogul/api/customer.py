@@ -82,6 +82,9 @@ Customer.unmerge = Customer._method("unmerge", "post", "/customers/unmerges")
 Customer.connectSubscriptions = Customer._method(
     "create", "post", "/customers/{uuid}/connect_subscriptions"
 )
+Customer.disconnectSubscriptions = Customer._method(
+    "create", "post", "/customers/{uuid}/disconnect_subscriptions"
+)
 Customer.contacts = Contact._method("all", "get", "/customers/{uuid}/contacts", useCallerClass=True)
 Customer.createContact = Contact._method(
     "create", "post", "/customers/{uuid}/contacts", useCallerClass=True

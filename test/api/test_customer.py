@@ -504,6 +504,35 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(result, None)
 
     @requests_mock.mock()
+    def test_disconnectSubscriptions(self, mock_requests):
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/customers/cus_5915ee5a-babd-406b-b8ce-d207133fb4cb/disconnect_subscriptions",
+            status_code=202,
+        )
+
+        jsonRequest = {
+            "subscriptions": [
+                {
+                    "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
+                    "external_id": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0",
+                },
+                {
+                    "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
+                    "external_id": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4",
+                },
+            ]
+        }
+        config = Config("token")
+        result = Customer.disconnectSubscriptions(
+            config, uuid="cus_5915ee5a-babd-406b-b8ce-d207133fb4cb", data=jsonRequest
+        ).get()
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result, None)
+
+    @requests_mock.mock()
     def test_modify_uuid_missing(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",

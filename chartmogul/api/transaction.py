@@ -16,6 +16,7 @@ class Transaction(Resource):
         date = fields.DateTime()
         result = fields.String()
         amount_in_cents = fields.Int(allow_none=True)
+        transaction_fees_in_cents = fields.Int(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
