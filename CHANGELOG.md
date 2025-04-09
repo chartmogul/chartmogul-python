@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [4.5.1] - 2025-04-07
+- Update urllib3 dependency to use >=2.2.3 to allow for future minor updates
+
 ## [4.5.0] - 2025-03-18
 - Adds support for disconnecting subscriptions
 - Adds support for transaction fees to transactions
