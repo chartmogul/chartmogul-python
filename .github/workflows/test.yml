@@ -70,8 +70,12 @@ jobs:
       - name: Run tests
         run: coverage run -m unittest && coverage xml -i --include='chartmogul/*'
       - name: Send Report to Code Climate
+        if: ${{ success() }}
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        if: ${{ success() }}
-        run: ./cc-test-reporter after-build -t coverage.py
-
+        run: |
+          if [ -z "$CC_TEST_REPORTER_ID" ]; then
+            echo "⚠️ Skipping Code Climate upload — CC_TEST_REPORTER_ID is not set."
+          else
+            ./cc-test-reporter after-build -t coverage.py
+          fi
