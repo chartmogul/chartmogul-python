@@ -1,5 +1,5 @@
 import unittest
-from chartmogul import Customer, Contact, Config, CustomerNote, Opportunity
+from chartmogul import Customer, Contact, Config, CustomerNote, Opportunity, Task
 from chartmogul.api.customer import Attributes, Address
 from datetime import datetime
 from chartmogul import APIError
@@ -362,6 +362,38 @@ opportunityEntry = {
 
 allOpportunities = {"entries": [opportunityEntry], "cursor": "cursor==", "has_more": True}
 
+task = {
+    "uuid": "00000000-0000-0000-0000-000000000000",
+    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "assignee": "customer@example.com",
+    "task_details": "This is some task details text.",
+    "due_date": "2025-04-30T00:00:00Z",
+    "completed_at": "2025-04-20T00:00:00Z",
+    "created_at": "2025-04-01T12:00:00.000Z",
+    "updated_at": "2025-04-01T12:00:00.000Z"
+}
+
+createTask = {
+    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "assignee": "customer@example.com",
+    "task_details": "This is some task details text.",
+    "due_date": "2025-04-30T00:00:00Z",
+    "completed_at": "2025-04-20T00:00:00Z",
+}
+
+taskEntry = {
+    "uuid": "00000000-0000-0000-0000-000000000000",
+    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "assignee": "customer@example.com",
+    "task_details": "This is some task details text.",
+    "due_date": "2025-04-30T00:00:00Z",
+    "completed_at": "2025-04-20T00:00:00Z",
+    "created_at": "2025-04-01T12:00:00.000Z",
+    "updated_at": "2025-04-01T12:00:00.000Z"
+}
+
+allTasks = {"entries": [taskEntry], "cursor": "cursor==", "has_more": False}
+
 
 class CustomerTestCase(unittest.TestCase):
     """
@@ -453,7 +485,7 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
         self.assertEqual(result, None)
-    
+
     @requests_mock.mock()
     def test_unmerge(self, mock_requests):
         mock_requests.register_uri(
@@ -701,3 +733,48 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), createOpportunity)
         self.assertTrue(isinstance(expected, Opportunity))
+
+    @requests_mock.mock()
+    def test_tasks(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/tasks?customer_uuid=cus_00000000-0000-0000-0000-000000000000&cursor=df431387&per_page=1",
+            status_code=200,
+            json=allTasks,
+        )
+
+        config = Config("token")
+        tasks = Customer.tasks(
+            config,
+            uuid="cus_00000000-0000-0000-0000-000000000000",
+            cursor="df431387",
+            per_page=1,
+            ).get()
+        expected = Customer._many(**allTasks)
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {'customer_uuid': ['cus_00000000-0000-0000-0000-000000000000'], 'cursor': ['df431387'], 'per_page': ['1']})
+        self.assertEqual(mock_requests.last_request.text, None)
+        self.assertEqual(sorted(dir(tasks)), sorted(dir(expected)))
+        self.assertTrue(isinstance(tasks.entries[0], Task))
+        self.assertEqual(tasks.cursor, "cursor==")
+        self.assertFalse(tasks.has_more)
+
+    @requests_mock.mock()
+    def test_createTask(self, mock_requests):
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/tasks",
+            status_code=200,
+            json=task,
+        )
+
+        config = Config("token")
+        expected = Customer.createTask(
+            config, uuid="cus_00000000-0000-0000-0000-000000000000", data=createTask
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.json(), createTask)
+        self.assertTrue(isinstance(expected, Task))
