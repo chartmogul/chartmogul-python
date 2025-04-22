@@ -17,7 +17,7 @@ requires = [
     "requests>=2.31.0",
     "uritemplate>=4.1.1",
     "promise>=2.3.0",
-    "marshmallow>=3.19.0",
+    "marshmallow>=3.19.0,<3.24.0",
     "future>=0.18.3",
     "urllib3==2.2.2",
 ]
