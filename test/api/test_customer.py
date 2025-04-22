@@ -378,7 +378,7 @@ createTask = {
     "assignee": "customer@example.com",
     "task_details": "This is some task details text.",
     "due_date": "2025-04-30T00:00:00Z",
-    "completed_at": "2025-04-20T00:00:00Z",
+    "completed_at": None,
 }
 
 taskEntry = {

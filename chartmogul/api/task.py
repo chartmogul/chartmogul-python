@@ -19,7 +19,7 @@ class Task(Resource):
         assignee = fields.String()
         task_details = fields.String()
         due_date = fields.DateTime()
-        completed_at = fields.DateTime()
+        completed_at = fields.DateTime(allow_none=True)
         created_at = fields.DateTime()
         updated_at = fields.DateTime()
 
