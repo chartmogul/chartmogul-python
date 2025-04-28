@@ -19,7 +19,7 @@ requires = [
     "promise>=2.3.0",
     "marshmallow>=3.19.0,<3.24.0",
     "future>=0.18.3",
-    "urllib3==2.2.2",
+    "urllib3>=2.2.2",
 ]
 test_requirements = [
     "mock>=5.1.0",
@@ -61,9 +61,9 @@ setup(
     install_requires=requires,
     license="MIT",
     zip_safe=False,
-    tests_require=test_requirements,
-    test_suite="test",
-    extras_require={},
+    extras_require={
+        "testing": test_requirements
+    },
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",

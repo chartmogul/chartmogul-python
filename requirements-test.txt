@@ -1,6 +1,0 @@
--r requirements.txt
-mock>=5.1.0
-requests-mock>=1.11.0
-PyYAML>=6.0.1
-httpretty>=1.1.4
-wrapt>=1.15.0

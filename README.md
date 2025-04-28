@@ -431,10 +431,10 @@ To work on the library:
 * Create your feature branch (`git checkout -b my-new-feature`)
 * Setup a virtual environment (`python -m venv <directory>`)
 * Activate the virtual environment (`source <directory>/bin/activate`)
-* Install dependencies: `pip3 install -r requirements.txt && python3 setup.py develop`
+* Install dependencies: `pip3 install -e ".[testing]"`
 * Fix bugs or add features. Make sure the changes pass the coding guidelines (use `pylama`).
 * Write tests for your new features. Use `requests_mock` for HTTP mocking.
-  * To run test install requirement-test `pip3 install -r requirements-test.txt` and run with `python -m unittest`:
+  * To run test:
     * `pip3 install coverage`
     * `coverage run -m unittest`
     * `coverage html --include='chartmogul/*'`
