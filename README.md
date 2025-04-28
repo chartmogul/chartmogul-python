@@ -29,7 +29,7 @@
 
 ## Installation
 
-This library requires Python 3.8 to 3.12. It was last tested against Python 2.7 in version 1.3.0.
+This library requires Python 3.9 to 3.12. It was last tested against Python 2.7 in version 1.3.0.
 
 ```sh
 pip3 install chartmogul
@@ -106,7 +106,7 @@ except Exception as ex:
 
 Available methods in Import API:
 
-#### [Data Sources](https://dev.chartmogul.com/docs/data-sources)
+#### [Data Sources](https://dev.chartmogul.com/reference/sources/)
 
 ```python
 chartmogul.DataSource.create(config, data={'name': 'In-house billing'})
@@ -115,7 +115,7 @@ chartmogul.DataSource.all(config)
 chartmogul.DataSource.destroy(config, uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
 
-#### [Customers](https://dev.chartmogul.com/docs/customers)
+#### [Customers](https://dev.chartmogul.com/reference/customers/)
 
 ```python
 chartmogul.Customer.create(config, data={})
@@ -166,11 +166,13 @@ chartmogul.Customer.contacts(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb
 chartmogul.Customer.createContact(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 chartmogul.Customer.notes(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
 chartmogul.Customer.createNote(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
-chartmogul.Customer.opporunities(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
+chartmogul.Customer.opportunities(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
 chartmogul.Customer.createOpportunity(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+chartmogul.Customer.tasks(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
+chartmogul.Customer.createTask(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 ```
 
-#### [Contacts](https://dev.chartmogul.com/docs/contacts)
+#### [Contacts](https://dev.chartmogul.com/reference/contacts/)
 
 ```python
 chartmogul.Contact.create(config, data={})
@@ -183,7 +185,7 @@ chartmogul.Contact.modify(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb
 chartmogul.Contact.destroy(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
 
-#### [Customer Notes](https://dev.chartmogul.com/docs/customer_notes)
+#### [Customer Notes](https://dev.chartmogul.com/reference/notes-and-call-logs/)
 ```python
 chartmogul.CustomerNote.create(config, data={})
 chartmogul.CustomerNote.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
@@ -192,7 +194,7 @@ chartmogul.CustomerNote.patch(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133
 chartmogul.CustomerNote.destroy(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
 
-#### [Opportunities](https://dev.chartmogul.com/docs/opportunities)
+#### [Opportunities](https://dev.chartmogul.com/reference/opportunities/)
 
 ```python
 chartmogul.Opportunity.create(config, data={})
@@ -202,7 +204,17 @@ chartmogul.Opportunity.patch(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb'
 chartmogul.Opportunity.destroy(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
 
-#### [Customer Attributes](https://dev.chartmogul.com/docs/customer-attributes)
+#### [Tasks](https://dev.chartmogul.com/reference/tasks/)
+
+```python
+chartmogul.Task.create(config, data={})
+chartmogul.Task.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Task.retrieve(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Task.patch(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Task.destroy(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
+```
+
+#### [Customer Attributes](https://dev.chartmogul.com/reference/customers/attributes/)
 
 Note that the returned attributes of type date are not parsed and stay in string.
 
@@ -210,7 +222,7 @@ Note that the returned attributes of type date are not parsed and stay in string
 chartmogul.Attributes.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
 
-#### [Tags](https://dev.chartmogul.com/docs/tags)
+#### [Tags](https://dev.chartmogul.com/reference/customers/tags/)
 
 ```python
 chartmogul.Tags.add(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
@@ -225,7 +237,7 @@ chartmogul.Tags.remove(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', 
 })
 ```
 
-#### [Custom Attributes](https://dev.chartmogul.com/docs/custom-attributes)
+#### [Custom Attributes](https://dev.chartmogul.com/reference/customers/attributes/)
 
 ```python
 chartmogul.CustomAttributes.add(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
@@ -250,7 +262,7 @@ chartmogul.CustomAttributes.remove(config, uuid='cus_5915ee5a-babd-406b-b8ce-d20
 })
 ```
 
-#### [Plans](https://dev.chartmogul.com/docs/plans)
+#### [Plans](https://dev.chartmogul.com/reference/plans/)
 
 ```python
 chartmogul.Plan.create(config, data={})
@@ -262,7 +274,7 @@ chartmogul.Plan.all(config, cursor='cursor==', external_id='')
 chartmogul.Plan.destroy(config, uuid='')
 ```
 
-#### [Plan Groups](https://dev.chartmogul.com/docs/plan_groups)
+#### [Plan Groups](https://dev.chartmogul.com/reference/plan-groups/)
 
 ```python
 chartmogul.PlanGroup.create(config, data={})
@@ -273,7 +285,7 @@ chartmogul.PlanGroup.all(config, uuid='plg_5915ee5a-babd-406b-b8ce-d207133fb4cb'
 chartmogul.PlanGroup.destroy(config, uuid='')
 ```
 
-#### [Invoices](https://dev.chartmogul.com/docs/invoices)
+#### [Invoices](https://dev.chartmogul.com/reference/invoices/)
 
 ```python
 import chartmogul
@@ -284,7 +296,7 @@ chartmogul.Invoice.all(config, customer_uuid='cus_f466e33d-ff2b-4a11-8f85-417eb0
 chartmogul.Invoice.retrieve(config, uuid='inv_22910fc6-c931-48e7-ac12-90d2cb5f0059')
 ```
 
-#### [Transactions](https://dev.chartmogul.com/docs/transactions)
+#### [Transactions](https://dev.chartmogul.com/reference/transactions/)
 
 ```python
 import chartmogul
@@ -292,7 +304,7 @@ import chartmogul
 chartmogul.Transaction.create(config, uuid='inv_745df1d4-819f-48ee-873d-b5204801e021', data={})
 ```
 
-#### [SubscriptionEvents](https://dev.chartmogul.com/docs/subscription_events)
+#### [SubscriptionEvents](https://dev.chartmogul.com/reference/subscription-events/)
 
 ```python
 import chartmogul
@@ -323,7 +335,7 @@ chartmogul.SubscriptionEvent.destroy_with_params(config, data={
 }})
 ```
 
-#### [Subscriptions](https://dev.chartmogul.com/docs/subscriptions)
+#### [Subscriptions](https://dev.chartmogul.com/reference/subscriptions/)
 
 ```python
 import chartmogul
@@ -333,7 +345,7 @@ chartmogul.Subscription.cancel(config, uuid='sub_3995ee5a-bbdb-406b-a8ca-d207133
 chartmogul.Subscription.modify(config, uuid='sub_3995ee5a-bbdb-406b-a8ca-d207133fb9bb' data={'cancellation_dates': []})
 ```
 
-### [Metrics API](https://dev.chartmogul.com/docs/introduction-metrics-api)
+### [Metrics API](https://dev.chartmogul.com/reference/metrics/)
 
 Available methods in Metrics API:
 

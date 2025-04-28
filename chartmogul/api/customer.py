@@ -12,6 +12,7 @@ from .attributes import Attributes
 from .contact import Contact
 from .customer_note import CustomerNote
 from .opportunity import Opportunity
+from .task import Task
 
 
 class Address(DataObject):
@@ -93,3 +94,5 @@ Customer.notes = CustomerNote._method("all", "get", "/customer_notes?customer_uu
 Customer.createNote = CustomerNote._method("create", "post", "/customer_notes", useCallerClass=True, useUUIDFor="customer_uuid")
 Customer.opportunities = Opportunity._method("all", "get", "/opportunities?customer_uuid={uuid}", useCallerClass=True)
 Customer.createOpportunity = Opportunity._method("create", "post", "/opportunities", useCallerClass=True, useUUIDFor="customer_uuid")
+Customer.tasks = Task._method("all", "get", "/tasks?customer_uuid={uuid}", useCallerClass=True)
+Customer.createTask = Task._method("create", "post", "/tasks", useCallerClass=True, useUUIDFor="customer_uuid")

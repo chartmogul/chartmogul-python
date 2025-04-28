@@ -17,6 +17,7 @@ from .api.data_source import DataSource
 from .api.invoice import Invoice
 from .api.metrics import Metrics
 from .api.opportunity import Opportunity
+from .api.task import Task
 from .api.ping import Ping
 from .api.plan import Plan
 from .api.plan_group import PlanGroup
