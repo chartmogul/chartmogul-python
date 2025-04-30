@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning].
 
 ## [4.6.1] - unreleased
 - Unify requirements in a single place
+- Support for Python 3.13.
 
 ## [4.6.0] - 2025-04-25
 - Adds support for Tasks (https://dev.chartmogul.com/reference/tasks)
