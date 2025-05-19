@@ -363,7 +363,7 @@ opportunityEntry = {
 allOpportunities = {"entries": [opportunityEntry], "cursor": "cursor==", "has_more": True}
 
 task = {
-    "uuid": "00000000-0000-0000-0000-000000000000",
+    "task_uuid": "00000000-0000-0000-0000-000000000000",
     "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
     "assignee": "customer@example.com",
     "task_details": "This is some task details text.",
@@ -382,7 +382,7 @@ createTask = {
 }
 
 taskEntry = {
-    "uuid": "00000000-0000-0000-0000-000000000000",
+    "task_uuid": "00000000-0000-0000-0000-000000000000",
     "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
     "assignee": "customer@example.com",
     "task_details": "This is some task details text.",

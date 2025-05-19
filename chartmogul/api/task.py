@@ -14,7 +14,7 @@ class Task(Resource):
 
     class _Schema(Schema):
 
-        uuid = fields.String()
+        task_uuid = fields.String()
         customer_uuid = fields.String()
         assignee = fields.String()
         task_details = fields.String()
