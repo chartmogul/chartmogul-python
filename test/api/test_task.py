@@ -5,7 +5,7 @@ import requests_mock
 from pprint import pprint
 
 task = {
-    "uuid": "00000000-0000-0000-0000-000000000000",
+    "task_uuid": "00000000-0000-0000-0000-000000000000",
     "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
     "assignee": "customer@example.com",
     "task_details": "This is some task details text.",
@@ -80,7 +80,7 @@ class TaskTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_patch(self, mock_requests):
         new_task = {
-            "uuid": "00000000-0000-0000-0000-000000000000",
+            "task_uuid": "00000000-0000-0000-0000-000000000000",
             "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
             "assignee": "customer@example.com",
             "task_details": "This is some task details text.",

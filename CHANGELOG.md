@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [4.6.2] - 2025-05-19
+- Fixed Tasks API schema issue
+
 ## [4.6.1] - unreleased
 - Unify requirements in a single place
 - Support for Python 3.13.
