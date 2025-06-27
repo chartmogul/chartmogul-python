@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [4.7.0] - 2025-01-XX
+- Add marshmallow 4.x compatibility by replacing deprecated Number fields with Float fields
+- Update marshmallow dependency constraint to support versions 3.19.0 through 4.x (>=3.19.0,<5.0.0)
+- Fix AttributeError: 'Number' object has no attribute 'num_type' error
+
 ## [4.6.1] - 2025-05-19
 - Fixed Tasks API schema issue
 - Unify requirements in a single place

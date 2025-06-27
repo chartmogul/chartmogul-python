@@ -11,17 +11,17 @@ class Summary(DataObject):
     """
 
     class _Schema(Schema):
-        current = fields.Number()
-        previous = fields.Number()
-        percentage_change = fields.Number(data_key="percentage-change")
+        current = fields.Float()
+        previous = fields.Float()
+        percentage_change = fields.Float(data_key="percentage-change")
         # All metrics percentage change
         for metric in metrics:
             pc = metric + "-percentage-change"
             current_pc = "current-" + metric
             previous_pc = "previous-" + metric
-            locals()[pc.replace("-", "_")] = fields.Number(data_key=pc)
-            locals()[current_pc.replace("-", "_")] = fields.Number(data_key=current_pc)
-            locals()[previous_pc.replace("-", "_")] = fields.Number(data_key=previous_pc)
+            locals()[pc.replace("-", "_")] = fields.Float(data_key=pc)
+            locals()[current_pc.replace("-", "_")] = fields.Float(data_key=current_pc)
+            locals()[previous_pc.replace("-", "_")] = fields.Float(data_key=previous_pc)
 
         @post_load
         def make(self, data, **kwargs):
@@ -46,24 +46,24 @@ class Metrics(Resource):
         """
 
         date = fields.Date()
-        customer_churn_rate = fields.Number(data_key="customer-churn-rate")
-        mrr_churn_rate = fields.Number(data_key="mrr-churn-rate")
-        ltv = fields.Number()
-        customers = fields.Number()
-        asp = fields.Number()
-        arpa = fields.Number()
-        arr = fields.Number()
-        mrr = fields.Number()
+        customer_churn_rate = fields.Float(data_key="customer-churn-rate")
+        mrr_churn_rate = fields.Float(data_key="mrr-churn-rate")
+        ltv = fields.Float()
+        customers = fields.Float()
+        asp = fields.Float()
+        arpa = fields.Float()
+        arr = fields.Float()
+        mrr = fields.Float()
         # MRR only
-        mrr_new_business = fields.Number(data_key="mrr-new-business")
-        mrr_expansion = fields.Number(data_key="mrr-expansion")
-        mrr_contraction = fields.Number(data_key="mrr-contraction")
-        mrr_churn = fields.Number(data_key="mrr-churn")
-        mrr_reactivation = fields.Number(data_key="mrr-reactivation")
-        percentage_change = fields.Number(data_key="percentage-change")
+        mrr_new_business = fields.Float(data_key="mrr-new-business")
+        mrr_expansion = fields.Float(data_key="mrr-expansion")
+        mrr_contraction = fields.Float(data_key="mrr-contraction")
+        mrr_churn = fields.Float(data_key="mrr-churn")
+        mrr_reactivation = fields.Float(data_key="mrr-reactivation")
+        percentage_change = fields.Float(data_key="percentage-change")
         for metric in metrics:
             pc = metric + "-percentage-change"
-            locals()[pc.replace("-", "_")] = fields.Number(data_key=pc)
+            locals()[pc.replace("-", "_")] = fields.Float(data_key=pc)
 
         @post_load
         def make(self, data, **kwargs):
