@@ -14,9 +14,9 @@ class CustomerActivity(Resource):
 
     class _Schema(Schema):
         id = fields.Int()
-        activity_arr = fields.Number(data_key="activity-arr")
-        activity_mrr = fields.Number(data_key="activity-mrr")
-        activity_mrr_movement = fields.Number(data_key="activity-mrr-movement")
+        activity_arr = fields.Integer(data_key="activity-arr")
+        activity_mrr = fields.Integer(data_key="activity-mrr")
+        activity_mrr_movement = fields.Integer(data_key="activity-mrr-movement")
         currency = fields.String()
         currency_sign = fields.String(data_key="currency-sign")
         date = fields.DateTime()

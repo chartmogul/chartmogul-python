@@ -78,9 +78,9 @@ parsedEntries = [
     Metrics(
         **{
             "date": date(2022, 4, 30),
-            "mrr": 383859969.0,
+            "mrr": 383859969,
             "mrr_percentage_change": 0.0,
-            "arr": 4606319628.0,
+            "arr": 4606319628,
             "arr_percentage_change": 0.0,
             "customer_churn_rate": 0.56,
             "customer_churn_rate_percentage_change": 0.0,
@@ -88,7 +88,7 @@ parsedEntries = [
             "mrr_churn_rate_percentage_change": 0.0,
             "ltv": 117173214.0,
             "ltv_percentage_change": 0.0,
-            "customers": 585.0,
+            "customers": 585,
             "customers_percentage_change": 0.0,
             "asp": 46107.0,
             "asp_percentage_change": 0.0,
@@ -99,9 +99,9 @@ parsedEntries = [
     Metrics(
         **{
             "date": date(2022, 5, 31),
-            "mrr": 67028090.0,
+            "mrr": 67028090,
             "mrr_percentage_change": 74.62,
-            "arr": 8043370848.0,
+            "arr": 8043370848,
             "arr_percentage_change": 74.62,
             "customer_churn_rate": 1.71,
             "customer_churn_rate_percentage_change": 205.36,
@@ -109,7 +109,7 @@ parsedEntries = [
             "mrr_churn_rate_percentage_change": -43735.29,
             "ltv": 65112456.0,
             "ltv_percentage_change": -44.43,
-            "customers": 602.0,
+            "customers": 602,
             "customers_percentage_change": 2.91,
             "asp": 22035.0,
             "asp_percentage_change": -52.21,
@@ -149,24 +149,24 @@ parsedMrrEntries = [
     Metrics(
         **{
             "date": date(2015, 1, 3),
-            "mrr": 30000.0,
-            "mrr_new_business": 10000.0,
-            "mrr_expansion": 15000.0,
-            "mrr_contraction": 0.0,
-            "mrr_churn": 0.0,
-            "mrr_reactivation": 0.0,
+            "mrr": 30000,
+            "mrr_new_business": 10000,
+            "mrr_expansion": 15000,
+            "mrr_contraction": 0,
+            "mrr_churn": 0,
+            "mrr_reactivation": 0,
             "percentage_change": 0.0,
         }
     ),
     Metrics(
         **{
             "date": date(2015, 1, 10),
-            "mrr": 30000.0,
-            "mrr_new_business": 0.0,
-            "mrr_expansion": 0.0,
-            "mrr_contraction": 0.0,
-            "mrr_churn": 0.0,
-            "mrr_reactivation": 0.0,
+            "mrr": 30000,
+            "mrr_new_business": 0,
+            "mrr_expansion": 0,
+            "mrr_contraction": 0,
+            "mrr_churn": 0,
+            "mrr_reactivation": 0,
             "percentage_change": 74.62,
         }
     ),
