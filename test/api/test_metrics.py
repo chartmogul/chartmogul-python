@@ -90,9 +90,9 @@ parsedEntries = [
             "ltv_percentage_change": 0.0,
             "customers": 585,
             "customers_percentage_change": 0.0,
-            "asp": 46107.0,
+            "asp": 46107,
             "asp_percentage_change": 0.0,
-            "arpa": 656170.0,
+            "arpa": 656170,
             "arpa_percentage_change": 0.0,
         }
     ),
@@ -111,9 +111,9 @@ parsedEntries = [
             "ltv_percentage_change": -44.43,
             "customers": 602,
             "customers_percentage_change": 2.91,
-            "asp": 22035.0,
+            "asp": 22035,
             "asp_percentage_change": -52.21,
-            "arpa": 1113423.0,
+            "arpa": 1113423,
             "arpa_percentage_change": 69.69,
         }
     ),
