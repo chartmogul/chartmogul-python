@@ -15,9 +15,9 @@ class Activity(Resource):
     )
 
     class _Schema(Schema):
-        activity_arr = fields.Number(data_key="activity-arr")
-        activity_mrr = fields.Number(data_key="activity-mrr")
-        activity_mrr_movement = fields.Number(data_key="activity-mrr-movement")
+        activity_arr = fields.Int(data_key="activity-arr")
+        activity_mrr = fields.Int(data_key="activity-mrr")
+        activity_mrr_movement = fields.Int(data_key="activity-mrr-movement")
         currency = fields.String()
         date = fields.DateTime()
         description = fields.String()
