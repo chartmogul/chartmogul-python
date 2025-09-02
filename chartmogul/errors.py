@@ -1,5 +1,6 @@
 from requests import HTTPError
 
+
 class ConfigurationError(Exception):
     pass
 
