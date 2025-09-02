@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from __future__ import absolute_import
 import os
 import re
 import sys
@@ -18,7 +17,6 @@ requires = [
     "uritemplate>=4.1.1",
     "promise>=2.3.0",
     "marshmallow>=3.24.0,<5.0.0",
-    "future>=0.18.3",
     "urllib3>=2.2.2",
 ]
 test_requirements = [

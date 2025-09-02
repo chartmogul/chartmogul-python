@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [4.6.3] - 2025-09-01
+- Remove future dependency to resolve vulnerability issues
+
+## [4.6.2] - 2025-07-09
+- Update Marshmallow dependency to use >=3.24.0 
+
 ## [4.6.1] - 2025-05-19
 - Fixed Tasks API schema issue
 - Unify requirements in a single place

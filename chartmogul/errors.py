@@ -1,4 +1,3 @@
-from future.utils import raise_from
 from requests import HTTPError
 
 
@@ -20,6 +19,6 @@ class DeprecatedArgumentError(Exception):
 
 def annotateHTTPError(err):
     if isinstance(err, HTTPError):
-        raise_from(APIError(err.response.content), err)
+        raise APIError(err.response.content) from err
     else:
         raise err
