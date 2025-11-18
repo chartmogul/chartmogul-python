@@ -29,6 +29,7 @@ class ActivitiesTestCase(unittest.TestCase):
                         "type": "new_biz",
                         "currency": "USD",
                         "subscription-external-id": "sub_2",
+                        "subscription-set-external-id": "sub_2",
                         "plan-external-id": "11",
                         "customer-name": "customer_2",
                         "customer-uuid": "8bc55ab6-c3b5-11eb-ac45-2f9a49d75af7",

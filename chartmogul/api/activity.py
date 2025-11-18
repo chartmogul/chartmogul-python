@@ -23,6 +23,7 @@ class Activity(Resource):
         description = fields.String()
         type = fields.String()
         subscription_external_id = fields.String(data_key="subscription-external-id")
+        subscription_set_external_id = fields.String(data_key="subscription-set-external-id")
         plan_external_id = fields.String(data_key="plan-external-id")
         customer_name = fields.String(data_key="customer-name")
         customer_uuid = fields.String(data_key="customer-uuid")
