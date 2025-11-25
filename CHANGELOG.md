@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [4.6.4] - 2025-11-24
+- Add Subscription Set ID key to Activity
+
 ## [4.6.3] - 2025-09-01
 - Remove future dependency to resolve vulnerability issues
 
