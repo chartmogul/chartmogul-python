@@ -22,7 +22,7 @@ class DataSourceTestCase(unittest.TestCase):
                 "name": "test",
                 "uuid": "my_uuid",
                 "created_at": "2016-01-10T15:34:05.144Z",
-                "status": "never_imported",
+                "status": "idle",
             },
         )
 
@@ -47,23 +47,77 @@ class DataSourceTestCase(unittest.TestCase):
                 "name": "test",
                 "uuid": "my_uuid",
                 "created_at": "2016-01-10T15:34:05Z",
-                "status": "never_imported",
+                "status": "idle",
+                "processing_status": {
+                    "processed": 61,
+                    "failed": 3,
+                    "pending": 8
+                },
+                "auto_churn_subscription_setting": True,
+                "invoice_handling_setting": {
+                    "manual": {
+                        "create_subscription_when_invoice_is": "open",
+                        "update_subscription_when_invoice_is": "open",
+                        "prevent_subscription_for_invoice_voided": True,
+                        "prevent_subscription_for_invoice_refunded": False,
+                        "prevent_subscription_for_invoice_written_off": True
+                    },
+                    "automatic": {
+                        "create_subscription_when_invoice_is": "open",
+                        "update_subscription_when_invoice_is": "open",
+                        "prevent_subscription_for_invoice_voided": True,
+                        "prevent_subscription_for_invoice_refunded": False,
+                        "prevent_subscription_for_invoice_written_off": True
+                    }
+                }
             },
         )
 
         config = Config("token")
-        ds = DataSource.retrieve(config, uuid="my_uuid").get()
+        ds = DataSource.retrieve(
+            config,
+            uuid="my_uuid",
+            with_processing_status=True,
+            with_auto_churn_subscription_setting=True,
+            with_invoice_handling_setting=True
+        ).get()
         expected = DataSource(
             **{
                 "name": "test",
                 "uuid": "my_uuid",
                 "created_at": datetime(2016, 1, 10, 15, 34, 5),
-                "status": "never_imported",
+                "status": "idle",
+                "processing_status": {
+                    "processed": 61,
+                    "failed": 3,
+                    "pending": 8
+                },
+                "auto_churn_subscription_setting": True,
+                "invoice_handling_setting": {
+                    "manual": {
+                        "create_subscription_when_invoice_is": "open",
+                        "update_subscription_when_invoice_is": "open",
+                        "prevent_subscription_for_invoice_voided": True,
+                        "prevent_subscription_for_invoice_refunded": False,
+                        "prevent_subscription_for_invoice_written_off": True
+                    },
+                    "automatic": {
+                        "create_subscription_when_invoice_is": "open",
+                        "update_subscription_when_invoice_is": "open",
+                        "prevent_subscription_for_invoice_voided": True,
+                        "prevent_subscription_for_invoice_refunded": False,
+                        "prevent_subscription_for_invoice_written_off": True
+                    }
+                }
             }
         )
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.qs, {
+            "with_processing_status": ["true"],
+            "with_auto_churn_subscription_setting": ["true"],
+            "with_invoice_handling_setting": ["true"]
+        })
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertTrue(isinstance(ds, DataSource))
         self.assertTrue(isinstance(ds.created_at, datetime))
@@ -81,14 +135,41 @@ class DataSourceTestCase(unittest.TestCase):
                         "name": "test",
                         "uuid": "my_uuid",
                         "created_at": "2016-01-10T15:34:05Z",
-                        "status": "never_imported",
+                        "status": "idle",
+                        "processing_status": {
+                            "processed": 61,
+                            "failed": 3,
+                            "pending": 8
+                        },
+                        "auto_churn_subscription_setting": True,
+                        "invoice_handling_setting": {
+                            "manual": {
+                                "create_subscription_when_invoice_is": "open",
+                                "update_subscription_when_invoice_is": "open",
+                                "prevent_subscription_for_invoice_voided": True,
+                                "prevent_subscription_for_invoice_refunded": False,
+                                "prevent_subscription_for_invoice_written_off": True
+                            },
+                            "automatic": {
+                                "create_subscription_when_invoice_is": "open",
+                                "update_subscription_when_invoice_is": "open",
+                                "prevent_subscription_for_invoice_voided": True,
+                                "prevent_subscription_for_invoice_refunded": False,
+                                "prevent_subscription_for_invoice_written_off": True
+                            }
+                        }
                     }
                 ]
             },
         )
 
         config = Config("token")
-        ds = DataSource.all(config).get()
+        ds = DataSource.all(
+            config,
+            with_processing_status=True,
+            with_auto_churn_subscription_setting=True,
+            with_invoice_handling_setting=True
+        ).get()
         expected = DataSource._many(
             data_sources=[
                 DataSource(
@@ -96,14 +177,40 @@ class DataSourceTestCase(unittest.TestCase):
                         "name": "test",
                         "uuid": "my_uuid",
                         "created_at": datetime(2016, 1, 10, 15, 34, 5),
-                        "status": "never_imported",
+                        "status": "idle",
+                        "processing_status": {
+                            "processed": 61,
+                            "failed": 3,
+                            "pending": 8
+                        },
+                        "auto_churn_subscription_setting": True,
+                        "invoice_handling_setting": {
+                            "manual": {
+                                "create_subscription_when_invoice_is": "open",
+                                "update_subscription_when_invoice_is": "open",
+                                "prevent_subscription_for_invoice_voided": True,
+                                "prevent_subscription_for_invoice_refunded": False,
+                                "prevent_subscription_for_invoice_written_off": True
+                            },
+                            "automatic": {
+                                "create_subscription_when_invoice_is": "open",
+                                "update_subscription_when_invoice_is": "open",
+                                "prevent_subscription_for_invoice_voided": True,
+                                "prevent_subscription_for_invoice_refunded": False,
+                                "prevent_subscription_for_invoice_written_off": True
+                            }
+                        }
                     }
                 )
             ]
         )
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.qs, {
+            "with_processing_status": ["true"],
+            "with_auto_churn_subscription_setting": ["true"],
+            "with_invoice_handling_setting": ["true"]
+        })
         self.assertEqual(mock_requests.last_request.text, None)
         self.assertTrue(isinstance(ds.data_sources[0], DataSource))
 
