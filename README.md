@@ -110,8 +110,19 @@ Available methods in Import API:
 
 ```python
 chartmogul.DataSource.create(config, data={'name': 'In-house billing'})
-chartmogul.DataSource.retrieve(config, uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb4cb')
-chartmogul.DataSource.all(config)
+chartmogul.DataSource.retrieve(
+  config,
+  uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb4cb',
+  with_processing_status=True,
+  with_auto_churn_subscription_setting=True,
+  with_invoice_handling_setting=True
+)
+chartmogul.DataSource.all(
+  config,
+  with_processing_status=True,
+  with_auto_churn_subscription_setting=True,
+  with_invoice_handling_setting=True
+)
 chartmogul.DataSource.destroy(config, uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
 
