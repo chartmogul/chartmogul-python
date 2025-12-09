@@ -37,6 +37,16 @@ class InvoiceHandlingSetting(DataObject):
             return InvoiceHandlingSetting(**data)
 
 
+class AutoChurnSubscriptionSetting(DataObject):
+    class _Schema(Schema):
+        enabled = fields.Boolean()
+        interval = fields.Integer(allow_none=True)
+
+        @post_load
+        def make(self, data, **kwargs):
+            return AutoChurnSubscriptionSetting(**data)
+
+
 class DataSource(Resource):
     """
     https://dev.chartmogul.com/v1.0/reference#data-sources
@@ -62,7 +72,7 @@ class DataSource(Resource):
         status = fields.Str()
         system = fields.Str()
         processing_status = fields.Nested(ProcessingStatus._Schema, many=False, unknown=EXCLUDE, allow_none=True)
-        auto_churn_subscription_setting = fields.Boolean(allow_none=True)
+        auto_churn_subscription_setting = fields.Nested(AutoChurnSubscriptionSetting._Schema, many=False, unknown=EXCLUDE, allow_none=True)
         invoice_handling_setting = fields.Nested(InvoiceHandlingSetting._Schema, many=False, unknown=EXCLUDE, allow_none=True)
 
         @post_load

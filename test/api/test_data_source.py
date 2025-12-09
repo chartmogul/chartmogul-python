@@ -53,7 +53,10 @@ class DataSourceTestCase(unittest.TestCase):
                     "failed": 3,
                     "pending": 8
                 },
-                "auto_churn_subscription_setting": True,
+                "auto_churn_subscription_setting": {
+                    "enabled": True,
+                    "interval": 30
+                },
                 "invoice_handling_setting": {
                     "manual": {
                         "create_subscription_when_invoice_is": "open",
@@ -92,7 +95,10 @@ class DataSourceTestCase(unittest.TestCase):
                     "failed": 3,
                     "pending": 8
                 },
-                "auto_churn_subscription_setting": True,
+                "auto_churn_subscription_setting": {
+                    "enabled": True,
+                    "interval": 30
+                },
                 "invoice_handling_setting": {
                     "manual": {
                         "create_subscription_when_invoice_is": "open",
@@ -141,7 +147,10 @@ class DataSourceTestCase(unittest.TestCase):
                             "failed": 3,
                             "pending": 8
                         },
-                        "auto_churn_subscription_setting": True,
+                        "auto_churn_subscription_setting": {
+                            "enabled": True,
+                            "interval": 30
+                        },
                         "invoice_handling_setting": {
                             "manual": {
                                 "create_subscription_when_invoice_is": "open",
@@ -183,7 +192,10 @@ class DataSourceTestCase(unittest.TestCase):
                             "failed": 3,
                             "pending": 8
                         },
-                        "auto_churn_subscription_setting": True,
+                        "auto_churn_subscription_setting": {
+                            "enabled": True,
+                            "interval": 30
+                        },
                         "invoice_handling_setting": {
                             "manual": {
                                 "create_subscription_when_invoice_is": "open",
