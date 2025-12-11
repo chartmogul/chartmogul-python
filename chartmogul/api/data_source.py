@@ -71,7 +71,7 @@ class DataSource(Resource):
 
         for query_param in cls._bool_query_params:
             if query_param in params and isinstance(params[query_param], bool):
-                if params[query_param] == True:
+                if params[query_param] is True:
                     params[query_param] = 'true'
                 else:
                     del params[query_param]
