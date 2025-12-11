@@ -54,16 +54,29 @@ class DataSource(Resource):
 
     _path = "/data_sources{/uuid}"
     _root_key = "data_sources"
+    _bool_query_params = [
+        'with_processing_status',
+        'with_auto_churn_subscription_setting',
+        'with_invoice_handling_setting'
+    ]
     _many = namedtuple(
         "DataSources",
-        [
-            _root_key,
-            "with_processing_status",
-            "with_auto_churn_subscription_setting",
-            "with_invoice_handling_setting"
-        ],
+        [_root_key] + _bool_query_params,
         defaults=[None, None, None]
     )
+
+    @classmethod
+    def _preProcessParams(cls, params):
+        params = super()._preProcessParams(params)
+
+        for query_param in cls._bool_query_params:
+            if query_param in params and isinstance(params[query_param], bool):
+                if params[query_param] == True:
+                    params[query_param] = 'true'
+                else:
+                    del params[query_param]
+
+        return params
 
     class _Schema(Schema):
         uuid = fields.String()
@@ -71,9 +84,9 @@ class DataSource(Resource):
         created_at = fields.DateTime()
         status = fields.Str()
         system = fields.Str()
-        processing_status = fields.Nested(ProcessingStatus._Schema, many=False, unknown=EXCLUDE, allow_none=True)
-        auto_churn_subscription_setting = fields.Nested(AutoChurnSubscriptionSetting._Schema, many=False, unknown=EXCLUDE, allow_none=True)
-        invoice_handling_setting = fields.Nested(InvoiceHandlingSetting._Schema, many=False, unknown=EXCLUDE, allow_none=True)
+        processing_status = fields.Nested(ProcessingStatus._Schema, many=False, allow_none=True)
+        auto_churn_subscription_setting = fields.Nested(AutoChurnSubscriptionSetting._Schema, many=False, allow_none=True)
+        invoice_handling_setting = fields.Nested(InvoiceHandlingSetting._Schema, many=False, allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
