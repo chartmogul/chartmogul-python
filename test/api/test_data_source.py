@@ -130,7 +130,7 @@ class DataSourceTestCase(unittest.TestCase):
         self.assertEqual(ds.name, "test")
         self.assertEqual(ds.processing_status.processed, 61)
         self.assertEqual(ds.auto_churn_subscription_setting.interval, 30)
-        self.assertEqual(ds.invoice_handling_setting.manual.create_subscription_when_invoice_is, "open")
+        self.assertEqual(ds.invoice_handling_setting['manual']['create_subscription_when_invoice_is'], "open")
 
     @requests_mock.mock()
     def test_all(self, mock_requests):
@@ -232,7 +232,7 @@ class DataSourceTestCase(unittest.TestCase):
         self.assertEqual(ds.data_sources[0].name, "test")
         self.assertEqual(ds.data_sources[0].processing_status.processed, 61)
         self.assertEqual(ds.data_sources[0].auto_churn_subscription_setting.interval, 30)
-        self.assertEqual(ds.data_sources[0].invoice_handling_setting.manual.create_subscription_when_invoice_is, "open")
+        self.assertEqual(ds.data_sources[0].invoice_handling_setting['manual']['create_subscription_when_invoice_is'], "open")
 
     @requests_mock.mock()
     def test_destroy(self, mock_requests):

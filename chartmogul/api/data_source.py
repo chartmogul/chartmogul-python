@@ -14,29 +14,6 @@ class ProcessingStatus(DataObject):
             return ProcessingStatus(**data)
 
 
-class InvoiceHandlingMethod(DataObject):
-    class _Schema(Schema):
-        create_subscription_when_invoice_is = fields.String()
-        update_subscription_when_invoice_is = fields.String()
-        prevent_subscription_for_invoice_voided = fields.Boolean()
-        prevent_subscription_for_invoice_refunded = fields.Boolean()
-        prevent_subscription_for_invoice_written_off = fields.Boolean()
-
-        @post_load
-        def make(self, data, **kwargs):
-            return InvoiceHandlingMethod(**data)
-
-
-class InvoiceHandlingSetting(DataObject):
-    class _Schema(Schema):
-        manual = fields.Nested(InvoiceHandlingMethod._Schema, many=False, unknown=EXCLUDE)
-        automatic = fields.Nested(InvoiceHandlingMethod._Schema, many=False, unknown=EXCLUDE)
-
-        @post_load
-        def make(self, data, **kwargs):
-            return InvoiceHandlingSetting(**data)
-
-
 class AutoChurnSubscriptionSetting(DataObject):
     class _Schema(Schema):
         enabled = fields.Boolean()
@@ -86,7 +63,7 @@ class DataSource(Resource):
         system = fields.Str()
         processing_status = fields.Nested(ProcessingStatus._Schema, many=False, allow_none=True)
         auto_churn_subscription_setting = fields.Nested(AutoChurnSubscriptionSetting._Schema, many=False, allow_none=True)
-        invoice_handling_setting = fields.Nested(InvoiceHandlingSetting._Schema, many=False, allow_none=True)
+        invoice_handling_setting = fields.Raw(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
