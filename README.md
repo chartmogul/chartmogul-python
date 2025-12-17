@@ -363,18 +363,21 @@ Available methods in Metrics API:
 
 ```python
 chartmogul.Metrics.all(config,
-                       start_date='2015-01-01', # notice the _ here
-                       end_date='2015-11-24',
-                       interval='month',
-                       geo='GB',
-                       plans='Bronze Plan'
+    start_date='2015-01-01', # notice the _ here
+    end_date='2015-11-24',
+    interval='month',
+    geo='GB',
+    plans='Bronze Plan',
+    filters="currency~ANY~'USD'"
 )
 chartmogul.Metrics.mrr(config,
-                       start_date='2015-01-01',
-                       end_date='2015-11-24',
-                       interval='month',
-                       geo='GB',
-                       plans='PRO Plan')
+    start_date='2015-01-01',
+    end_date='2015-11-24',
+    interval='month',
+    geo='GB',
+    plans='PRO Plan',
+    filters="currency~ANY~'USD'"
+)
 chartmogul.Metrics.arr(config, data={})
 chartmogul.Metrics.arpa(config, data={})
 chartmogul.Metrics.asp(config, data={})
