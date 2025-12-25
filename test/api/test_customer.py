@@ -1,6 +1,7 @@
 import unittest
 from chartmogul import Customer, Contact, Config, CustomerNote, Opportunity, Task
 from chartmogul.api.customer import Attributes, Address
+from chartmogul.api.customers.subscription import CustomerSubscription
 from datetime import datetime
 from chartmogul import APIError
 import requests_mock
@@ -394,6 +395,66 @@ taskEntry = {
 
 allTasks = {"entries": [taskEntry], "cursor": "cursor==", "has_more": False}
 
+allSubscriptions = {
+  "entries": [
+    {
+      "id": 5322874574,
+      "external_id": "cbdemo_ZpbKpmKUbu83EsNv",
+      "subscription_set_external_id": "cbdemo_ZpbKpmKUbu83EsNv",
+      "quantity": 1,
+      "uuid": "8d80f275-a494-4957-8968-6cb68acdcfab",
+      "mrr": 18100,
+      "arr": 217200,
+      "status": "active",
+      "plan": "Professional Suite Annual(cbdemo_omnisupport-solutions)",
+      "billing-cycle": "year",
+      "billing-cycle-count": 1,
+      "start-date": "2024-11-22T17:51:46+00:00",
+      "end-date": "2026-11-23T17:51:44+00:00",
+      "currency": "PLN",
+      "currency-sign": "zł"
+    },
+    {
+      "id": 5322874575,
+      "external_id": "cbdemo_ZpbKpmKUbu83EsNv_cbdemo_workforce-optimizer-addon-annual",
+      "subscription_set_external_id": "cbdemo_ZpbKpmKUbu83EsNv",
+      "quantity": 1,
+      "uuid": "77867070-2435-4da1-8bde-014f6817bd49",
+      "mrr": 9048,
+      "arr": 108576,
+      "status": "active",
+      "plan": "Workforce Optimizer Add-on Annual(cbdemo_omnisupport-solutions)",
+      "billing-cycle": "year",
+      "billing-cycle-count": 1,
+      "start-date": "2024-11-22T17:51:46+00:00",
+      "end-date": "2026-11-23T17:51:44+00:00",
+      "currency": "PLN",
+      "currency-sign": "zł"
+    },
+    {
+      "id": 5322874576,
+      "external_id": "169vEGV551MI2J0",
+      "subscription_set_external_id": "169vEGV551MI2J0",
+      "quantity": 1,
+      "uuid": "a8640a5a-0d43-41c7-803e-76fc042267b0",
+      "mrr": 19432,
+      "arr": 233184,
+      "status": "active",
+      "plan": "Professional Suite Monthly(cbdemo_omnisupport-solutions)",
+      "billing-cycle": "month",
+      "billing-cycle-count": 1,
+      "start-date": "2025-12-11T14:09:32+00:00",
+      "end-date": "2026-01-11T14:09:32+00:00",
+      "currency": "PLN",
+      "currency-sign": "zł"
+    }
+  ],
+  "has_more": False,
+  "per_page": 200,
+  "page": 1,
+  "cursor": "c3Vic2NyaXB0aW9uc19uZXh0X3BhZ2U9Mg=="
+}
+
 
 class CustomerTestCase(unittest.TestCase):
     """
@@ -505,6 +566,24 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
         self.assertEqual(result, None)
+
+    @requests_mock.mock()
+    def test_subscriptions(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/customers/cus_5915ee5a-babd-406b-b8ce-d207133fb4cb/subscriptions",
+            status_code=200,
+            json=allSubscriptions,
+        )
+
+        config = Config("token")
+        result = Customer.subscriptions(
+            config, uuid="cus_5915ee5a-babd-406b-b8ce-d207133fb4cb"
+        ).get()
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.text, None)
+        self.assertTrue(isinstance(result, CustomerSubscription._many))
 
     @requests_mock.mock()
     def test_connectSubscriptions(self, mock_requests):
