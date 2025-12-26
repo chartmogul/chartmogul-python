@@ -66,6 +66,7 @@ _original_list_imported = CustomerSubscription._method(
     "list_imported", "get", "/import/customers{/uuid}/subscriptions"
 )
 
+
 @classmethod
 def _deprecated_list_imported(cls, config, **kwargs):
     warnings.warn(
@@ -74,6 +75,7 @@ def _deprecated_list_imported(cls, config, **kwargs):
         stacklevel=2
     )
     return _original_list_imported.__func__(cls, config, **kwargs)
+
 
 CustomerSubscription.list_imported = _deprecated_list_imported
 CustomerSubscription.cancel = CustomerSubscription._method(

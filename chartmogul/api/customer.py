@@ -15,6 +15,7 @@ from .opportunity import Opportunity
 from .task import Task
 from .customers.subscription import CustomerSubscription
 
+
 class Address(DataObject):
     class _Schema(Schema):
         address_zip = fields.String(allow_none=True)
