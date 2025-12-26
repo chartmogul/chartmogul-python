@@ -149,15 +149,16 @@ chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4c
   "state": "CA",
 })
 chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Customer.subscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   'subscriptions': [
     {
       "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
-      "external_id": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0"
+      "uuid": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0"
     },
     {
       "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
-      "external_id": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4"
+      "uuid": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4"
     }
   ]
 })
@@ -165,11 +166,11 @@ chartmogul.Customer.disconnectSubscriptions(config, uuid='cus_5915ee5a-babd-406b
   'subscriptions': [
     {
       "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
-      "external_id": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0"
+      "uuid": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0"
     },
     {
       "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
-      "external_id": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4"
+      "uuid": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4"
     }
   ]
 })
@@ -351,6 +352,7 @@ chartmogul.SubscriptionEvent.destroy_with_params(config, data={
 ```python
 import chartmogul
 
+# DEPRECATED: use chartmogul.Customer.subscriptions() instead
 chartmogul.Subscription.list_imported(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Subscription.cancel(config, uuid='sub_3995ee5a-bbdb-406b-a8ca-d207133fb9bb' data={'cancelled_at': ''})
 chartmogul.Subscription.modify(config, uuid='sub_3995ee5a-bbdb-406b-a8ca-d207133fb9bb' data={'cancellation_dates': []})

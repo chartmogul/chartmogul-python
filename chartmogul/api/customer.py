@@ -13,6 +13,7 @@ from .contact import Contact
 from .customer_note import CustomerNote
 from .opportunity import Opportunity
 from .task import Task
+from .customers.subscription import CustomerSubscription
 
 
 class Address(DataObject):
@@ -80,6 +81,9 @@ class Customer(Resource):
 Customer.search = Customer._method("all", "get", "/customers/search")
 Customer.merge = Customer._method("merge", "post", "/customers/merges")
 Customer.unmerge = Customer._method("unmerge", "post", "/customers/unmerges")
+Customer.subscriptions = CustomerSubscription._method(
+    "all", "get", "/customers/{uuid}/subscriptions", useCallerClass=True
+)
 Customer.connectSubscriptions = Customer._method(
     "create", "post", "/customers/{uuid}/connect_subscriptions"
 )
