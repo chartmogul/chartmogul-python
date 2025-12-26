@@ -1,6 +1,7 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE
 from chartmogul.resource import Resource
 from collections import namedtuple
+import warnings
 
 
 class CustomerSubscription(Resource):
@@ -61,9 +62,20 @@ class CustomerSubscription(Resource):
 
 
 # /import namespace
-CustomerSubscription.list_imported = CustomerSubscription._method(
+_original_list_imported = CustomerSubscription._method(
     "list_imported", "get", "/import/customers{/uuid}/subscriptions"
 )
+
+@classmethod
+def _deprecated_list_imported(cls, config, **kwargs):
+    warnings.warn(
+        "CustomerSubscription.list_imported() is deprecated. Use Customer.subscriptions() instead.",
+        DeprecationWarning,
+        stacklevel=2
+    )
+    return _original_list_imported.__func__(cls, config, **kwargs)
+
+CustomerSubscription.list_imported = _deprecated_list_imported
 CustomerSubscription.cancel = CustomerSubscription._method(
     "cancel", "patch", "/import/subscriptions{/uuid}"
 )

@@ -597,11 +597,11 @@ class CustomerTestCase(unittest.TestCase):
             "subscriptions": [
                 {
                     "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
-                    "external_id": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0",
+                    "uuid": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0",
                 },
                 {
                     "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
-                    "external_id": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4",
+                    "uuid": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4",
                 },
             ]
         }
@@ -626,11 +626,11 @@ class CustomerTestCase(unittest.TestCase):
             "subscriptions": [
                 {
                     "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
-                    "external_id": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0",
+                    "uuid": "d1c0c885-add0-48db-8fa9-0bdf5017d6b0",
                 },
                 {
                     "data_source_uuid": "ds_ade45e52-47a4-231a-1ed2-eb6b9e541213",
-                    "external_id": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4",
+                    "uuid": "9db5f4a1-1695-44c0-8bd4-de7ce4d0f1d4",
                 },
             ]
         }
