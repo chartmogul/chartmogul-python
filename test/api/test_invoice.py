@@ -447,3 +447,117 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result, Invoice))
 
         self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
+
+    @requests_mock.mock()
+    def test_retrieve_invoice_with_validation_type(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            ("https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059"
+             "?validation_type=all"),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=retrieveInvoiceExample,
+        )
+
+        config = Config("token")  # is actually checked in mock
+        result = Invoice.retrieve(
+            config,
+            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+            validation_type="all"
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        vt = []
+        vt.append("all")
+        self.assertEqual(mock_requests.last_request.qs, {"validation_type": vt})
+
+        # Struct too complex to do 1:1 comparison
+        self.assertTrue(isinstance(result, Invoice))
+
+        self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
+
+    @requests_mock.mock()
+    def test_retrieve_invoice_with_all_params(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            ("https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059"
+             "?validation_type=invalid&include_edit_histories=true&with_disabled=false"),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=retrieveInvoiceExample,
+        )
+
+        config = Config("token")  # is actually checked in mock
+        result = Invoice.retrieve(
+            config,
+            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+            validation_type="invalid",
+            include_edit_histories=True,
+            with_disabled=False
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        qs = mock_requests.last_request.qs
+        self.assertEqual(qs["validation_type"], ["invalid"])
+        self.assertEqual(qs["include_edit_histories"], ["true"])
+        self.assertEqual(qs["with_disabled"], ["false"])
+
+        # Struct too complex to do 1:1 comparison
+        self.assertTrue(isinstance(result, Invoice))
+
+        self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
+
+    @requests_mock.mock()
+    def test_all_invoices_with_validation_type(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/invoices?validation_type=all",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=invoiceListExample,
+        )
+
+        config = Config("token")  # is actually checked in mock
+        result = Invoice.all(config, validation_type="all").get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        vt = []
+        vt.append("all")
+        self.assertEqual(mock_requests.last_request.qs, {"validation_type": vt})
+
+        # Struct too complex to do 1:1 comparison
+        self.assertTrue(isinstance(result, Invoice._many))
+        self.assertEqual(len(result.invoices), 1)
+
+    @requests_mock.mock()
+    def test_all_invoices_with_all_params(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            ("https://api.chartmogul.com/v1/invoices"
+             "?validation_type=valid&include_edit_histories=true&with_disabled=true"),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=invoiceListExample,
+        )
+
+        config = Config("token")  # is actually checked in mock
+        result = Invoice.all(
+            config,
+            validation_type="valid",
+            include_edit_histories=True,
+            with_disabled=True
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        qs = mock_requests.last_request.qs
+        self.assertEqual(qs["validation_type"], ["valid"])
+        self.assertEqual(qs["include_edit_histories"], ["true"])
+        self.assertEqual(qs["with_disabled"], ["true"])
+
+        # Struct too complex to do 1:1 comparison
+        self.assertTrue(isinstance(result, Invoice._many))
+        self.assertEqual(len(result.invoices), 1)
