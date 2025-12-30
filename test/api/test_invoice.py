@@ -468,9 +468,10 @@ class InvoiceTestCase(unittest.TestCase):
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        vt = []
-        vt.append("all")
-        self.assertEqual(mock_requests.last_request.qs, {"validation_type": vt})
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {"validation_type": ["all"]},
+        )
 
         # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice))
