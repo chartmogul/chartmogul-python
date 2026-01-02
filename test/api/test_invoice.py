@@ -1,6 +1,6 @@
 # pylama:ignore=W0212
 import unittest
-from datetime import datetime
+from datetime import datetime, timezone
 
 import requests_mock
 
@@ -175,6 +175,20 @@ invoiceListExample = {
             "date": "2015-11-01T00:00:00.000Z",
             "due_date": "2015-11-15T00:00:00.000Z",
             "currency": "USD",
+            "disabled": False,
+            "disabled_at": None,
+            "disabled_by": None,
+            "edit_history_summary": {
+                "values_changed": {
+                    "amount_in_cents": {
+                        "original_value": 4500,
+                        "edited_value": 5000
+                    }
+                },
+                "latest_edit_author": "admin@example.com",
+                "latest_edit_performed_at": "2024-01-10T12:00:00.000Z"
+            },
+            "errors": None,
             "line_items": [
                 {
                     "uuid": "li_d72e6843-5793-41d0-bfdf-0269514c9c56",
@@ -231,6 +245,27 @@ retrieveInvoiceExample = {
     "date": "2015-11-01T00:00:00.000Z",
     "due_date": "2015-11-15T00:00:00.000Z",
     "currency": "USD",
+    "disabled": True,
+    "disabled_at": "2024-01-15T10:30:00.000Z",
+    "disabled_by": "user@example.com",
+    "edit_history_summary": {
+        "values_changed": {
+            "currency": {
+                "original_value": "EUR",
+                "edited_value": "USD"
+            },
+            "date": {
+                "original_value": "2024-01-01T00:00:00.000Z",
+                "edited_value": "2024-01-02T00:00:00.000Z"
+            }
+        },
+        "latest_edit_author": "editor@example.com",
+        "latest_edit_performed_at": "2024-01-20T15:45:00.000Z"
+    },
+    "errors": {
+        "currency": ["Currency is invalid", "Currency must be supported"],
+        "date": ["Date is in the future"]
+    },
     "line_items": [
         {
             "uuid": "li_d72e6843-5793-41d0-bfdf-0269514c9c56",
@@ -447,3 +482,142 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result, Invoice))
 
         self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
+
+    @requests_mock.mock()
+    def test_retrieve_invoice_with_validation_type(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            ("https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059"
+             "?validation_type=all"),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=retrieveInvoiceExample,
+        )
+
+        config = Config("token")
+        result = Invoice.retrieve(
+            config,
+            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+            validation_type="all"
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {"validation_type": ["all"]},
+        )
+        self.assertTrue(isinstance(result, Invoice))
+        self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
+
+    @requests_mock.mock()
+    def test_retrieve_invoice_with_all_params(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            ("https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059"
+             "?validation_type=invalid&include_edit_histories=true&with_disabled=false"),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=retrieveInvoiceExample,
+        )
+
+        config = Config("token")
+        result = Invoice.retrieve(
+            config,
+            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+            validation_type="invalid",
+            include_edit_histories=True,
+            with_disabled=False
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        qs = mock_requests.last_request.qs
+        self.assertEqual(qs["validation_type"], ["invalid"])
+        self.assertEqual(qs["include_edit_histories"], ["true"])
+        self.assertEqual(qs["with_disabled"], ["false"])
+        self.assertTrue(isinstance(result, Invoice))
+        self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
+        self.assertTrue(result.disabled)
+        self.assertEqual(result.disabled_at, datetime(2024, 1, 15, 10, 30, tzinfo=timezone.utc))
+        self.assertEqual(result.disabled_by, "user@example.com")
+        self.assertIsNotNone(result.edit_history_summary)
+        self.assertIn("values_changed", result.edit_history_summary)
+        self.assertIn("currency", result.edit_history_summary["values_changed"])
+        self.assertEqual(
+            result.edit_history_summary["values_changed"]["currency"]["original_value"],
+            "EUR"
+        )
+        self.assertEqual(
+            result.edit_history_summary["values_changed"]["currency"]["edited_value"],
+            "USD"
+        )
+        self.assertEqual(
+            result.edit_history_summary["latest_edit_author"],
+            "editor@example.com"
+        )
+        self.assertEqual(
+            result.edit_history_summary["latest_edit_performed_at"],
+            "2024-01-20T15:45:00.000Z"
+        )
+        self.assertIsNotNone(result.errors)
+        self.assertIn("currency", result.errors)
+        self.assertIsInstance(result.errors["currency"], list)
+        self.assertEqual(len(result.errors["currency"]), 2)
+        self.assertEqual(result.errors["currency"][0], "Currency is invalid")
+        self.assertEqual(result.errors["currency"][1], "Currency must be supported")
+        self.assertIn("date", result.errors)
+        self.assertIsInstance(result.errors["date"], list)
+        self.assertEqual(len(result.errors["date"]), 1)
+        self.assertEqual(result.errors["date"][0], "Date is in the future")
+
+    @requests_mock.mock()
+    def test_all_invoices_with_validation_type(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/invoices?validation_type=all",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=invoiceListExample,
+        )
+
+        config = Config("token")
+        result = Invoice.all(config, validation_type="all").get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {"validation_type": ["all"]},
+        )
+
+        self.assertTrue(isinstance(result, Invoice._many))
+        self.assertEqual(len(result.invoices), 1)
+
+    @requests_mock.mock()
+    def test_all_invoices_with_all_params(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            ("https://api.chartmogul.com/v1/invoices"
+             "?validation_type=valid&include_edit_histories=true&with_disabled=true"),
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=invoiceListExample,
+        )
+
+        config = Config("token")
+        result = Invoice.all(
+            config,
+            validation_type="valid",
+            include_edit_histories=True,
+            with_disabled=True
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        qs = mock_requests.last_request.qs
+        self.assertEqual(qs["validation_type"], ["valid"])
+        self.assertEqual(qs["include_edit_histories"], ["true"])
+        self.assertEqual(qs["with_disabled"], ["true"])
+        self.assertTrue(isinstance(result, Invoice._many))
+        self.assertEqual(len(result.invoices), 1)

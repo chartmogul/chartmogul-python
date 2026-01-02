@@ -58,6 +58,12 @@ class Invoice(Resource):
         date = fields.DateTime()
         due_date = fields.DateTime(allow_none=True)
 
+        disabled = fields.Boolean(allow_none=True)
+        disabled_at = fields.DateTime(allow_none=True)
+        disabled_by = fields.String(allow_none=True)
+        edit_history_summary = fields.Dict(allow_none=True)
+        errors = fields.Dict(allow_none=True)
+
         line_items = fields.Nested(LineItem._Schema, many=True, unknown=EXCLUDE)
         transactions = fields.Nested(Transaction._Schema, many=True, unknown=EXCLUDE)
 
