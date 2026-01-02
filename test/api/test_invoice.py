@@ -495,7 +495,7 @@ class InvoiceTestCase(unittest.TestCase):
             json=retrieveInvoiceExample,
         )
 
-        config = Config("token")  # is actually checked in mock
+        config = Config("token")
         result = Invoice.retrieve(
             config,
             uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
@@ -507,10 +507,7 @@ class InvoiceTestCase(unittest.TestCase):
             mock_requests.last_request.qs,
             {"validation_type": ["all"]},
         )
-
-        # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice))
-
         self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
 
     @requests_mock.mock()
@@ -525,7 +522,7 @@ class InvoiceTestCase(unittest.TestCase):
             json=retrieveInvoiceExample,
         )
 
-        config = Config("token")  # is actually checked in mock
+        config = Config("token")
         result = Invoice.retrieve(
             config,
             uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
@@ -539,13 +536,8 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertEqual(qs["validation_type"], ["invalid"])
         self.assertEqual(qs["include_edit_histories"], ["true"])
         self.assertEqual(qs["with_disabled"], ["false"])
-
-        # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice))
-
         self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
-
-        # Verify new fields are present
         self.assertTrue(result.disabled)
         self.assertEqual(result.disabled_at, datetime(2024, 1, 15, 10, 30, tzinfo=timezone.utc))
         self.assertEqual(result.disabled_by, "user@example.com")
@@ -590,7 +582,7 @@ class InvoiceTestCase(unittest.TestCase):
             json=invoiceListExample,
         )
 
-        config = Config("token")  # is actually checked in mock
+        config = Config("token")
         result = Invoice.all(config, validation_type="all").get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -599,7 +591,6 @@ class InvoiceTestCase(unittest.TestCase):
             {"validation_type": ["all"]},
         )
 
-        # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice._many))
         self.assertEqual(len(result.invoices), 1)
 
@@ -615,7 +606,7 @@ class InvoiceTestCase(unittest.TestCase):
             json=invoiceListExample,
         )
 
-        config = Config("token")  # is actually checked in mock
+        config = Config("token")
         result = Invoice.all(
             config,
             validation_type="valid",
@@ -628,7 +619,5 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertEqual(qs["validation_type"], ["valid"])
         self.assertEqual(qs["include_edit_histories"], ["true"])
         self.assertEqual(qs["with_disabled"], ["true"])
-
-        # Struct too complex to do 1:1 comparison
         self.assertTrue(isinstance(result, Invoice._many))
         self.assertEqual(len(result.invoices), 1)
