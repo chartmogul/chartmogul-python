@@ -40,6 +40,10 @@ class Invoice(Resource):
 
     _path = "/import/customers{/uuid}/invoices"
     _root_key = "invoices"
+    _bool_query_params = [
+        'include_edit_histories',
+        'with_disabled'
+    ]
     _many = namedtuple(
         "Invoices",
         [_root_key, "cursor", "has_more", "customer_uuid"],

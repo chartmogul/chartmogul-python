@@ -42,19 +42,6 @@ class DataSource(Resource):
         defaults=[None, None, None]
     )
 
-    @classmethod
-    def _preProcessParams(cls, params):
-        params = super()._preProcessParams(params)
-
-        for query_param in cls._bool_query_params:
-            if query_param in params and isinstance(params[query_param], bool):
-                if params[query_param] is True:
-                    params[query_param] = 'true'
-                else:
-                    del params[query_param]
-
-        return params
-
     class _Schema(Schema):
         uuid = fields.String()
         name = fields.String()

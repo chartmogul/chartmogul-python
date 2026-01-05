@@ -121,6 +121,15 @@ class Resource(DataObject):
             if key in params:
                 params[replacement] = params[key]
                 del params[key]
+
+        if hasattr(cls, '_bool_query_params'):
+            for query_param in cls._bool_query_params:
+                if query_param in params and isinstance(params[query_param], bool):
+                    if params[query_param] is True:
+                        params[query_param] = 'true'
+                    elif params[query_param] is False:
+                        params[query_param] = 'false'
+
         return params
 
     @classmethod
