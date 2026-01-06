@@ -36,11 +36,7 @@ class DataSource(Resource):
         'with_auto_churn_subscription_setting',
         'with_invoice_handling_setting'
     ]
-    _many = namedtuple(
-        "DataSources",
-        [_root_key] + _bool_query_params,
-        defaults=[None, None, None]
-    )
+    _many = namedtuple("DataSources", [_root_key])
 
     class _Schema(Schema):
         uuid = fields.String()
