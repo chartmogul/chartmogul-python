@@ -40,6 +40,10 @@ class Invoice(Resource):
 
     _path = "/import/customers{/uuid}/invoices"
     _root_key = "invoices"
+    _bool_query_params = [
+        'include_edit_histories',
+        'with_disabled'
+    ]
     _many = namedtuple(
         "Invoices",
         [_root_key, "cursor", "has_more", "customer_uuid"],
@@ -57,6 +61,12 @@ class Invoice(Resource):
         currency = fields.String()
         date = fields.DateTime()
         due_date = fields.DateTime(allow_none=True)
+
+        disabled = fields.Boolean(allow_none=True)
+        disabled_at = fields.DateTime(allow_none=True)
+        disabled_by = fields.String(allow_none=True)
+        edit_history_summary = fields.Dict(allow_none=True)
+        errors = fields.Dict(allow_none=True)
 
         line_items = fields.Nested(LineItem._Schema, many=True, unknown=EXCLUDE)
         transactions = fields.Nested(Transaction._Schema, many=True, unknown=EXCLUDE)

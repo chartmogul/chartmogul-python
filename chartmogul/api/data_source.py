@@ -36,24 +36,7 @@ class DataSource(Resource):
         'with_auto_churn_subscription_setting',
         'with_invoice_handling_setting'
     ]
-    _many = namedtuple(
-        "DataSources",
-        [_root_key] + _bool_query_params,
-        defaults=[None, None, None]
-    )
-
-    @classmethod
-    def _preProcessParams(cls, params):
-        params = super()._preProcessParams(params)
-
-        for query_param in cls._bool_query_params:
-            if query_param in params and isinstance(params[query_param], bool):
-                if params[query_param] is True:
-                    params[query_param] = 'true'
-                else:
-                    del params[query_param]
-
-        return params
+    _many = namedtuple("DataSources", [_root_key])
 
     class _Schema(Schema):
         uuid = fields.String()
