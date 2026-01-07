@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning].
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [4.8.0] - 2026-01-06
+- Mention filters (CFL) param for metrics api
+- Add Customer.subscriptions 
+- Update CustomerSubscription.list_imported to deprecated
+- Add disabled, disabled_at, edit_history_summary and errors fields to Invoice
+
+## [4.7.0] - 2025-12-22
+- Add fetching additional DataSource fields
+
 ## [4.6.4] - 2025-11-24
 - Add Subscription Set ID key to Activity
 
