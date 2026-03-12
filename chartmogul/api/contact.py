@@ -17,6 +17,7 @@ class Contact(Resource):
         customer_uuid = fields.String(allow_none=True)
         data_source_uuid = fields.String(allow_none=True)
         customer_external_id = fields.String(allow_none=True)
+        external_id = fields.String(allow_none=True, load_default=None)
         first_name = fields.String(allow_none=True)
         last_name = fields.String(allow_none=True)
         position = fields.Int(allow_none=True)

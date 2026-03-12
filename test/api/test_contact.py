@@ -9,6 +9,7 @@ contact = {
     "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
     "data_source_uuid": "ds_00000000-0000-0000-0000-000000000000",
     "customer_external_id": "external_001",
+    "external_id": "contact_external_id_001",
     "first_name": "First name",
     "last_name": "Last name",
     "position": 9,
@@ -25,6 +26,7 @@ createContact = {
     "uuid": "con_00000000-0000-0000-0000-000000000000",
     "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
     "data_source_uuid": "ds_00000000-0000-0000-0000-000000000000",
+    "external_id": "contact_external_id_001",
     "first_name": "First name",
     "last_name": "Last name",
     "position": 9,
@@ -41,6 +43,18 @@ createContact = {
 }
 
 allContacts = {"entries": [contact], "cursor": "cursor==", "has_more": False}
+
+contactWithoutExternalId = {k: v for k, v in contact.items() if k != "external_id"}
+
+contactWithNullExternalId = {
+    **contact,
+    "external_id": None,
+}
+
+createContactWithNullExternalId = {
+    **createContact,
+    "external_id": None,
+}
 
 
 class ContactTestCase(unittest.TestCase):
@@ -94,6 +108,30 @@ class ContactTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.json(), createContact)
 
     @requests_mock.mock()
+    def test_create_with_null_external_id(self, mock_requests):
+        mock_requests.register_uri(
+            "POST", "https://api.chartmogul.com/v1/contacts", status_code=200, json=contactWithNullExternalId
+        )
+
+        config = Config("token")
+        result = Contact.create(config, data=createContactWithNullExternalId).get()
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), createContactWithNullExternalId)
+        self.assertIsNone(result.external_id)
+
+    @requests_mock.mock()
+    def test_create_without_external_id(self, mock_requests):
+        mock_requests.register_uri(
+            "POST", "https://api.chartmogul.com/v1/contacts", status_code=200, json=contactWithoutExternalId
+        )
+
+        config = Config("token")
+        result = Contact.create(config, data=createContactWithNullExternalId).get()
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), createContactWithNullExternalId)
+        self.assertIsNone(result.external_id)
+
+    @requests_mock.mock()
     def test_merge(self, mock_requests):
         mock_requests.register_uri(
             "POST",
@@ -132,6 +170,24 @@ class ContactTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
         self.assertTrue(isinstance(expected, Contact))
+
+    @requests_mock.mock()
+    def test_modify_with_null_external_id(self, mock_requests):
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/contacts/con_00000000-0000-0000-0000-000000000000",
+            status_code=200,
+            json=contactWithNullExternalId,
+        )
+
+        jsonRequest = {"external_id": None}
+        config = Config("token")
+        result = Contact.modify(
+            config, uuid="con_00000000-0000-0000-0000-000000000000", data=jsonRequest
+        ).get()
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertIsNone(result.external_id)
 
     @requests_mock.mock()
     def test_retrieve(self, mock_requests):
