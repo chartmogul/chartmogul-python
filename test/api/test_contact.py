@@ -117,7 +117,7 @@ class ContactTestCase(unittest.TestCase):
         result = Contact.create(config, data=createContactWithNullExternalId).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.json(), createContactWithNullExternalId)
-        self.assertIsNone(result.contact_external_id)
+        self.assertIsNone(result.external_id)
 
     @requests_mock.mock()
     def test_create_without_external_id(self, mock_requests):
@@ -129,7 +129,7 @@ class ContactTestCase(unittest.TestCase):
         result = Contact.create(config, data=createContactWithNullExternalId).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.json(), createContactWithNullExternalId)
-        self.assertIsNone(result.contact_external_id)
+        self.assertIsNone(result.external_id)
 
     @requests_mock.mock()
     def test_merge(self, mock_requests):
@@ -187,7 +187,7 @@ class ContactTestCase(unittest.TestCase):
         ).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
-        self.assertIsNone(result.contact_external_id)
+        self.assertIsNone(result.external_id)
 
     @requests_mock.mock()
     def test_retrieve(self, mock_requests):
