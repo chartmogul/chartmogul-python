@@ -26,6 +26,9 @@ class Contact(Resource):
         phone = fields.String(allow_none=True)
         linked_in = fields.String(allow_none=True)
         twitter = fields.String(allow_none=True)
+        # load_default=None ensures this attribute is always present on the Contact
+        # object even when the API omits the field (e.g. older responses)
+        external_id = fields.String(allow_none=True, load_default=None)
         custom = fields.Dict(allow_none=True)
 
         @post_load
