@@ -17,7 +17,6 @@ class Contact(Resource):
         customer_uuid = fields.String(allow_none=True)
         data_source_uuid = fields.String(allow_none=True)
         customer_external_id = fields.String(allow_none=True)
-        external_id = fields.String(allow_none=True, load_default=None)
         first_name = fields.String(allow_none=True)
         last_name = fields.String(allow_none=True)
         position = fields.Int(allow_none=True)
@@ -27,6 +26,9 @@ class Contact(Resource):
         phone = fields.String(allow_none=True)
         linked_in = fields.String(allow_none=True)
         twitter = fields.String(allow_none=True)
+        # load_default=None ensures this attribute is always present on the Contact
+        # object even when the API omits the field (e.g. older responses)
+        contact_external_id = fields.String(allow_none=True, load_default=None, data_key="external_id")
         custom = fields.Dict(allow_none=True)
 
         @post_load
