@@ -12,6 +12,24 @@ jsonResponse = {
     "week_start_on": "sunday",
 }
 
+jsonResponseWithId = {
+    "id": "acct_a1b2c3d4",
+    "name": "Example Test Company",
+    "currency": "EUR",
+    "time_zone": "Europe/Berlin",
+    "week_start_on": "sunday",
+}
+
+jsonResponseWithInclude = {
+    "id": "acct_a1b2c3d4",
+    "name": "Example Test Company",
+    "currency": "EUR",
+    "time_zone": "Europe/Berlin",
+    "week_start_on": "sunday",
+    "churn_recognition": "immediate",
+    "churn_when_zero_mrr": "ignore",
+}
+
 
 class AccountTestCase(unittest.TestCase):
     """
@@ -35,3 +53,43 @@ class AccountTestCase(unittest.TestCase):
         self.assertEqual(account.currency, "EUR")
         self.assertEqual(account.time_zone, "Europe/Berlin")
         self.assertEqual(account.week_start_on, "sunday")
+
+    @requests_mock.mock()
+    def test_retrieve_with_id(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/account",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=jsonResponseWithId,
+        )
+
+        config = Config("token")
+        account = Account.retrieve(config).get()
+        self.assertTrue(isinstance(account, Account))
+        self.assertEqual(account.id, "acct_a1b2c3d4")
+
+    @requests_mock.mock()
+    def test_retrieve_with_include(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/account?include=churn_recognition,churn_when_zero_mrr",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=jsonResponseWithInclude,
+        )
+
+        config = Config("token")
+        account = Account.retrieve(
+            config,
+            include="churn_recognition,churn_when_zero_mrr"
+        ).get()
+        self.assertTrue(isinstance(account, Account))
+        self.assertEqual(account.id, "acct_a1b2c3d4")
+        self.assertEqual(account.churn_recognition, "immediate")
+        self.assertEqual(account.churn_when_zero_mrr, "ignore")
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {"include": ["churn_recognition,churn_when_zero_mrr"]},
+        )

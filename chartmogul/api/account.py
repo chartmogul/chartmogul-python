@@ -10,10 +10,13 @@ class Account(Resource):
     _path = "/account"
 
     class _Schema(Schema):
+        id = fields.String(allow_none=True)
         name = fields.String()
         currency = fields.String()
         time_zone = fields.String()
         week_start_on = fields.String()
+        churn_recognition = fields.String(allow_none=True)
+        churn_when_zero_mrr = fields.String(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
