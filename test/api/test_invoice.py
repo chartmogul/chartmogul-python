@@ -621,3 +621,55 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertEqual(qs["with_disabled"], ["true"])
         self.assertTrue(isinstance(result, Invoice._many))
         self.assertEqual(len(result.invoices), 1)
+
+    @requests_mock.mock()
+    def test_line_item_and_transaction_errors(self, mock_requests):
+        responseWithErrors = {
+            "uuid": "inv_test",
+            "external_id": "INV0001",
+            "date": "2015-11-01T00:00:00.000Z",
+            "due_date": "2015-11-15T00:00:00.000Z",
+            "currency": "USD",
+            "line_items": [
+                {
+                    "uuid": "li_test",
+                    "external_id": None,
+                    "type": "subscription",
+                    "prorated": False,
+                    "amount_in_cents": 5000,
+                    "quantity": 1,
+                    "discount_amount_in_cents": 0,
+                    "tax_amount_in_cents": 0,
+                    "transaction_fees_in_cents": 0,
+                    "errors": {"amount_in_cents": ["must be positive"]},
+                },
+            ],
+            "transactions": [
+                {
+                    "uuid": "tr_test",
+                    "external_id": None,
+                    "type": "payment",
+                    "date": "2015-11-05T00:04:03.000Z",
+                    "result": "successful",
+                    "errors": {"date": ["is in the future"]},
+                },
+            ],
+        }
+
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/invoices/inv_test",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=responseWithErrors,
+        )
+
+        config = Config("token")
+        result = Invoice.retrieve(config, uuid="inv_test").get()
+
+        self.assertTrue(isinstance(result, Invoice))
+        self.assertIsNotNone(result.line_items[0].errors)
+        self.assertEqual(result.line_items[0].errors["amount_in_cents"], ["must be positive"])
+        self.assertIsNotNone(result.transactions[0].errors)
+        self.assertEqual(result.transactions[0].errors["date"], ["is in the future"])
