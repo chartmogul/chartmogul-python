@@ -304,6 +304,166 @@ class SubscriptionEventTestCase(unittest.TestCase):
         self.assertFalse(body["subscription_event"]["disabled"])
 
     @requests_mock.mock()
+    def test_destroy_flat_with_external_id_and_ds_uuid(self, mock_requests):
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/subscription_events",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=204,
+        )
+
+        config = Config("token")
+        result = SubscriptionEvent.destroy(
+            config,
+            data={
+                "external_id": "evnt_026",
+                "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+            }
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(
+            mock_requests.last_request.json(),
+            {
+                "subscription_event": {
+                    "external_id": "evnt_026",
+                    "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+                }
+            },
+        )
+        self.assertTrue(result is None)
+
+    @requests_mock.mock()
+    def test_modify_flat_with_external_id_and_ds_uuid(self, mock_requests):
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/subscription_events",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=expected_sub_ev,
+        )
+
+        config = Config("token")
+        sub_ev = SubscriptionEvent.modify(
+            config,
+            data={
+                "external_id": "evnt_026",
+                "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+                "amount_in_cents": 10,
+            }
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(
+            mock_requests.last_request.json(),
+            {
+                "subscription_event": {
+                    "external_id": "evnt_026",
+                    "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+                    "amount_in_cents": 10,
+                }
+            },
+        )
+        self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
+
+    @requests_mock.mock()
+    def test_destroy_flat_passthrough_envelope(self, mock_requests):
+        """If caller already wraps in subscription_event, don't double-wrap."""
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/subscription_events",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=204,
+        )
+
+        config = Config("token")
+        result = SubscriptionEvent.destroy(
+            config,
+            data={"subscription_event": {"id": 7654321}}
+        ).get()
+
+        self.assertEqual(
+            mock_requests.last_request.json(),
+            {"subscription_event": {"id": 7654321}},
+        )
+        self.assertTrue(result is None)
+
+    @requests_mock.mock()
+    def test_modify_flat_passthrough_envelope(self, mock_requests):
+        """If caller already wraps in subscription_event, don't double-wrap."""
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/subscription_events",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=expected_sub_ev,
+        )
+
+        config = Config("token")
+        sub_ev = SubscriptionEvent.modify(
+            config,
+            data={"subscription_event": {"id": 7654321, "amount_in_cents": 10}}
+        ).get()
+
+        self.assertEqual(
+            mock_requests.last_request.json(),
+            {"subscription_event": {"id": 7654321, "amount_in_cents": 10}},
+        )
+        self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
+
+    @requests_mock.mock()
+    def test_disable_with_external_id_and_ds_uuid(self, mock_requests):
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/subscription_events",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=expected_sub_ev,
+        )
+
+        config = Config("token")
+        sub_ev = SubscriptionEvent.disable(
+            config,
+            data={
+                "external_id": "evnt_026",
+                "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+            }
+        ).get()
+
+        body = mock_requests.last_request.json()
+        self.assertEqual(body["subscription_event"]["external_id"], "evnt_026")
+        self.assertEqual(
+            body["subscription_event"]["data_source_uuid"],
+            "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+        )
+        self.assertTrue(body["subscription_event"]["disabled"])
+        self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
+
+    @requests_mock.mock()
+    def test_enable_with_external_id_and_ds_uuid(self, mock_requests):
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/subscription_events",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=expected_sub_ev,
+        )
+
+        config = Config("token")
+        sub_ev = SubscriptionEvent.enable(
+            config,
+            data={
+                "external_id": "evnt_026",
+                "data_source_uuid": "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
+            }
+        ).get()
+
+        body = mock_requests.last_request.json()
+        self.assertEqual(body["subscription_event"]["external_id"], "evnt_026")
+        self.assertFalse(body["subscription_event"]["disabled"])
+        self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
+
+    @requests_mock.mock()
     def test_all_subscription_events_with_filters(self, mock_requests):
         mock_requests.register_uri(
             "GET",

@@ -93,3 +93,52 @@ class AccountTestCase(unittest.TestCase):
             mock_requests.last_request.qs,
             {"include": ["churn_recognition,churn_when_zero_mrr"]},
         )
+
+    @requests_mock.mock()
+    def test_retrieve_without_id_field(self, mock_requests):
+        """Old API responses without id field should not break deserialization."""
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/account",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=jsonResponse,
+        )
+
+        config = Config("token")
+        account = Account.retrieve(config).get()
+        self.assertTrue(isinstance(account, Account))
+        self.assertFalse(hasattr(account, "id"))
+
+    @requests_mock.mock()
+    def test_retrieve_with_single_include(self, mock_requests):
+        singleIncludeResponse = {
+            "id": "acct_a1b2c3d4",
+            "name": "Example Test Company",
+            "currency": "EUR",
+            "time_zone": "Europe/Berlin",
+            "week_start_on": "sunday",
+            "churn_recognition": "immediate",
+        }
+
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/account?include=churn_recognition",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=singleIncludeResponse,
+        )
+
+        config = Config("token")
+        account = Account.retrieve(
+            config,
+            include="churn_recognition"
+        ).get()
+        self.assertTrue(isinstance(account, Account))
+        self.assertEqual(account.churn_recognition, "immediate")
+        self.assertFalse(hasattr(account, "churn_when_zero_mrr"))
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {"include": ["churn_recognition"]},
+        )

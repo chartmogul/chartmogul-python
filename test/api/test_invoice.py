@@ -722,3 +722,188 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertTrue(isinstance(result, Invoice))
         self.assertTrue(result.disabled)
+
+    @requests_mock.mock()
+    def test_update_status_verifies_request_body(self, mock_requests):
+        updatedInvoice = dict(retrieveInvoiceExample)
+        updatedInvoice["disabled"] = False
+
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=updatedInvoice,
+        )
+
+        config = Config("token")
+        Invoice.update_status(
+            config,
+            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+            data={"disabled": False}
+        ).get()
+
+        self.assertEqual(
+            mock_requests.last_request.json(),
+            {"disabled": False},
+        )
+
+    @requests_mock.mock()
+    def test_update_status_not_found(self, mock_requests):
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/invoices/inv_nonexistent",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=404,
+            json={"error": "Invoice not found"},
+        )
+
+        config = Config("token")
+        with self.assertRaises(APIError):
+            Invoice.update_status(
+                config,
+                uuid="inv_nonexistent",
+                data={"disabled": False}
+            ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+
+    @requests_mock.mock()
+    def test_disable_no_request_body(self, mock_requests):
+        disabledInvoice = dict(retrieveInvoiceExample)
+        disabledInvoice["disabled"] = True
+
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059/disable",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=disabledInvoice,
+        )
+
+        config = Config("token")
+        Invoice.disable(
+            config,
+            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+        ).get()
+
+        self.assertIsNone(mock_requests.last_request.body)
+
+    @requests_mock.mock()
+    def test_disable_not_found(self, mock_requests):
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/invoices/inv_nonexistent/disable",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=404,
+            json={"error": "Invoice not found"},
+        )
+
+        config = Config("token")
+        with self.assertRaises(APIError):
+            Invoice.disable(config, uuid="inv_nonexistent").get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+
+    @requests_mock.mock()
+    def test_line_item_errors_none(self, mock_requests):
+        responseWithNoneErrors = {
+            "uuid": "inv_test",
+            "external_id": "INV0001",
+            "date": "2015-11-01T00:00:00.000Z",
+            "due_date": "2015-11-15T00:00:00.000Z",
+            "currency": "USD",
+            "line_items": [
+                {
+                    "uuid": "li_test",
+                    "external_id": None,
+                    "type": "subscription",
+                    "prorated": False,
+                    "amount_in_cents": 5000,
+                    "quantity": 1,
+                    "discount_amount_in_cents": 0,
+                    "tax_amount_in_cents": 0,
+                    "transaction_fees_in_cents": 0,
+                    "errors": None,
+                },
+            ],
+            "transactions": [
+                {
+                    "uuid": "tr_test",
+                    "external_id": None,
+                    "type": "payment",
+                    "date": "2015-11-05T00:04:03.000Z",
+                    "result": "successful",
+                    "errors": None,
+                },
+            ],
+        }
+
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/invoices/inv_test",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=responseWithNoneErrors,
+        )
+
+        config = Config("token")
+        result = Invoice.retrieve(config, uuid="inv_test").get()
+
+        self.assertTrue(isinstance(result, Invoice))
+        self.assertIsNone(result.line_items[0].errors)
+        self.assertIsNone(result.transactions[0].errors)
+
+    @requests_mock.mock()
+    def test_line_item_errors_absent(self, mock_requests):
+        responseNoErrors = {
+            "uuid": "inv_test",
+            "external_id": "INV0001",
+            "date": "2015-11-01T00:00:00.000Z",
+            "due_date": "2015-11-15T00:00:00.000Z",
+            "currency": "USD",
+            "line_items": [
+                {
+                    "uuid": "li_test",
+                    "external_id": None,
+                    "type": "subscription",
+                    "prorated": False,
+                    "amount_in_cents": 5000,
+                    "quantity": 1,
+                    "discount_amount_in_cents": 0,
+                    "tax_amount_in_cents": 0,
+                    "transaction_fees_in_cents": 0,
+                },
+            ],
+            "transactions": [
+                {
+                    "uuid": "tr_test",
+                    "external_id": None,
+                    "type": "payment",
+                    "date": "2015-11-05T00:04:03.000Z",
+                    "result": "successful",
+                },
+            ],
+        }
+
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/invoices/inv_test_no_errors",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=responseNoErrors,
+        )
+
+        config = Config("token")
+        result = Invoice.retrieve(config, uuid="inv_test_no_errors").get()
+
+        self.assertTrue(isinstance(result, Invoice))
+        # When errors field is absent from response, the attribute should not be set
+        self.assertFalse(hasattr(result.line_items[0], "errors"))
+        self.assertFalse(hasattr(result.transactions[0], "errors"))
