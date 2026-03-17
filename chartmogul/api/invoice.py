@@ -98,3 +98,5 @@ Invoice.destroy_all = Invoice._method(
     "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
+Invoice.update_status = Invoice._method("modify", "patch", "/invoices{/uuid}")
+Invoice.disable = Invoice._method("patch", "patch", "/invoices{/uuid}/disable")

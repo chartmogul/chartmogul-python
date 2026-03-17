@@ -673,3 +673,52 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertEqual(result.line_items[0].errors["amount_in_cents"], ["must be positive"])
         self.assertIsNotNone(result.transactions[0].errors)
         self.assertEqual(result.transactions[0].errors["date"], ["is in the future"])
+
+    @requests_mock.mock()
+    def test_update_status(self, mock_requests):
+        updatedInvoice = dict(retrieveInvoiceExample)
+        updatedInvoice["disabled"] = False
+
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=updatedInvoice,
+        )
+
+        config = Config("token")
+        result = Invoice.update_status(
+            config,
+            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+            data={"disabled": False}
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertTrue(isinstance(result, Invoice))
+        self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
+
+    @requests_mock.mock()
+    def test_disable(self, mock_requests):
+        disabledInvoice = dict(retrieveInvoiceExample)
+        disabledInvoice["disabled"] = True
+
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059/disable",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=disabledInvoice,
+        )
+
+        config = Config("token")
+        result = Invoice.disable(
+            config,
+            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertTrue(isinstance(result, Invoice))
+        self.assertTrue(result.disabled)
