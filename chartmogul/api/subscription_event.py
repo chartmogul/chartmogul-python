@@ -69,9 +69,12 @@ def _modify(cls, config, **kwargs):
 @classmethod
 def _disable(cls, config, **kwargs):
     """Disable a subscription event by setting disabled to true."""
-    data = kwargs.get("data", {})
-    data["disabled"] = True
-    if "subscription_event" not in data:
+    data = dict(kwargs.get("data", {}))
+    if "subscription_event" in data:
+        data = {"subscription_event": dict(data["subscription_event"])}
+        data["subscription_event"]["disabled"] = True
+    else:
+        data["disabled"] = True
         data = {"subscription_event": data}
     return cls.modify_with_params(config, data=data)
 
@@ -79,9 +82,12 @@ def _disable(cls, config, **kwargs):
 @classmethod
 def _enable(cls, config, **kwargs):
     """Enable a subscription event by setting disabled to false."""
-    data = kwargs.get("data", {})
-    data["disabled"] = False
-    if "subscription_event" not in data:
+    data = dict(kwargs.get("data", {}))
+    if "subscription_event" in data:
+        data = {"subscription_event": dict(data["subscription_event"])}
+        data["subscription_event"]["disabled"] = False
+    else:
+        data["disabled"] = False
         data = {"subscription_event": data}
     return cls.modify_with_params(config, data=data)
 

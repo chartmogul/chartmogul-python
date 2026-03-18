@@ -99,4 +99,4 @@ Invoice.destroy_all = Invoice._method(
 )
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
 Invoice.update_status = Invoice._method("modify", "patch", "/invoices{/uuid}")
-Invoice.disable = Invoice._method("patch", "patch", "/invoices{/uuid}/disable")
+Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disable")

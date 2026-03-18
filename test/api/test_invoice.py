@@ -8,6 +8,7 @@ from requests.exceptions import HTTPError
 
 from chartmogul import Config
 from chartmogul import APIError
+from chartmogul import ArgumentMissingError
 from chartmogul import Invoice
 
 
@@ -907,3 +908,8 @@ class InvoiceTestCase(unittest.TestCase):
         # When errors field is absent from response, the attribute should not be set
         self.assertFalse(hasattr(result.line_items[0], "errors"))
         self.assertFalse(hasattr(result.transactions[0], "errors"))
+
+    def test_disable_missing_uuid_raises(self):
+        config = Config("token")
+        with self.assertRaises(ArgumentMissingError):
+            Invoice.disable(config)

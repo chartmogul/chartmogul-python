@@ -504,3 +504,65 @@ class SubscriptionEventTestCase(unittest.TestCase):
             sorted(expected.subscription_events[0].external_id),
         )
         self.assertTrue(isinstance(subscription_events.subscription_events[0], SubscriptionEvent))
+
+    @requests_mock.mock()
+    def test_disable_passthrough_envelope_sets_flag_inside(self, mock_requests):
+        """When caller passes pre-wrapped envelope, disabled flag must go inside it."""
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/subscription_events",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=expected_sub_ev,
+        )
+
+        caller_data = {"subscription_event": {"id": 7654321}}
+        config = Config("token")
+        SubscriptionEvent.disable(config, data=caller_data).get()
+
+        body = mock_requests.last_request.json()
+        # disabled must be inside the envelope, not at top level
+        self.assertNotIn("disabled", body)
+        self.assertTrue(body["subscription_event"]["disabled"])
+        self.assertEqual(body["subscription_event"]["id"], 7654321)
+        # caller's dict must not be mutated
+        self.assertNotIn("disabled", caller_data["subscription_event"])
+
+    @requests_mock.mock()
+    def test_enable_passthrough_envelope_sets_flag_inside(self, mock_requests):
+        """When caller passes pre-wrapped envelope, disabled=False must go inside it."""
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/subscription_events",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=expected_sub_ev,
+        )
+
+        caller_data = {"subscription_event": {"id": 7654321}}
+        config = Config("token")
+        SubscriptionEvent.enable(config, data=caller_data).get()
+
+        body = mock_requests.last_request.json()
+        self.assertNotIn("disabled", body)
+        self.assertFalse(body["subscription_event"]["disabled"])
+        self.assertEqual(body["subscription_event"]["id"], 7654321)
+        self.assertNotIn("disabled", caller_data["subscription_event"])
+
+    @requests_mock.mock()
+    def test_disable_does_not_mutate_caller_dict(self, mock_requests):
+        """Flat-param disable must not mutate the caller's dict in-place."""
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/subscription_events",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=expected_sub_ev,
+        )
+
+        caller_data = {"id": 7654321}
+        config = Config("token")
+        SubscriptionEvent.disable(config, data=caller_data).get()
+
+        # caller's original dict should not have been modified
+        self.assertNotIn("disabled", caller_data)
