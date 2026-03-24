@@ -5,27 +5,20 @@ import requests_mock
 from chartmogul import Account, Config, APIError
 
 
-jsonResponse = {
+base_response = {
     "name": "Example Test Company",
     "currency": "EUR",
     "time_zone": "Europe/Berlin",
     "week_start_on": "sunday",
 }
 
-jsonResponseWithId = {
+response_with_id = {
+    **base_response,
     "id": "acct_a1b2c3d4",
-    "name": "Example Test Company",
-    "currency": "EUR",
-    "time_zone": "Europe/Berlin",
-    "week_start_on": "sunday",
 }
 
-jsonResponseWithInclude = {
-    "id": "acct_a1b2c3d4",
-    "name": "Example Test Company",
-    "currency": "EUR",
-    "time_zone": "Europe/Berlin",
-    "week_start_on": "sunday",
+response_with_include = {
+    **response_with_id,
     "churn_recognition": "immediate",
     "churn_when_zero_mrr": "ignore",
 }
@@ -43,7 +36,7 @@ class AccountTestCase(unittest.TestCase):
             "https://api.chartmogul.com/v1/account",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=jsonResponse,
+            json=base_response,
         )
 
         config = Config("token")  # is actually checked in mock
@@ -61,7 +54,7 @@ class AccountTestCase(unittest.TestCase):
             "https://api.chartmogul.com/v1/account",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=jsonResponseWithId,
+            json=response_with_id,
         )
 
         config = Config("token")
@@ -77,7 +70,7 @@ class AccountTestCase(unittest.TestCase):
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=200,
-            json=jsonResponseWithInclude,
+            json=response_with_include,
         )
 
         config = Config("token")
@@ -102,7 +95,7 @@ class AccountTestCase(unittest.TestCase):
             "https://api.chartmogul.com/v1/account",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=jsonResponse,
+            json=base_response,
         )
 
         config = Config("token")
@@ -112,12 +105,8 @@ class AccountTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_retrieve_with_single_include(self, mock_requests):
-        singleIncludeResponse = {
-            "id": "acct_a1b2c3d4",
-            "name": "Example Test Company",
-            "currency": "EUR",
-            "time_zone": "Europe/Berlin",
-            "week_start_on": "sunday",
+        single_include_response = {
+            **response_with_id,
             "churn_recognition": "immediate",
         }
 
@@ -127,7 +116,7 @@ class AccountTestCase(unittest.TestCase):
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=200,
-            json=singleIncludeResponse,
+            json=single_include_response,
         )
 
         config = Config("token")

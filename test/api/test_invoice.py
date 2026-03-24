@@ -623,39 +623,45 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result, Invoice._many))
         self.assertEqual(len(result.invoices), 1)
 
-    @requests_mock.mock()
-    def test_line_item_and_transaction_errors(self, mock_requests):
-        responseWithErrors = {
+    def _make_errors_response(self, li_errors=None, tx_errors=None, include_errors=True):
+        """Build a minimal invoice response with configurable errors fields."""
+        li = {
+            "uuid": "li_test",
+            "external_id": None,
+            "type": "subscription",
+            "prorated": False,
+            "amount_in_cents": 5000,
+            "quantity": 1,
+            "discount_amount_in_cents": 0,
+            "tax_amount_in_cents": 0,
+            "transaction_fees_in_cents": 0,
+        }
+        tx = {
+            "uuid": "tr_test",
+            "external_id": None,
+            "type": "payment",
+            "date": "2015-11-05T00:04:03.000Z",
+            "result": "successful",
+        }
+        if include_errors:
+            li["errors"] = li_errors
+            tx["errors"] = tx_errors
+        return {
             "uuid": "inv_test",
             "external_id": "INV0001",
             "date": "2015-11-01T00:00:00.000Z",
             "due_date": "2015-11-15T00:00:00.000Z",
             "currency": "USD",
-            "line_items": [
-                {
-                    "uuid": "li_test",
-                    "external_id": None,
-                    "type": "subscription",
-                    "prorated": False,
-                    "amount_in_cents": 5000,
-                    "quantity": 1,
-                    "discount_amount_in_cents": 0,
-                    "tax_amount_in_cents": 0,
-                    "transaction_fees_in_cents": 0,
-                    "errors": {"amount_in_cents": ["must be positive"]},
-                },
-            ],
-            "transactions": [
-                {
-                    "uuid": "tr_test",
-                    "external_id": None,
-                    "type": "payment",
-                    "date": "2015-11-05T00:04:03.000Z",
-                    "result": "successful",
-                    "errors": {"date": ["is in the future"]},
-                },
-            ],
+            "line_items": [li],
+            "transactions": [tx],
         }
+
+    @requests_mock.mock()
+    def test_line_item_and_transaction_errors(self, mock_requests):
+        response = self._make_errors_response(
+            li_errors={"amount_in_cents": ["must be positive"]},
+            tx_errors={"date": ["is in the future"]},
+        )
 
         mock_requests.register_uri(
             "GET",
@@ -663,7 +669,7 @@ class InvoiceTestCase(unittest.TestCase):
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=200,
-            json=responseWithErrors,
+            json=response,
         )
 
         config = Config("token")
@@ -812,37 +818,7 @@ class InvoiceTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_line_item_errors_none(self, mock_requests):
-        responseWithNoneErrors = {
-            "uuid": "inv_test",
-            "external_id": "INV0001",
-            "date": "2015-11-01T00:00:00.000Z",
-            "due_date": "2015-11-15T00:00:00.000Z",
-            "currency": "USD",
-            "line_items": [
-                {
-                    "uuid": "li_test",
-                    "external_id": None,
-                    "type": "subscription",
-                    "prorated": False,
-                    "amount_in_cents": 5000,
-                    "quantity": 1,
-                    "discount_amount_in_cents": 0,
-                    "tax_amount_in_cents": 0,
-                    "transaction_fees_in_cents": 0,
-                    "errors": None,
-                },
-            ],
-            "transactions": [
-                {
-                    "uuid": "tr_test",
-                    "external_id": None,
-                    "type": "payment",
-                    "date": "2015-11-05T00:04:03.000Z",
-                    "result": "successful",
-                    "errors": None,
-                },
-            ],
-        }
+        response = self._make_errors_response(li_errors=None, tx_errors=None)
 
         mock_requests.register_uri(
             "GET",
@@ -850,7 +826,7 @@ class InvoiceTestCase(unittest.TestCase):
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=200,
-            json=responseWithNoneErrors,
+            json=response,
         )
 
         config = Config("token")
@@ -862,35 +838,7 @@ class InvoiceTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_line_item_errors_absent(self, mock_requests):
-        responseNoErrors = {
-            "uuid": "inv_test",
-            "external_id": "INV0001",
-            "date": "2015-11-01T00:00:00.000Z",
-            "due_date": "2015-11-15T00:00:00.000Z",
-            "currency": "USD",
-            "line_items": [
-                {
-                    "uuid": "li_test",
-                    "external_id": None,
-                    "type": "subscription",
-                    "prorated": False,
-                    "amount_in_cents": 5000,
-                    "quantity": 1,
-                    "discount_amount_in_cents": 0,
-                    "tax_amount_in_cents": 0,
-                    "transaction_fees_in_cents": 0,
-                },
-            ],
-            "transactions": [
-                {
-                    "uuid": "tr_test",
-                    "external_id": None,
-                    "type": "payment",
-                    "date": "2015-11-05T00:04:03.000Z",
-                    "result": "successful",
-                },
-            ],
-        }
+        response = self._make_errors_response(include_errors=False)
 
         mock_requests.register_uri(
             "GET",
@@ -898,7 +846,7 @@ class InvoiceTestCase(unittest.TestCase):
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=200,
-            json=responseNoErrors,
+            json=response,
         )
 
         config = Config("token")

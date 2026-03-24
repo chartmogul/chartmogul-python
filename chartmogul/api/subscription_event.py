@@ -31,12 +31,53 @@ class SubscriptionEvent(Resource):
         retracted_event_id = fields.String(allow_none=True)
         external_id = fields.String(allow_none=True)
         event_order = fields.Int(allow_none=True)
+        disabled = fields.Bool(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
             return SubscriptionEvent(**data)
 
     _schema = _Schema(unknown=EXCLUDE)
+
+    @classmethod
+    def destroy(cls, config, **kwargs):
+        """Accept flat params and wrap in subscription_event envelope for the API."""
+        data = dict(kwargs.get("data", {}))
+        if "subscription_event" not in data:
+            data = {"subscription_event": data}
+        return cls.destroy_with_params(config, data=data)
+
+    @classmethod
+    def modify(cls, config, **kwargs):
+        """Accept flat params and wrap in subscription_event envelope for the API."""
+        data = dict(kwargs.get("data", {}))
+        if "subscription_event" not in data:
+            data = {"subscription_event": data}
+        return cls.modify_with_params(config, data=data)
+
+    @classmethod
+    def disable(cls, config, **kwargs):
+        """Disable a subscription event by setting disabled to true."""
+        data = dict(kwargs.get("data", {}))
+        if "subscription_event" in data:
+            data = {"subscription_event": dict(data["subscription_event"])}
+            data["subscription_event"]["disabled"] = True
+        else:
+            data["disabled"] = True
+            data = {"subscription_event": data}
+        return cls.modify_with_params(config, data=data)
+
+    @classmethod
+    def enable(cls, config, **kwargs):
+        """Enable a subscription event by setting disabled to false."""
+        data = dict(kwargs.get("data", {}))
+        if "subscription_event" in data:
+            data = {"subscription_event": dict(data["subscription_event"])}
+            data["subscription_event"]["disabled"] = False
+        else:
+            data["disabled"] = False
+            data = {"subscription_event": data}
+        return cls.modify_with_params(config, data=data)
 
 
 SubscriptionEvent.all = SubscriptionEvent._method("all", "get", "/subscription_events")
@@ -46,53 +87,3 @@ SubscriptionEvent.destroy_with_params = SubscriptionEvent._method(
 SubscriptionEvent.modify_with_params = SubscriptionEvent._method(
     "modify_with_params", "patch", "/subscription_events"
 )
-
-
-@classmethod
-def _destroy(cls, config, **kwargs):
-    """Accept flat params and wrap in subscription_event envelope for the API."""
-    data = kwargs.get("data", {})
-    if "subscription_event" not in data:
-        data = {"subscription_event": data}
-    return cls.destroy_with_params(config, data=data)
-
-
-@classmethod
-def _modify(cls, config, **kwargs):
-    """Accept flat params and wrap in subscription_event envelope for the API."""
-    data = kwargs.get("data", {})
-    if "subscription_event" not in data:
-        data = {"subscription_event": data}
-    return cls.modify_with_params(config, data=data)
-
-
-@classmethod
-def _disable(cls, config, **kwargs):
-    """Disable a subscription event by setting disabled to true."""
-    data = dict(kwargs.get("data", {}))
-    if "subscription_event" in data:
-        data = {"subscription_event": dict(data["subscription_event"])}
-        data["subscription_event"]["disabled"] = True
-    else:
-        data["disabled"] = True
-        data = {"subscription_event": data}
-    return cls.modify_with_params(config, data=data)
-
-
-@classmethod
-def _enable(cls, config, **kwargs):
-    """Enable a subscription event by setting disabled to false."""
-    data = dict(kwargs.get("data", {}))
-    if "subscription_event" in data:
-        data = {"subscription_event": dict(data["subscription_event"])}
-        data["subscription_event"]["disabled"] = False
-    else:
-        data["disabled"] = False
-        data = {"subscription_event": data}
-    return cls.modify_with_params(config, data=data)
-
-
-SubscriptionEvent.destroy = _destroy
-SubscriptionEvent.modify = _modify
-SubscriptionEvent.disable = _disable
-SubscriptionEvent.enable = _enable
