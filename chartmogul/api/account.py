@@ -16,7 +16,7 @@ class Account(Resource):
         time_zone = fields.String()
         week_start_on = fields.String()
         churn_recognition = fields.String(allow_none=True)
-        churn_when_zero_mrr = fields.String(allow_none=True)
+        churn_when_zero_mrr = fields.Raw(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
