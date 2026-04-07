@@ -36,7 +36,7 @@ single_invoice_response = {
 class InvoiceExternalIdTestCase(unittest.TestCase):
 
     @requests_mock.mock()
-    def test_retrieve_by_external_id(self, mock_requests):
+    def test_retrieve_with_external_id(self, mock_requests):
         mock_requests.register_uri(
             "GET",
             "https://api.chartmogul.com/v1/invoices"
@@ -47,7 +47,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Invoice.retrieve_by_external_id(
+        result = Invoice.retrieve(
             config, data_source_uuid="ds_123", external_id="inv_ext_1"
         ).get()
 
@@ -56,7 +56,23 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         self.assertIn("external_id", mock_requests.last_request.qs)
 
     @requests_mock.mock()
-    def test_update_by_external_id(self, mock_requests):
+    def test_retrieve_with_uuid_still_works(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/invoices/inv_test",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=single_invoice_response,
+        )
+
+        config = Config("token")
+        result = Invoice.retrieve(config, uuid="inv_test").get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(isinstance(result, Invoice))
+
+    @requests_mock.mock()
+    def test_update_status_with_external_id(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/invoices"
@@ -67,7 +83,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Invoice.update_by_external_id(
+        result = Invoice.update_status(
             config,
             data_source_uuid="ds_123",
             external_id="inv_ext_1",
@@ -79,7 +95,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.json(), {"currency": "EUR"})
 
     @requests_mock.mock()
-    def test_update_by_external_id_with_handle_as_user_edit(self, mock_requests):
+    def test_update_status_with_handle_as_user_edit(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/invoices"
@@ -90,7 +106,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Invoice.update_by_external_id(
+        Invoice.update_status(
             config,
             data_source_uuid="ds_123",
             external_id="inv_ext_1",
@@ -104,7 +120,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         )
 
     @requests_mock.mock()
-    def test_destroy_by_external_id(self, mock_requests):
+    def test_destroy_with_external_id(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
             "https://api.chartmogul.com/v1/invoices"
@@ -114,7 +130,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Invoice.destroy_by_external_id(
+        result = Invoice.destroy(
             config, data_source_uuid="ds_123", external_id="inv_ext_1"
         ).get()
 
@@ -123,7 +139,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
-    def test_toggle_disabled_by_external_id(self, mock_requests):
+    def test_toggle_disabled(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/invoices/disabled_state"
@@ -134,7 +150,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Invoice.toggle_disabled_by_external_id(
+        result = Invoice.toggle_disabled(
             config,
             data_source_uuid="ds_123",
             external_id="inv_ext_1",
@@ -146,7 +162,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result, Invoice))
 
     @requests_mock.mock()
-    def test_destroy_by_external_id_not_found(self, mock_requests):
+    def test_destroy_with_external_id_not_found(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
             "https://api.chartmogul.com/v1/invoices"
@@ -159,6 +175,6 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
 
         config = Config("token")
         with self.assertRaises(APIError):
-            Invoice.destroy_by_external_id(
+            Invoice.destroy(
                 config, data_source_uuid="ds_123", external_id="inv_bad"
             ).get()

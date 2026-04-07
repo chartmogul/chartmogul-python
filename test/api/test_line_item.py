@@ -19,10 +19,10 @@ line_item_response = {
 }
 
 
-class LineItemExternalIdTestCase(unittest.TestCase):
+class LineItemTestCase(unittest.TestCase):
 
     @requests_mock.mock()
-    def test_retrieve_by_external_id(self, mock_requests):
+    def test_retrieve(self, mock_requests):
         mock_requests.register_uri(
             "GET",
             "https://api.chartmogul.com/v1/line_items"
@@ -33,7 +33,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = LineItem.retrieve_by_external_id(
+        result = LineItem.retrieve(
             config, data_source_uuid="ds_123", external_id="li_ext_1"
         ).get()
 
@@ -44,7 +44,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         self.assertEqual(result.uuid, "li_test")
 
     @requests_mock.mock()
-    def test_update_by_external_id(self, mock_requests):
+    def test_modify(self, mock_requests):
         updated = dict(line_item_response)
         updated["amount_in_cents"] = 10000
 
@@ -58,7 +58,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = LineItem.update_by_external_id(
+        result = LineItem.modify(
             config,
             data_source_uuid="ds_123",
             external_id="li_ext_1",
@@ -71,7 +71,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         self.assertEqual(result.amount_in_cents, 10000)
 
     @requests_mock.mock()
-    def test_update_by_external_id_with_handle_as_user_edit(self, mock_requests):
+    def test_modify_with_handle_as_user_edit(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/line_items"
@@ -82,7 +82,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        LineItem.update_by_external_id(
+        LineItem.modify(
             config,
             data_source_uuid="ds_123",
             external_id="li_ext_1",
@@ -95,7 +95,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         )
 
     @requests_mock.mock()
-    def test_destroy_by_external_id(self, mock_requests):
+    def test_destroy(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
             "https://api.chartmogul.com/v1/line_items"
@@ -105,7 +105,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = LineItem.destroy_by_external_id(
+        result = LineItem.destroy(
             config, data_source_uuid="ds_123", external_id="li_ext_1"
         ).get()
 
@@ -113,7 +113,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
-    def test_toggle_disabled_by_external_id(self, mock_requests):
+    def test_toggle_disabled(self, mock_requests):
         disabled = dict(line_item_response)
         disabled["disabled"] = True
 
@@ -127,7 +127,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = LineItem.toggle_disabled_by_external_id(
+        result = LineItem.toggle_disabled(
             config,
             data_source_uuid="ds_123",
             external_id="li_ext_1",
@@ -140,7 +140,7 @@ class LineItemExternalIdTestCase(unittest.TestCase):
         self.assertTrue(result.disabled)
 
     @requests_mock.mock()
-    def test_retrieve_by_external_id_not_found(self, mock_requests):
+    def test_retrieve_not_found(self, mock_requests):
         mock_requests.register_uri(
             "GET",
             "https://api.chartmogul.com/v1/line_items"
@@ -153,6 +153,6 @@ class LineItemExternalIdTestCase(unittest.TestCase):
 
         config = Config("token")
         with self.assertRaises(APIError):
-            LineItem.retrieve_by_external_id(
+            LineItem.retrieve(
                 config, data_source_uuid="ds_123", external_id="li_bad"
             ).get()

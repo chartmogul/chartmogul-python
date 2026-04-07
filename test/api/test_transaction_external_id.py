@@ -19,7 +19,7 @@ transaction_response = {
 class TransactionExternalIdTestCase(unittest.TestCase):
 
     @requests_mock.mock()
-    def test_retrieve_by_external_id(self, mock_requests):
+    def test_retrieve_with_external_id(self, mock_requests):
         mock_requests.register_uri(
             "GET",
             "https://api.chartmogul.com/v1/transactions"
@@ -30,7 +30,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Transaction.retrieve_by_external_id(
+        result = Transaction.retrieve(
             config, data_source_uuid="ds_123", external_id="tr_ext_1"
         ).get()
 
@@ -41,7 +41,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         self.assertEqual(result.uuid, "tr_test")
 
     @requests_mock.mock()
-    def test_update_by_external_id(self, mock_requests):
+    def test_modify_with_external_id(self, mock_requests):
         updated = dict(transaction_response)
         updated["amount_in_cents"] = 10000
 
@@ -55,7 +55,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Transaction.update_by_external_id(
+        result = Transaction.modify(
             config,
             data_source_uuid="ds_123",
             external_id="tr_ext_1",
@@ -67,7 +67,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result, Transaction))
 
     @requests_mock.mock()
-    def test_update_by_external_id_with_handle_as_user_edit(self, mock_requests):
+    def test_modify_with_handle_as_user_edit(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/transactions"
@@ -78,7 +78,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        Transaction.update_by_external_id(
+        Transaction.modify(
             config,
             data_source_uuid="ds_123",
             external_id="tr_ext_1",
@@ -91,7 +91,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         )
 
     @requests_mock.mock()
-    def test_destroy_by_external_id(self, mock_requests):
+    def test_destroy_with_external_id(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
             "https://api.chartmogul.com/v1/transactions"
@@ -101,7 +101,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Transaction.destroy_by_external_id(
+        result = Transaction.destroy(
             config, data_source_uuid="ds_123", external_id="tr_ext_1"
         ).get()
 
@@ -109,7 +109,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
-    def test_toggle_disabled_by_external_id(self, mock_requests):
+    def test_toggle_disabled(self, mock_requests):
         disabled = dict(transaction_response)
         disabled["disabled"] = True
 
@@ -123,7 +123,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Transaction.toggle_disabled_by_external_id(
+        result = Transaction.toggle_disabled(
             config,
             data_source_uuid="ds_123",
             external_id="tr_ext_1",
@@ -136,7 +136,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         self.assertTrue(result.disabled)
 
     @requests_mock.mock()
-    def test_destroy_by_external_id_not_found(self, mock_requests):
+    def test_destroy_with_external_id_not_found(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
             "https://api.chartmogul.com/v1/transactions"
@@ -149,6 +149,6 @@ class TransactionExternalIdTestCase(unittest.TestCase):
 
         config = Config("token")
         with self.assertRaises(APIError):
-            Transaction.destroy_by_external_id(
+            Transaction.destroy(
                 config, data_source_uuid="ds_123", external_id="tr_bad"
             ).get()
