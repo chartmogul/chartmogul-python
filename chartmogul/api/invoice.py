@@ -46,7 +46,8 @@ class Invoice(Resource):
     _root_key = "invoices"
     _bool_query_params = [
         'include_edit_histories',
-        'with_disabled'
+        'with_disabled',
+        'handle_as_user_edit',
     ]
     _many = namedtuple(
         "Invoices",

@@ -9,6 +9,7 @@ class LineItem(Resource):
     """
 
     _path = "/line_items"
+    _bool_query_params = ['handle_as_user_edit']
 
     class _Schema(Schema):
         uuid = fields.String()
@@ -44,26 +45,26 @@ class LineItem(Resource):
     _schema = _Schema(unknown=EXCLUDE)
 
     @classmethod
-    def retrieve_by_external_id(cls, config, **kwargs):
+    def retrieve(cls, config, **kwargs):
         """GET /line_items with data_source_uuid + external_id query params."""
         params = _build_ext_id_params(kwargs)
         return cls._request(config, "retrieve", "get", "/line_items", query_params=params)
 
     @classmethod
-    def update_by_external_id(cls, config, **kwargs):
+    def modify(cls, config, **kwargs):
         """PATCH /line_items with data_source_uuid + external_id query params."""
         params = _build_ext_id_params(kwargs)
         return cls._request(config, "modify", "patch", "/line_items",
                             data=kwargs.get("data"), query_params=params)
 
     @classmethod
-    def destroy_by_external_id(cls, config, **kwargs):
+    def destroy(cls, config, **kwargs):
         """DELETE /line_items with data_source_uuid + external_id query params."""
         params = _build_ext_id_params(kwargs)
         return cls._request(config, "destroy", "delete", "/line_items", query_params=params)
 
     @classmethod
-    def toggle_disabled_by_external_id(cls, config, **kwargs):
+    def toggle_disabled(cls, config, **kwargs):
         """PATCH /line_items/disabled_state with data_source_uuid + external_id query params."""
         params = _build_ext_id_params(kwargs)
         return cls._request(config, "modify", "patch", "/line_items/disabled_state",

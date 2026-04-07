@@ -135,10 +135,10 @@ class Resource(DataObject):
     @classmethod
     def _request(cls, config, method, http_verb, path, data=None, query_params=None, **kwargs):
         if http_verb == "get":
-            params = query_params if query_params is not None else cls._preProcessParams(kwargs)
+            params = cls._preProcessParams(query_params if query_params is not None else kwargs)
             data = None
         else:
-            params = query_params
+            params = cls._preProcessParams(query_params) if query_params is not None else None
             if data is not None:
                 data = dumps(data, default=json_serial)
 
@@ -253,5 +253,5 @@ def _build_ext_id_params(kwargs):
         "external_id": kwargs["external_id"],
     }
     if kwargs.get("handle_as_user_edit") is not None:
-        params["handle_as_user_edit"] = str(kwargs["handle_as_user_edit"]).lower()
+        params["handle_as_user_edit"] = kwargs["handle_as_user_edit"]
     return params
