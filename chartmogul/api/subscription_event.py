@@ -60,24 +60,18 @@ class SubscriptionEvent(Resource):
         """Disable a subscription event by setting disabled to true."""
         data = dict(kwargs.get("data", {}))
         if "subscription_event" in data:
-            data = {"subscription_event": dict(data["subscription_event"])}
-            data["subscription_event"]["disabled"] = True
-        else:
-            data["disabled"] = True
-            data = {"subscription_event": data}
-        return cls.modify_with_params(config, data=data)
+            data = dict(data["subscription_event"])
+        data["disabled"] = True
+        return cls.modify(config, data=data)
 
     @classmethod
     def enable(cls, config, **kwargs):
         """Enable a subscription event by setting disabled to false."""
         data = dict(kwargs.get("data", {}))
         if "subscription_event" in data:
-            data = {"subscription_event": dict(data["subscription_event"])}
-            data["subscription_event"]["disabled"] = False
-        else:
-            data["disabled"] = False
-            data = {"subscription_event": data}
-        return cls.modify_with_params(config, data=data)
+            data = dict(data["subscription_event"])
+        data["disabled"] = False
+        return cls.modify(config, data=data)
 
 
 SubscriptionEvent.all = SubscriptionEvent._method("all", "get", "/subscription_events")
