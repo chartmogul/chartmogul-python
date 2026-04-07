@@ -89,7 +89,6 @@ class Invoice(Resource):
         else:
             return cls.all_any(config, **kwargs)
 
-
     @classmethod
     def retrieve_by_external_id(cls, config, **kwargs):
         """GET /invoices with data_source_uuid + external_id query params."""
