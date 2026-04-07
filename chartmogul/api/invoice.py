@@ -28,6 +28,9 @@ class LineItem(DataObject):
         description = fields.String(allow_none=True)
         event_order = fields.Int(allow_none=True)
         errors = fields.Dict(allow_none=True)
+        disabled = fields.Boolean(allow_none=True)
+        disabled_at = fields.DateTime(allow_none=True)
+        disabled_by = fields.String(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
@@ -90,26 +93,29 @@ class Invoice(Resource):
             return cls.all_any(config, **kwargs)
 
     @classmethod
-    def retrieve_by_external_id(cls, config, **kwargs):
-        """GET /invoices with data_source_uuid + external_id query params."""
-        params = _build_ext_id_params(kwargs)
-        return cls._request(config, "retrieve", "get", "/invoices", query_params=params)
+    def retrieve(cls, config, **kwargs):
+        if "data_source_uuid" in kwargs and "external_id" in kwargs:
+            params = _build_ext_id_params(kwargs)
+            return cls._request(config, "retrieve", "get", "/invoices", query_params=params)
+        return cls._retrieve_by_uuid(config, **kwargs)
 
     @classmethod
-    def update_by_external_id(cls, config, **kwargs):
-        """PATCH /invoices with data_source_uuid + external_id query params."""
-        params = _build_ext_id_params(kwargs)
-        return cls._request(config, "modify", "patch", "/invoices",
-                            data=kwargs.get("data"), query_params=params)
+    def destroy(cls, config, **kwargs):
+        if "data_source_uuid" in kwargs and "external_id" in kwargs:
+            params = _build_ext_id_params(kwargs)
+            return cls._request(config, "destroy", "delete", "/invoices", query_params=params)
+        return cls._destroy_by_uuid(config, **kwargs)
 
     @classmethod
-    def destroy_by_external_id(cls, config, **kwargs):
-        """DELETE /invoices with data_source_uuid + external_id query params."""
-        params = _build_ext_id_params(kwargs)
-        return cls._request(config, "destroy", "delete", "/invoices", query_params=params)
+    def update_status(cls, config, **kwargs):
+        if "data_source_uuid" in kwargs and "external_id" in kwargs:
+            params = _build_ext_id_params(kwargs)
+            return cls._request(config, "modify", "patch", "/invoices",
+                                data=kwargs.get("data"), query_params=params)
+        return cls._update_status_by_uuid(config, **kwargs)
 
     @classmethod
-    def toggle_disabled_by_external_id(cls, config, **kwargs):
+    def toggle_disabled(cls, config, **kwargs):
         """PATCH /invoices/disabled_state with data_source_uuid + external_id query params."""
         params = _build_ext_id_params(kwargs)
         return cls._request(config, "modify", "patch", "/invoices/disabled_state",
@@ -117,12 +123,12 @@ class Invoice(Resource):
 
 
 Invoice.all_any = Invoice._method("all", "get", "/invoices")
-Invoice.destroy = Invoice._method("destroy", "delete", "/invoices{/uuid}")
+Invoice._destroy_by_uuid = Invoice._method("destroy", "delete", "/invoices{/uuid}")
 Invoice.destroy_all = Invoice._method(
     "destroy_all",
     "delete",
     "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
-Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
-Invoice.update_status = Invoice._method("modify", "patch", "/invoices{/uuid}")
+Invoice._retrieve_by_uuid = Invoice._method("retrieve", "get", "/invoices{/uuid}")
+Invoice._update_status_by_uuid = Invoice._method("modify", "patch", "/invoices{/uuid}")
 Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disable")
