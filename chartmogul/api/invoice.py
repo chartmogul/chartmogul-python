@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE
-from ..resource import Resource, DataObject, _build_ext_id_params
+from ..resource import Resource, DataObject
 from .transaction import Transaction
 from collections import namedtuple
 
@@ -43,6 +43,7 @@ class Invoice(Resource):
     """
 
     _path = "/import/customers{/uuid}/invoices"
+    _ext_id_path = "/invoices"
     _root_key = "invoices"
     _bool_query_params = [
         'include_edit_histories',
@@ -93,43 +94,14 @@ class Invoice(Resource):
         else:
             return cls.all_any(config, **kwargs)
 
-    @classmethod
-    def retrieve(cls, config, **kwargs):
-        if "data_source_uuid" in kwargs and "external_id" in kwargs:
-            params = _build_ext_id_params(kwargs)
-            return cls._request(config, "retrieve", "get", "/invoices", query_params=params)
-        return cls._retrieve_by_uuid(config, **kwargs)
-
-    @classmethod
-    def destroy(cls, config, **kwargs):
-        if "data_source_uuid" in kwargs and "external_id" in kwargs:
-            params = _build_ext_id_params(kwargs)
-            return cls._request(config, "destroy", "delete", "/invoices", query_params=params)
-        return cls._destroy_by_uuid(config, **kwargs)
-
-    @classmethod
-    def update_status(cls, config, **kwargs):
-        if "data_source_uuid" in kwargs and "external_id" in kwargs:
-            params = _build_ext_id_params(kwargs)
-            return cls._request(config, "modify", "patch", "/invoices",
-                                data=kwargs.get("data"), query_params=params)
-        return cls._update_status_by_uuid(config, **kwargs)
-
-    @classmethod
-    def toggle_disabled(cls, config, **kwargs):
-        """PATCH /invoices/disabled_state with data_source_uuid + external_id query params."""
-        params = _build_ext_id_params(kwargs)
-        return cls._request(config, "modify", "patch", "/invoices/disabled_state",
-                            data=kwargs.get("data"), query_params=params)
-
 
 Invoice.all_any = Invoice._method("all", "get", "/invoices")
-Invoice._destroy_by_uuid = Invoice._method("destroy", "delete", "/invoices{/uuid}")
+Invoice.destroy = Invoice._method("destroy", "delete", "/invoices{/uuid}")
 Invoice.destroy_all = Invoice._method(
     "destroy_all",
     "delete",
     "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
-Invoice._retrieve_by_uuid = Invoice._method("retrieve", "get", "/invoices{/uuid}")
-Invoice._update_status_by_uuid = Invoice._method("modify", "patch", "/invoices{/uuid}")
+Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
+Invoice.update_status = Invoice._method("modify", "patch", "/invoices{/uuid}")
 Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disable")

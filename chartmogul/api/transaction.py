@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE
-from ..resource import Resource, _build_ext_id_params
+from ..resource import Resource
 
 
 class Transaction(Resource):
@@ -8,6 +8,7 @@ class Transaction(Resource):
     """
 
     _path = "/import/invoices{/uuid}/transactions"
+    _ext_id_path = "/transactions"
     _bool_query_params = ['handle_as_user_edit']
 
     class _Schema(Schema):
@@ -30,41 +31,10 @@ class Transaction(Resource):
 
     _schema = _Schema(unknown=EXCLUDE)
 
-    @classmethod
-    def retrieve(cls, config, **kwargs):
-        if "data_source_uuid" in kwargs and "external_id" in kwargs:
-            params = _build_ext_id_params(kwargs)
-            return cls._request(config, "retrieve", "get", "/transactions",
-                                query_params=params)
-        return cls._retrieve_by_uuid(config, **kwargs)
 
-    @classmethod
-    def modify(cls, config, **kwargs):
-        if "data_source_uuid" in kwargs and "external_id" in kwargs:
-            params = _build_ext_id_params(kwargs)
-            return cls._request(config, "modify", "patch", "/transactions",
-                                data=kwargs.get("data"), query_params=params)
-        return cls._modify_by_uuid(config, **kwargs)
-
-    @classmethod
-    def destroy(cls, config, **kwargs):
-        if "data_source_uuid" in kwargs and "external_id" in kwargs:
-            params = _build_ext_id_params(kwargs)
-            return cls._request(config, "destroy", "delete", "/transactions",
-                                query_params=params)
-        return cls._destroy_by_uuid(config, **kwargs)
-
-    @classmethod
-    def toggle_disabled(cls, config, **kwargs):
-        """PATCH /transactions/disabled_state with data_source_uuid + external_id query params."""
-        params = _build_ext_id_params(kwargs)
-        return cls._request(config, "modify", "patch", "/transactions/disabled_state",
-                            data=kwargs.get("data"), query_params=params)
-
-
-Transaction._retrieve_by_uuid = Transaction._method(
+Transaction.retrieve = Transaction._method(
     "retrieve", "get", "/transactions{/uuid}")
-Transaction._modify_by_uuid = Transaction._method(
+Transaction.modify = Transaction._method(
     "modify", "patch", "/transactions{/uuid}")
-Transaction._destroy_by_uuid = Transaction._method(
+Transaction.destroy = Transaction._method(
     "destroy", "delete", "/transactions{/uuid}")
