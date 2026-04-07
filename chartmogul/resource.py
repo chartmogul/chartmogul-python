@@ -133,12 +133,12 @@ class Resource(DataObject):
         return params
 
     @classmethod
-    def _request(cls, config, method, http_verb, path, data=None, **kwargs):
+    def _request(cls, config, method, http_verb, path, data=None, query_params=None, **kwargs):
         if http_verb == "get":
-            params = cls._preProcessParams(kwargs)
+            params = query_params if query_params is not None else cls._preProcessParams(kwargs)
             data = None
         else:
-            params = None
+            params = query_params
             if data is not None:
                 data = dumps(data, default=json_serial)
 
@@ -243,3 +243,15 @@ def _add_method(cls, method, http_verb, path=None):
 
 for method, http_verb in MAPPINGS.items():
     _add_method(Resource, method, http_verb)
+
+
+def _build_ext_id_params(kwargs):
+    """Extract data_source_uuid, external_id, and optional handle_as_user_edit
+    from kwargs into a query params dict for external-id-based operations."""
+    params = {
+        "data_source_uuid": kwargs["data_source_uuid"],
+        "external_id": kwargs["external_id"],
+    }
+    if kwargs.get("handle_as_user_edit") is not None:
+        params["handle_as_user_edit"] = str(kwargs["handle_as_user_edit"]).lower()
+    return params

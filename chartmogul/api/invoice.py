@@ -1,5 +1,5 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE
-from ..resource import Resource, DataObject
+from ..resource import Resource, DataObject, _build_ext_id_params
 from .transaction import Transaction
 from collections import namedtuple
 
@@ -88,6 +88,33 @@ class Invoice(Resource):
             return super(Invoice, cls).all(config, **kwargs)
         else:
             return cls.all_any(config, **kwargs)
+
+
+    @classmethod
+    def retrieve_by_external_id(cls, config, **kwargs):
+        """GET /invoices with data_source_uuid + external_id query params."""
+        params = _build_ext_id_params(kwargs)
+        return cls._request(config, "retrieve", "get", "/invoices", query_params=params)
+
+    @classmethod
+    def update_by_external_id(cls, config, **kwargs):
+        """PATCH /invoices with data_source_uuid + external_id query params."""
+        params = _build_ext_id_params(kwargs)
+        return cls._request(config, "modify", "patch", "/invoices",
+                            data=kwargs.get("data"), query_params=params)
+
+    @classmethod
+    def destroy_by_external_id(cls, config, **kwargs):
+        """DELETE /invoices with data_source_uuid + external_id query params."""
+        params = _build_ext_id_params(kwargs)
+        return cls._request(config, "destroy", "delete", "/invoices", query_params=params)
+
+    @classmethod
+    def toggle_disabled_by_external_id(cls, config, **kwargs):
+        """PATCH /invoices/disabled_state with data_source_uuid + external_id query params."""
+        params = _build_ext_id_params(kwargs)
+        return cls._request(config, "modify", "patch", "/invoices/disabled_state",
+                            data=kwargs.get("data"), query_params=params)
 
 
 Invoice.all_any = Invoice._method("all", "get", "/invoices")
