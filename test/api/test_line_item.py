@@ -113,7 +113,7 @@ class LineItemTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
-    def test_toggle_disabled(self, mock_requests):
+    def test_disable(self, mock_requests):
         disabled = dict(line_item_response)
         disabled["disabled"] = True
 
@@ -127,7 +127,7 @@ class LineItemTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = LineItem.toggle_disabled(
+        result = LineItem.disable(
             config,
             data_source_uuid="ds_123",
             external_id="li_ext_1",

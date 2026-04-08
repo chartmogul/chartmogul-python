@@ -139,7 +139,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
-    def test_toggle_disabled(self, mock_requests):
+    def test_disable(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/invoices/disabled_state"
@@ -150,7 +150,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Invoice.toggle_disabled(
+        result = Invoice.disable(
             config,
             data_source_uuid="ds_123",
             external_id="inv_ext_1",

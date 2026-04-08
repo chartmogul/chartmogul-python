@@ -162,7 +162,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
-    def test_toggle_disabled(self, mock_requests):
+    def test_disable(self, mock_requests):
         disabled = dict(transaction_response)
         disabled["disabled"] = True
 
@@ -176,7 +176,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Transaction.toggle_disabled(
+        result = Transaction.disable(
             config,
             data_source_uuid="ds_123",
             external_id="tr_ext_1",

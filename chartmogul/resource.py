@@ -116,18 +116,6 @@ class Resource(DataObject):
             return cls._schema.load(jsonObj)
 
     @classmethod
-    def toggle_disabled(cls, config, **kwargs):
-        """PATCH /<resource>/disabled_state with data_source_uuid + external_id query params."""
-        ext_id_path = getattr(cls, '_ext_id_path', None)
-        if ext_id_path is None:
-            raise ConfigurationError(
-                "toggle_disabled requires _ext_id_path on the resource class")
-        params = _build_ext_id_params(kwargs)
-        return cls._request(
-            config, "modify", "patch", ext_id_path + "/disabled_state",
-            data=kwargs.get("data"), query_params=params)
-
-    @classmethod
     def _preProcessParams(cls, params):
         for key, replacement in ESCAPED_QUERY_KEYS.items():
             if key in params:
@@ -232,8 +220,13 @@ class Resource(DataObject):
                     and "data_source_uuid" in kwargs
                     and "external_id" in kwargs):
                 query_params = _build_ext_id_params(kwargs)
+                # Preserve path suffix after {/uuid}, e.g.
+                # "/line_items{/uuid}/disabled_state" → "/line_items/disabled_state"
+                suffix = ""
+                if pathTemp and "{/uuid}" in pathTemp:
+                    suffix = pathTemp.split("{/uuid}", 1)[1]
                 return cls._request(
-                    config, method, http_verb, ext_id_path,
+                    config, method, http_verb, ext_id_path + suffix,
                     data=kwargs.get("data"), query_params=query_params)
 
             cls._validate_arguments(method, kwargs)
