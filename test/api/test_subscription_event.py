@@ -225,7 +225,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         self.assertTrue(isinstance(subscription_events.subscription_events[0], SubscriptionEvent))
 
     @requests_mock.mock()
-    def test_destroy_flat_params(self, mock_requests):
+    def test_destroy_with_params_flat(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
             "https://api.chartmogul.com/v1/subscription_events",
@@ -234,7 +234,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = SubscriptionEvent.destroy(config, data={"id": 7654321}).get()
+        result = SubscriptionEvent.destroy_with_params(config, data={"id": 7654321}).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(
@@ -244,7 +244,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
-    def test_modify_flat_params(self, mock_requests):
+    def test_modify_with_params_flat(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/subscription_events",
@@ -254,7 +254,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        sub_ev = SubscriptionEvent.modify(
+        sub_ev = SubscriptionEvent.modify_with_params(
             config, data={"id": 7654321, "amount_in_cents": 10}
         ).get()
 
@@ -304,7 +304,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         self.assertFalse(body["subscription_event"]["disabled"])
 
     @requests_mock.mock()
-    def test_destroy_flat_with_external_id_and_ds_uuid(self, mock_requests):
+    def test_destroy_with_params_flat_external_id(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
             "https://api.chartmogul.com/v1/subscription_events",
@@ -313,7 +313,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = SubscriptionEvent.destroy(
+        result = SubscriptionEvent.destroy_with_params(
             config,
             data={
                 "external_id": "evnt_026",
@@ -334,7 +334,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
-    def test_modify_flat_with_external_id_and_ds_uuid(self, mock_requests):
+    def test_modify_with_params_flat_external_id(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/subscription_events",
@@ -344,7 +344,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        sub_ev = SubscriptionEvent.modify(
+        sub_ev = SubscriptionEvent.modify_with_params(
             config,
             data={
                 "external_id": "evnt_026",
@@ -367,7 +367,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
 
     @requests_mock.mock()
-    def test_destroy_flat_passthrough_envelope(self, mock_requests):
+    def test_destroy_with_params_envelope_passthrough(self, mock_requests):
         """If caller already wraps in subscription_event, don't double-wrap."""
         mock_requests.register_uri(
             "DELETE",
@@ -377,7 +377,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = SubscriptionEvent.destroy(
+        result = SubscriptionEvent.destroy_with_params(
             config,
             data={"subscription_event": {"id": 7654321}}
         ).get()
@@ -389,7 +389,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
-    def test_modify_flat_passthrough_envelope(self, mock_requests):
+    def test_modify_with_params_envelope_passthrough(self, mock_requests):
         """If caller already wraps in subscription_event, don't double-wrap."""
         mock_requests.register_uri(
             "PATCH",
@@ -400,7 +400,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        sub_ev = SubscriptionEvent.modify(
+        sub_ev = SubscriptionEvent.modify_with_params(
             config,
             data={"subscription_event": {"id": 7654321, "amount_in_cents": 10}}
         ).get()

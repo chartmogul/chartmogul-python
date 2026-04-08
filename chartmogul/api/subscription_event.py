@@ -40,20 +40,24 @@ class SubscriptionEvent(Resource):
     _schema = _Schema(unknown=EXCLUDE)
 
     @classmethod
-    def destroy(cls, config, **kwargs):
-        """Accept flat params and wrap in subscription_event envelope for the API."""
+    def _wrap_envelope(cls, kwargs):
+        """Wrap flat params in subscription_event envelope if not already wrapped."""
         data = dict(kwargs.get("data", {}))
         if "subscription_event" not in data:
             data = {"subscription_event": data}
-        return cls.destroy_with_params(config, data=data)
+        return data
 
     @classmethod
-    def modify(cls, config, **kwargs):
-        """Accept flat params and wrap in subscription_event envelope for the API."""
-        data = dict(kwargs.get("data", {}))
-        if "subscription_event" not in data:
-            data = {"subscription_event": data}
-        return cls.modify_with_params(config, data=data)
+    def destroy_with_params(cls, config, **kwargs):
+        """DELETE /subscription_events. Accepts flat or envelope-wrapped params."""
+        kwargs["data"] = cls._wrap_envelope(kwargs)
+        return cls._destroy_raw(config, **kwargs)
+
+    @classmethod
+    def modify_with_params(cls, config, **kwargs):
+        """PATCH /subscription_events. Accepts flat or envelope-wrapped params."""
+        kwargs["data"] = cls._wrap_envelope(kwargs)
+        return cls._modify_raw(config, **kwargs)
 
     @classmethod
     def disable(cls, config, **kwargs):
@@ -62,7 +66,7 @@ class SubscriptionEvent(Resource):
         if "subscription_event" in data:
             data = dict(data["subscription_event"])
         data["disabled"] = True
-        return cls.modify(config, data=data)
+        return cls.modify_with_params(config, data=data)
 
     @classmethod
     def enable(cls, config, **kwargs):
@@ -71,13 +75,12 @@ class SubscriptionEvent(Resource):
         if "subscription_event" in data:
             data = dict(data["subscription_event"])
         data["disabled"] = False
-        return cls.modify(config, data=data)
+        return cls.modify_with_params(config, data=data)
 
 
-SubscriptionEvent.all = SubscriptionEvent._method("all", "get", "/subscription_events")
-SubscriptionEvent.destroy_with_params = SubscriptionEvent._method(
-    "destroy_with_params", "delete", "/subscription_events"
-)
-SubscriptionEvent.modify_with_params = SubscriptionEvent._method(
-    "modify_with_params", "patch", "/subscription_events"
-)
+SubscriptionEvent.all = SubscriptionEvent._method(
+    "all", "get", "/subscription_events")
+SubscriptionEvent._destroy_raw = SubscriptionEvent._method(
+    "destroy_with_params", "delete", "/subscription_events")
+SubscriptionEvent._modify_raw = SubscriptionEvent._method(
+    "modify_with_params", "patch", "/subscription_events")
