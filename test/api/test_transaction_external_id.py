@@ -19,6 +19,59 @@ transaction_response = {
 class TransactionExternalIdTestCase(unittest.TestCase):
 
     @requests_mock.mock()
+    def test_retrieve_by_uuid(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/transactions/tr_test",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=transaction_response,
+        )
+
+        config = Config("token")
+        result = Transaction.retrieve(config, uuid="tr_test").get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(isinstance(result, Transaction))
+        self.assertEqual(result.uuid, "tr_test")
+
+    @requests_mock.mock()
+    def test_modify_by_uuid(self, mock_requests):
+        updated = dict(transaction_response)
+        updated["amount_in_cents"] = 10000
+
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/transactions/tr_test",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=updated,
+        )
+
+        config = Config("token")
+        result = Transaction.modify(
+            config, uuid="tr_test", data={"amount_in_cents": 10000}
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(isinstance(result, Transaction))
+
+    @requests_mock.mock()
+    def test_destroy_by_uuid(self, mock_requests):
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/transactions/tr_test",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=204,
+        )
+
+        config = Config("token")
+        result = Transaction.destroy(config, uuid="tr_test").get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(result is None)
+
+    @requests_mock.mock()
     def test_retrieve_with_external_id(self, mock_requests):
         mock_requests.register_uri(
             "GET",
