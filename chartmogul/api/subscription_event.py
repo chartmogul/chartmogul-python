@@ -41,11 +41,21 @@ class SubscriptionEvent(Resource):
 
     @classmethod
     def _wrap_envelope(cls, kwargs):
-        """Wrap flat params in subscription_event envelope if not already wrapped."""
+        """Wrap params in subscription_event envelope.
+
+        Supports three call styles (all backwards compatible):
+        1. New style:     (config, id=123, data={'amount': 2000})
+        2. Flat style:    (config, data={'id': 123, 'amount': 2000})
+        3. Envelope style:(config, data={'subscription_event': {'id': 123}})
+        """
         data = dict(kwargs.get("data", {}))
-        if "subscription_event" not in data:
-            data = {"subscription_event": data}
-        return data
+        if "subscription_event" in data:
+            return data
+        # Merge top-level id/external_id/data_source_uuid into data
+        for key in ("id", "external_id", "data_source_uuid"):
+            if key in kwargs:
+                data[key] = kwargs[key]
+        return {"subscription_event": data}
 
     @classmethod
     def destroy_with_params(cls, config, **kwargs):
@@ -65,6 +75,9 @@ class SubscriptionEvent(Resource):
         data = dict(kwargs.get("data", {}))
         if "subscription_event" in data:
             data = dict(data["subscription_event"])
+        for key in ("id", "external_id", "data_source_uuid"):
+            if key in kwargs:
+                data[key] = kwargs[key]
         data["disabled"] = True
         return cls.modify_with_params(config, data=data)
 
@@ -74,6 +87,9 @@ class SubscriptionEvent(Resource):
         data = dict(kwargs.get("data", {}))
         if "subscription_event" in data:
             data = dict(data["subscription_event"])
+        for key in ("id", "external_id", "data_source_uuid"):
+            if key in kwargs:
+                data[key] = kwargs[key]
         data["disabled"] = False
         return cls.modify_with_params(config, data=data)
 
