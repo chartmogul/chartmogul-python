@@ -46,6 +46,6 @@ class LineItem(Resource):
     _schema = _Schema(unknown=EXCLUDE)
 
 
-LineItem.retrieve = LineItem._method("retrieve", "get", "/line_items")
-LineItem.modify = LineItem._method("modify", "patch", "/line_items")
-LineItem.destroy = LineItem._method("destroy", "delete", "/line_items")
+LineItem.retrieve = LineItem._method("retrieve", "get", "/line_items{/uuid}")
+LineItem.modify = LineItem._method("modify", "patch", "/line_items{/uuid}")
+LineItem.destroy = LineItem._method("destroy", "delete", "/line_items{/uuid}")
