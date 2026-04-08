@@ -140,6 +140,60 @@ class LineItemTestCase(unittest.TestCase):
         self.assertTrue(result.disabled)
 
     @requests_mock.mock()
+    def test_retrieve_by_uuid(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/line_items/li_test",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=line_item_response,
+        )
+
+        config = Config("token")
+        result = LineItem.retrieve(config, uuid="li_test").get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(isinstance(result, LineItem))
+        self.assertEqual(result.uuid, "li_test")
+
+    @requests_mock.mock()
+    def test_modify_by_uuid(self, mock_requests):
+        updated = dict(line_item_response)
+        updated["amount_in_cents"] = 10000
+
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/line_items/li_test",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=updated,
+        )
+
+        config = Config("token")
+        result = LineItem.modify(
+            config, uuid="li_test", data={"amount_in_cents": 10000}
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(isinstance(result, LineItem))
+        self.assertEqual(result.amount_in_cents, 10000)
+
+    @requests_mock.mock()
+    def test_destroy_by_uuid(self, mock_requests):
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/line_items/li_test",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=204,
+        )
+
+        config = Config("token")
+        result = LineItem.destroy(config, uuid="li_test").get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(result is None)
+
+    @requests_mock.mock()
     def test_retrieve_not_found(self, mock_requests):
         mock_requests.register_uri(
             "GET",
