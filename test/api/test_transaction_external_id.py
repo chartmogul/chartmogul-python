@@ -152,3 +152,25 @@ class TransactionExternalIdTestCase(unittest.TestCase):
             Transaction.destroy(
                 config, data_source_uuid="ds_123", external_id="tr_bad"
             ).get()
+
+    @requests_mock.mock()
+    def test_disable_by_uuid(self, mock_requests):
+        disabled = dict(transaction_response)
+        disabled["disabled"] = True
+
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/transactions/tr_test/disabled_state",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=disabled,
+        )
+
+        config = Config("token")
+        result = Transaction.disable(
+            config, uuid="tr_test", data={"disabled": True}
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(isinstance(result, Transaction))
+        self.assertTrue(result.disabled)

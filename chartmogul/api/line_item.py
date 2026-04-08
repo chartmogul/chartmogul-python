@@ -46,6 +46,10 @@ class LineItem(Resource):
     _schema = _Schema(unknown=EXCLUDE)
 
 
+LineItem.create = LineItem._method(
+    "create", "post", "/import/invoices{/uuid}/line_items")
 LineItem.retrieve = LineItem._method("retrieve", "get", "/line_items{/uuid}")
 LineItem.modify = LineItem._method("modify", "patch", "/line_items{/uuid}")
 LineItem.destroy = LineItem._method("destroy", "delete", "/line_items{/uuid}")
+LineItem.disable = LineItem._method(
+    "disable", "patch", "/line_items{/uuid}/disabled_state")

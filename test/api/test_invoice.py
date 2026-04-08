@@ -713,7 +713,7 @@ class InvoiceTestCase(unittest.TestCase):
 
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059/disable",
+            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=200,
@@ -784,7 +784,7 @@ class InvoiceTestCase(unittest.TestCase):
 
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059/disable",
+            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=200,
@@ -803,7 +803,7 @@ class InvoiceTestCase(unittest.TestCase):
     def test_disable_not_found(self, mock_requests):
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/invoices/inv_nonexistent/disable",
+            "https://api.chartmogul.com/v1/invoices/inv_nonexistent/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=404,

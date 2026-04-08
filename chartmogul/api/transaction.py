@@ -38,3 +38,5 @@ Transaction.modify = Transaction._method(
     "modify", "patch", "/transactions{/uuid}")
 Transaction.destroy = Transaction._method(
     "destroy", "delete", "/transactions{/uuid}")
+Transaction.disable = Transaction._method(
+    "disable", "patch", "/transactions{/uuid}/disabled_state")

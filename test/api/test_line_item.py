@@ -194,6 +194,48 @@ class LineItemTestCase(unittest.TestCase):
         self.assertTrue(result is None)
 
     @requests_mock.mock()
+    def test_create(self, mock_requests):
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/import/invoices/inv_123/line_items",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=line_item_response,
+        )
+
+        config = Config("token")
+        result = LineItem.create(
+            config,
+            uuid="inv_123",
+            data={"type": "subscription", "amount_in_cents": 5000},
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(isinstance(result, LineItem))
+
+    @requests_mock.mock()
+    def test_disable_by_uuid(self, mock_requests):
+        disabled = dict(line_item_response)
+        disabled["disabled"] = True
+
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/line_items/li_test/disabled_state",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json=disabled,
+        )
+
+        config = Config("token")
+        result = LineItem.disable(
+            config, uuid="li_test", data={"disabled": True}
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(isinstance(result, LineItem))
+        self.assertTrue(result.disabled)
+
+    @requests_mock.mock()
     def test_retrieve_not_found(self, mock_requests):
         mock_requests.register_uri(
             "GET",
