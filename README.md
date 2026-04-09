@@ -22,6 +22,8 @@
 |
 <b><a href='#contributing'>Contributing</a></b>
 |
+<b><a href='#security'>Security</a></b>
+|
 <b><a href='#license'>License</a></b>
 </p>
 <hr>
@@ -470,15 +472,17 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/chartm
 
 ## Releasing
 
-Make sure that:
-1. you have prepared `~/.pypirc` with credentials,
-2. a higher version has been set in `chartmogul/__init__.py`,
-3. Run tests `python3 -m unittest`
-4. Build package `python3 setup.py sdist`
-4. release works `twine upload --repository-url https://test.pypi.org/legacy/ dist/*`,
-5. release to production `twine upload dist/*`,
+See [RELEASING.md](RELEASING.md) for the release process and security details.
 
-[Read full HOWTO](http://peterdowns.com/posts/first-time-with-pypi.html)
+## Security
+
+### Verifying Releases
+
+All releases of this library are published as [immutable GitHub Releases](https://github.com/chartmogul/chartmogul-python/releases) with protected tags and as a package on [PyPI](https://pypi.org/project/chartmogul/).
+
+To maximize supply chain security:
+- **Commit your `requirements.txt`** (or lock file) to version control
+- **Verify package checksums** with `pip install --require-hashes` for reproducible installs
 
 ## License
 
