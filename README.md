@@ -472,7 +472,17 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/chartm
 
 ## Releasing
 
-See [RELEASING.md](RELEASING.md) for the release process and security details.
+Make sure that:
+1. you have prepared `~/.pypirc` with credentials,
+2. a higher version has been set in `chartmogul/__init__.py`,
+3. Run tests `python3 -m unittest`
+4. Build package `python3 setup.py sdist`
+4. release works `twine upload --repository-url https://test.pypi.org/legacy/ dist/*`,
+5. release to production `twine upload dist/*`,
+
+[Read full HOWTO](http://peterdowns.com/posts/first-time-with-pypi.html)
+
+See also [RELEASING.md](RELEASING.md) for the full release process and security details.
 
 ## Security
 
