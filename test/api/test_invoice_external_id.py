@@ -54,6 +54,9 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1)
         self.assertIn("data_source_uuid", mock_requests.last_request.qs)
         self.assertIn("external_id", mock_requests.last_request.qs)
+        # Returns a single Invoice, same as uuid-based retrieve
+        self.assertTrue(isinstance(result, Invoice))
+        self.assertEqual(result.uuid, "inv_test")
 
     @requests_mock.mock()
     def test_retrieve_with_uuid_still_works(self, mock_requests):
@@ -160,6 +163,24 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1)
         self.assertEqual(mock_requests.last_request.json(), {"disabled": True})
         self.assertTrue(isinstance(result, Invoice))
+
+    @requests_mock.mock()
+    def test_retrieve_with_external_id_empty_returns_none(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/invoices"
+            "?data_source_uuid=ds_123&external_id=inv_bad",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            status_code=200,
+            json={"invoices": [], "cursor": None, "has_more": False},
+        )
+
+        config = Config("token")
+        result = Invoice.retrieve(
+            config, data_source_uuid="ds_123", external_id="inv_bad"
+        ).get()
+
+        self.assertIsNone(result)
 
     @requests_mock.mock()
     def test_destroy_with_external_id_not_found(self, mock_requests):

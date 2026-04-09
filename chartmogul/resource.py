@@ -225,9 +225,19 @@ class Resource(DataObject):
                 suffix = ""
                 if pathTemp and "{/uuid}" in pathTemp:
                     suffix = pathTemp.split("{/uuid}", 1)[1]
-                return cls._request(
+                result = cls._request(
                     config, method, http_verb, ext_id_path + suffix,
                     data=kwargs.get("data"), query_params=query_params)
+                # For retrieve, unwrap the first item from the list response
+                # so the return type matches uuid-based retrieve.
+                if method == "retrieve" and hasattr(cls, '_root_key'):
+                    def _unwrap(many_result):
+                        items = getattr(many_result, cls._root_key, [])
+                        if items:
+                            return items[0]
+                        return None
+                    return result.then(_unwrap)
+                return result
 
             cls._validate_arguments(method, kwargs)
 
