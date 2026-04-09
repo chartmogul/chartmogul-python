@@ -71,7 +71,10 @@ class SubscriptionEvent(Resource):
 
     @classmethod
     def disable(cls, config, **kwargs):
-        """Disable a subscription event by setting disabled to true."""
+        """Disable a subscription event. Supports id path param or body-based."""
+        if "id" in kwargs and "data" not in kwargs:
+            return cls._disable_by_id(
+                config, id=kwargs["id"], data={"disabled": True})
         data = dict(kwargs.get("data", {}))
         if "subscription_event" in data:
             data = dict(data["subscription_event"])
@@ -83,7 +86,10 @@ class SubscriptionEvent(Resource):
 
     @classmethod
     def enable(cls, config, **kwargs):
-        """Enable a subscription event by setting disabled to false."""
+        """Enable a subscription event. Supports id path param or body-based."""
+        if "id" in kwargs and "data" not in kwargs:
+            return cls._disable_by_id(
+                config, id=kwargs["id"], data={"disabled": False})
         data = dict(kwargs.get("data", {}))
         if "subscription_event" in data:
             data = dict(data["subscription_event"])
@@ -100,5 +106,5 @@ SubscriptionEvent._destroy_raw = SubscriptionEvent._method(
     "destroy_with_params", "delete", "/subscription_events")
 SubscriptionEvent._modify_raw = SubscriptionEvent._method(
     "modify_with_params", "patch", "/subscription_events")
-SubscriptionEvent.disable_by_id = SubscriptionEvent._method(
+SubscriptionEvent._disable_by_id = SubscriptionEvent._method(
     "disable_by_id", "patch", "/subscription_events{/id}/disabled_state")

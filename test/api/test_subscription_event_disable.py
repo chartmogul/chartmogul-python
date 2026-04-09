@@ -21,10 +21,11 @@ expected_sub_ev = {
 }
 
 
-class SubscriptionEventDisableByIdTestCase(unittest.TestCase):
+class SubscriptionEventDisablePathParamTestCase(unittest.TestCase):
 
     @requests_mock.mock()
-    def test_disable_by_id(self, mock_requests):
+    def test_disable_with_id_kwarg_uses_path_param(self, mock_requests):
+        """disable(config, id=123) uses PATCH /subscription_events/{id}/disabled_state."""
         mock_requests.register_uri(
             "PATCH",
             "https://api.chartmogul.com/v1/subscription_events/7654321/disabled_state",
@@ -34,9 +35,7 @@ class SubscriptionEventDisableByIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = SubscriptionEvent.disable_by_id(
-            config, id=7654321, data={"disabled": True}
-        ).get()
+        result = SubscriptionEvent.disable(config, id=7654321).get()
 
         self.assertEqual(mock_requests.call_count, 1)
         self.assertEqual(
@@ -46,7 +45,8 @@ class SubscriptionEventDisableByIdTestCase(unittest.TestCase):
         self.assertTrue(result.disabled)
 
     @requests_mock.mock()
-    def test_enable_by_id(self, mock_requests):
+    def test_enable_with_id_kwarg_uses_path_param(self, mock_requests):
+        """enable(config, id=123) uses PATCH /subscription_events/{id}/disabled_state."""
         enabled = dict(expected_sub_ev)
         enabled["disabled"] = False
 
@@ -59,9 +59,10 @@ class SubscriptionEventDisableByIdTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = SubscriptionEvent.disable_by_id(
-            config, id=7654321, data={"disabled": False}
-        ).get()
+        result = SubscriptionEvent.enable(config, id=7654321).get()
 
         self.assertEqual(mock_requests.call_count, 1)
+        self.assertEqual(
+            mock_requests.last_request.json(), {"disabled": False}
+        )
         self.assertFalse(result.disabled)

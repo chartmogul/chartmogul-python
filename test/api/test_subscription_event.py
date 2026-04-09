@@ -290,10 +290,10 @@ class SubscriptionEventTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_disable_new_style(self, mock_requests):
-        """New style: id as a separate kwarg."""
+        """New style: id as a separate kwarg uses path-param endpoint."""
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/subscription_events",
+            "https://api.chartmogul.com/v1/subscription_events/7654321/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=expected_sub_ev,
@@ -302,27 +302,28 @@ class SubscriptionEventTestCase(unittest.TestCase):
         config = Config("token")
         sub_ev = SubscriptionEvent.disable(config, id=7654321).get()
 
-        body = mock_requests.last_request.json()
-        self.assertEqual(body["subscription_event"]["id"], 7654321)
-        self.assertTrue(body["subscription_event"]["disabled"])
+        self.assertEqual(mock_requests.last_request.json(), {"disabled": True})
+        self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
 
     @requests_mock.mock()
     def test_enable_new_style(self, mock_requests):
-        """New style: id as a separate kwarg."""
+        """New style: id as a separate kwarg uses path-param endpoint."""
+        enabled = dict(expected_sub_ev)
+        enabled["disabled"] = False
+
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/subscription_events",
+            "https://api.chartmogul.com/v1/subscription_events/7654321/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
-            json=expected_sub_ev,
+            json=enabled,
         )
 
         config = Config("token")
         sub_ev = SubscriptionEvent.enable(config, id=7654321).get()
 
-        body = mock_requests.last_request.json()
-        self.assertEqual(body["subscription_event"]["id"], 7654321)
-        self.assertFalse(body["subscription_event"]["disabled"])
+        self.assertEqual(mock_requests.last_request.json(), {"disabled": False})
+        self.assertFalse(sub_ev.disabled)
 
     @requests_mock.mock()
     def test_modify_with_params_flat(self, mock_requests):
