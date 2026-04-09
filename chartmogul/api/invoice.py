@@ -102,3 +102,6 @@ Invoice.destroy_all = Invoice._method(
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
 Invoice.update_status = Invoice._method("modify", "patch", "/invoices{/uuid}")
 Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disabled_state")
+Invoice.update_status_by_ext = Invoice._method(
+    "update_status_by_ext", "put",
+    "/data_sources{/data_source_uuid}/invoices{/invoice_external_id}/status")

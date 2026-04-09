@@ -728,3 +728,39 @@ class InvoiceEndpointsTestCase(unittest.TestCase):
         config = Config("token")
         with self.assertRaises(ArgumentMissingError):
             Invoice.disable(config)
+
+    @requests_mock.mock()
+    def test_update_status_by_ext(self, mock_requests):
+        mock_requests.register_uri(
+            "PUT",
+            "https://api.chartmogul.com/v1/data_sources/ds_123/invoices/inv_ext_1/status",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json={
+                "message": "Invoice updated",
+                "invoice": {
+                    "uuid": "inv_test",
+                    "external_id": "inv_ext_1",
+                    "date": "2015-11-01T00:00:00.000Z",
+                    "due_date": "2015-11-15T00:00:00.000Z",
+                    "currency": "USD",
+                    "status": "voided",
+                    "line_items": [],
+                    "transactions": [],
+                },
+            },
+        )
+
+        config = Config("token")
+        result = Invoice.update_status_by_ext(
+            config,
+            data_source_uuid="ds_123",
+            invoice_external_id="inv_ext_1",
+            data={"status": "voided"},
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertEqual(
+            mock_requests.last_request.json(), {"status": "voided"}
+        )
