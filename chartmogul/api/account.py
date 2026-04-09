@@ -10,6 +10,7 @@ class Account(Resource):
     _path = "/account"
 
     class _Schema(Schema):
+        id = fields.String(allow_none=True)
         name = fields.String()
         currency = fields.String()
         time_zone = fields.String()
