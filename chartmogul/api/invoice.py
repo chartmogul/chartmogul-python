@@ -91,6 +91,13 @@ class Invoice(Resource):
         else:
             return cls.all_any(config, **kwargs)
 
+    @classmethod
+    def update_status(cls, config, **kwargs):
+        """Update invoice status. Supports both uuid and data_source_uuid + invoice_external_id."""
+        if "data_source_uuid" in kwargs and "invoice_external_id" in kwargs:
+            return cls._update_status_by_ext(config, **kwargs)
+        return cls._update_status_by_uuid(config, **kwargs)
+
 
 Invoice.all_any = Invoice._method("all", "get", "/invoices")
 Invoice.destroy = Invoice._method("destroy", "delete", "/invoices{/uuid}")
@@ -100,8 +107,9 @@ Invoice.destroy_all = Invoice._method(
     "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
-Invoice.update_status = Invoice._method("modify", "patch", "/invoices{/uuid}")
-Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disabled_state")
-Invoice.update_status_by_ext = Invoice._method(
+Invoice._update_status_by_uuid = Invoice._method(
+    "modify", "patch", "/invoices{/uuid}")
+Invoice._update_status_by_ext = Invoice._method(
     "update_status_by_ext", "put",
     "/data_sources{/data_source_uuid}/invoices{/invoice_external_id}/status")
+Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disabled_state")

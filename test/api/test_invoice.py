@@ -730,7 +730,7 @@ class InvoiceEndpointsTestCase(unittest.TestCase):
             Invoice.disable(config)
 
     @requests_mock.mock()
-    def test_update_status_by_ext(self, mock_requests):
+    def test_update_status_by_ext_id(self, mock_requests):
         mock_requests.register_uri(
             "PUT",
             "https://api.chartmogul.com/v1/data_sources/ds_123/invoices/inv_ext_1/status",
@@ -753,7 +753,7 @@ class InvoiceEndpointsTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = Invoice.update_status_by_ext(
+        result = Invoice.update_status(
             config,
             data_source_uuid="ds_123",
             invoice_external_id="inv_ext_1",
