@@ -78,3 +78,64 @@ class AccountIdTestCase(unittest.TestCase):
         account = Account.retrieve(config).get()
         self.assertTrue(isinstance(account, Account))
         self.assertFalse(hasattr(account, "id"))
+
+
+jsonResponseWithInclude = {
+    "name": "Example Test Company",
+    "currency": "EUR",
+    "time_zone": "Europe/Berlin",
+    "week_start_on": "sunday",
+    "churn_recognition": "immediate",
+    "churn_when_zero_mrr": "ignore",
+}
+
+
+class AccountIncludeTestCase(unittest.TestCase):
+
+    @requests_mock.mock()
+    def test_retrieve_with_include(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/account?include=churn_recognition,churn_when_zero_mrr",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=jsonResponseWithInclude,
+        )
+
+        config = Config("token")
+        account = Account.retrieve(
+            config, include="churn_recognition,churn_when_zero_mrr"
+        ).get()
+        self.assertTrue(isinstance(account, Account))
+        self.assertEqual(account.churn_recognition, "immediate")
+        self.assertEqual(account.churn_when_zero_mrr, "ignore")
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {"include": ["churn_recognition,churn_when_zero_mrr"]},
+        )
+
+    @requests_mock.mock()
+    def test_retrieve_with_single_include(self, mock_requests):
+        singleIncludeResponse = {
+            "name": "Example Test Company",
+            "currency": "EUR",
+            "time_zone": "Europe/Berlin",
+            "week_start_on": "sunday",
+            "churn_recognition": "immediate",
+        }
+
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/account?include=churn_recognition",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=singleIncludeResponse,
+        )
+
+        config = Config("token")
+        account = Account.retrieve(config, include="churn_recognition").get()
+        self.assertTrue(isinstance(account, Account))
+        self.assertEqual(account.churn_recognition, "immediate")
+        self.assertFalse(hasattr(account, "churn_when_zero_mrr"))
