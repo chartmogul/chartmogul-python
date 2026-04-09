@@ -27,6 +27,9 @@ class LineItem(DataObject):
         account_code = fields.String(allow_none=True)
         description = fields.String(allow_none=True)
         event_order = fields.Int(allow_none=True)
+        disabled = fields.Boolean(allow_none=True)
+        disabled_at = fields.DateTime(allow_none=True)
+        disabled_by = fields.String(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
@@ -97,3 +100,5 @@ Invoice.destroy_all = Invoice._method(
     "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
+Invoice.update_status = Invoice._method("modify", "patch", "/invoices{/uuid}")
+Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disabled_state")
