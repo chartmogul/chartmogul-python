@@ -231,12 +231,10 @@ class Resource(DataObject):
                 # For retrieve, unwrap the first item from the list response
                 # so the return type matches uuid-based retrieve.
                 if method == "retrieve" and hasattr(cls, '_root_key'):
-                    def _unwrap(many_result):
-                        items = getattr(many_result, cls._root_key, [])
-                        if items:
-                            return items[0]
-                        return None
-                    return result.then(_unwrap)
+                    root_key = cls._root_key
+                    return result.then(
+                        lambda r: getattr(r, root_key, [None])[0]
+                        if getattr(r, root_key, []) else None)
                 return result
 
             cls._validate_arguments(method, kwargs)
