@@ -100,3 +100,5 @@ SubscriptionEvent._destroy_raw = SubscriptionEvent._method(
     "destroy_with_params", "delete", "/subscription_events")
 SubscriptionEvent._modify_raw = SubscriptionEvent._method(
     "modify_with_params", "patch", "/subscription_events")
+SubscriptionEvent.disable_by_id = SubscriptionEvent._method(
+    "disable_by_id", "patch", "/subscription_events{/id}/disabled_state")
