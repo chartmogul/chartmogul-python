@@ -85,8 +85,8 @@ jsonResponseWithInclude = {
     "currency": "EUR",
     "time_zone": "Europe/Berlin",
     "week_start_on": "sunday",
-    "churn_recognition": "immediate",
-    "churn_when_zero_mrr": "ignore",
+    "churn_recognition": "churn_at_time_of_cancelation",
+    "churn_when_zero_mrr": False,
 }
 
 
@@ -108,8 +108,8 @@ class AccountIncludeTestCase(unittest.TestCase):
             config, include="churn_recognition,churn_when_zero_mrr"
         ).get()
         self.assertTrue(isinstance(account, Account))
-        self.assertEqual(account.churn_recognition, "immediate")
-        self.assertEqual(account.churn_when_zero_mrr, "ignore")
+        self.assertEqual(account.churn_recognition, "churn_at_time_of_cancelation")
+        self.assertEqual(account.churn_when_zero_mrr, False)
         self.assertEqual(
             mock_requests.last_request.qs,
             {"include": ["churn_recognition,churn_when_zero_mrr"]},
@@ -122,7 +122,7 @@ class AccountIncludeTestCase(unittest.TestCase):
             "currency": "EUR",
             "time_zone": "Europe/Berlin",
             "week_start_on": "sunday",
-            "churn_recognition": "immediate",
+            "churn_recognition": "churn_at_time_of_cancelation",
         }
 
         mock_requests.register_uri(
@@ -137,7 +137,7 @@ class AccountIncludeTestCase(unittest.TestCase):
         config = Config("token")
         account = Account.retrieve(config, include="churn_recognition").get()
         self.assertTrue(isinstance(account, Account))
-        self.assertEqual(account.churn_recognition, "immediate")
+        self.assertEqual(account.churn_recognition, "churn_at_time_of_cancelation")
         self.assertFalse(hasattr(account, "churn_when_zero_mrr"))
 
     @requests_mock.mock()
