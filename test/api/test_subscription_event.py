@@ -22,6 +22,9 @@ expected_sub_ev = {
     "currency": "USD",
     "amount_in_cents": 1000,
     "event_order": 123,
+    "disabled": True,
+    "disabled_at": "2026-04-10 10:00:00.000",
+    "disabled_by": "wiktor@chartmogul.com",
 }
 
 sub_ev_list_expected = {
@@ -39,6 +42,9 @@ sub_ev_list_expected = {
             "currency": "USD",
             "amount_in_cents": 1000,
             "event_order": 123,
+            "disabled": True,
+            "disabled_at": "2026-04-10 10:00:00.000",
+            "disabled_by": "wiktor@chartmogul.com",
         }
     ],
     "cursor": "cursor==",
@@ -91,6 +97,9 @@ class SubscriptionEventTestCase(unittest.TestCase):
         self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
         self.assertEqual(sub_ev.id, expected.id)
         self.assertEqual(sub_ev.external_id, expected.external_id)
+        self.assertTrue(sub_ev.disabled)
+        self.assertEqual(sub_ev.disabled_by, "wiktor@chartmogul.com")
+        self.assertIsNotNone(sub_ev.disabled_at)
 
     @requests_mock.mock()
     def test_delete_subscription_event_with_id(self, mock_requests):

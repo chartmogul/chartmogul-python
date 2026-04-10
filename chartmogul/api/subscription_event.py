@@ -32,6 +32,8 @@ class SubscriptionEvent(Resource):
         external_id = fields.String(allow_none=True)
         event_order = fields.Int(allow_none=True)
         disabled = fields.Bool(allow_none=True)
+        disabled_at = fields.DateTime(allow_none=True)
+        disabled_by = fields.String(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
