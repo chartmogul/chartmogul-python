@@ -350,9 +350,10 @@ class SubscriptionEventTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_disable_subscription_event(self, mock_requests):
+        """disable(data={'id': ...}) routes to /disabled_state endpoint."""
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/subscription_events",
+            "https://api.chartmogul.com/v1/subscription_events/7654321/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=expected_sub_ev,
@@ -362,16 +363,15 @@ class SubscriptionEventTestCase(unittest.TestCase):
         sub_ev = SubscriptionEvent.disable(config, data={"id": 7654321}).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        body = mock_requests.last_request.json()
-        self.assertEqual(body["subscription_event"]["id"], 7654321)
-        self.assertTrue(body["subscription_event"]["disabled"])
+        self.assertEqual(mock_requests.last_request.json(), {"disabled": True})
         self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
 
     @requests_mock.mock()
     def test_enable_subscription_event(self, mock_requests):
+        """enable(data={'id': ...}) routes to /disabled_state endpoint."""
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/subscription_events",
+            "https://api.chartmogul.com/v1/subscription_events/7654321/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=expected_sub_ev,
@@ -381,9 +381,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         sub_ev = SubscriptionEvent.enable(config, data={"id": 7654321}).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        body = mock_requests.last_request.json()
-        self.assertEqual(body["subscription_event"]["id"], 7654321)
-        self.assertFalse(body["subscription_event"]["disabled"])
+        self.assertEqual(mock_requests.last_request.json(), {"disabled": False})
 
     @requests_mock.mock()
     def test_destroy_with_params_flat_external_id(self, mock_requests):
@@ -495,9 +493,10 @@ class SubscriptionEventTestCase(unittest.TestCase):
 
     @requests_mock.mock()
     def test_disable_with_external_id_and_ds_uuid(self, mock_requests):
+        """disable with external_id+data_source_uuid uses body-based /disabled_state."""
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/subscription_events",
+            "https://api.chartmogul.com/v1/subscription_events/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=expected_sub_ev,
@@ -513,19 +512,17 @@ class SubscriptionEventTestCase(unittest.TestCase):
         ).get()
 
         body = mock_requests.last_request.json()
-        self.assertEqual(body["subscription_event"]["external_id"], "evnt_026")
-        self.assertEqual(
-            body["subscription_event"]["data_source_uuid"],
-            "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba",
-        )
-        self.assertTrue(body["subscription_event"]["disabled"])
+        self.assertEqual(body["external_id"], "evnt_026")
+        self.assertEqual(body["data_source_uuid"], "ds_1fm3eaac-62d0-31ec-clf4-4bf0mbe81aba")
+        self.assertTrue(body["disabled"])
         self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
 
     @requests_mock.mock()
     def test_enable_with_external_id_and_ds_uuid(self, mock_requests):
+        """enable with external_id+data_source_uuid uses body-based /disabled_state."""
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/subscription_events",
+            "https://api.chartmogul.com/v1/subscription_events/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=expected_sub_ev,
@@ -541,9 +538,15 @@ class SubscriptionEventTestCase(unittest.TestCase):
         ).get()
 
         body = mock_requests.last_request.json()
-        self.assertEqual(body["subscription_event"]["external_id"], "evnt_026")
-        self.assertFalse(body["subscription_event"]["disabled"])
+        self.assertEqual(body["external_id"], "evnt_026")
+        self.assertFalse(body["disabled"])
         self.assertTrue(isinstance(sub_ev, SubscriptionEvent))
+
+    def test_disable_missing_identifiers_raises_error(self):
+        """disable without id or external_id+data_source_uuid raises ValueError."""
+        config = Config("token")
+        with self.assertRaises(ValueError):
+            SubscriptionEvent.disable(config, data={"amount_in_cents": 100})
 
     @requests_mock.mock()
     def test_all_subscription_events_with_filters(self, mock_requests):
@@ -588,11 +591,11 @@ class SubscriptionEventTestCase(unittest.TestCase):
         self.assertTrue(isinstance(subscription_events.subscription_events[0], SubscriptionEvent))
 
     @requests_mock.mock()
-    def test_disable_passthrough_envelope_sets_flag_inside(self, mock_requests):
-        """When caller passes pre-wrapped envelope, disabled flag must go inside it."""
+    def test_disable_passthrough_envelope_routes_to_disabled_state(self, mock_requests):
+        """When caller passes pre-wrapped envelope, id is extracted and routed to /disabled_state."""
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/subscription_events",
+            "https://api.chartmogul.com/v1/subscription_events/7654321/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=expected_sub_ev,
@@ -602,20 +605,16 @@ class SubscriptionEventTestCase(unittest.TestCase):
         config = Config("token")
         SubscriptionEvent.disable(config, data=caller_data).get()
 
-        body = mock_requests.last_request.json()
-        # disabled must be inside the envelope, not at top level
-        self.assertNotIn("disabled", body)
-        self.assertTrue(body["subscription_event"]["disabled"])
-        self.assertEqual(body["subscription_event"]["id"], 7654321)
+        self.assertEqual(mock_requests.last_request.json(), {"disabled": True})
         # caller's dict must not be mutated
         self.assertNotIn("disabled", caller_data["subscription_event"])
 
     @requests_mock.mock()
-    def test_enable_passthrough_envelope_sets_flag_inside(self, mock_requests):
-        """When caller passes pre-wrapped envelope, disabled=False must go inside it."""
+    def test_enable_passthrough_envelope_routes_to_disabled_state(self, mock_requests):
+        """When caller passes pre-wrapped envelope, id is extracted and routed to /disabled_state."""
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/subscription_events",
+            "https://api.chartmogul.com/v1/subscription_events/7654321/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=expected_sub_ev,
@@ -625,10 +624,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         config = Config("token")
         SubscriptionEvent.enable(config, data=caller_data).get()
 
-        body = mock_requests.last_request.json()
-        self.assertNotIn("disabled", body)
-        self.assertFalse(body["subscription_event"]["disabled"])
-        self.assertEqual(body["subscription_event"]["id"], 7654321)
+        self.assertEqual(mock_requests.last_request.json(), {"disabled": False})
         self.assertNotIn("disabled", caller_data["subscription_event"])
 
     @requests_mock.mock()
@@ -636,7 +632,7 @@ class SubscriptionEventTestCase(unittest.TestCase):
         """Flat-param disable must not mutate the caller's dict in-place."""
         mock_requests.register_uri(
             "PATCH",
-            "https://api.chartmogul.com/v1/subscription_events",
+            "https://api.chartmogul.com/v1/subscription_events/7654321/disabled_state",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=expected_sub_ev,
