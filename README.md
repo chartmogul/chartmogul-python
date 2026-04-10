@@ -491,8 +491,8 @@ See also [RELEASING.md](RELEASING.md) for the full release process and security 
 All releases of this library are published as [immutable GitHub Releases](https://github.com/chartmogul/chartmogul-python/releases) with protected tags and as a package on [PyPI](https://pypi.org/project/chartmogul/).
 
 To maximize supply chain security:
-- **Commit your `requirements.txt`** (or lock file) to version control
-- **Verify package checksums** with `pip install --require-hashes` for reproducible installs
+- **Commit your lock file** to version control — both `uv.lock` and `requirements.txt` record package hashes automatically
+- **Use [uv](https://docs.astral.sh/uv/)** for hash-verified, reproducible installs
 
 ## License
 
