@@ -22,6 +22,8 @@
 |
 <b><a href='#contributing'>Contributing</a></b>
 |
+<b><a href='#security'>Security</a></b>
+|
 <b><a href='#license'>License</a></b>
 </p>
 <hr>
@@ -479,6 +481,18 @@ Make sure that:
 5. release to production `twine upload dist/*`,
 
 [Read full HOWTO](http://peterdowns.com/posts/first-time-with-pypi.html)
+
+See also [RELEASING.md](RELEASING.md) for the full release process and security details.
+
+## Security
+
+### Verifying Releases
+
+All releases of this library are published as [immutable GitHub Releases](https://github.com/chartmogul/chartmogul-python/releases) with protected tags and as a package on [PyPI](https://pypi.org/project/chartmogul/).
+
+To maximize supply chain security:
+- **Commit your lock file** to version control — both `uv.lock` and `requirements.txt` record package hashes automatically
+- **Use [uv](https://docs.astral.sh/uv/)** for hash-verified, reproducible installs
 
 ## License
 
