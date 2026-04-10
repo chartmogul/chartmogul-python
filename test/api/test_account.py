@@ -139,3 +139,45 @@ class AccountIncludeTestCase(unittest.TestCase):
         self.assertTrue(isinstance(account, Account))
         self.assertEqual(account.churn_recognition, "immediate")
         self.assertFalse(hasattr(account, "churn_when_zero_mrr"))
+
+    @requests_mock.mock()
+    def test_retrieve_with_all_include_params(self, mock_requests):
+        allIncludeResponse = {
+            "id": "acct_a1b2c3d4",
+            "name": "Example Test Company",
+            "currency": "EUR",
+            "time_zone": "Europe/Berlin",
+            "week_start_on": "sunday",
+            "churn_recognition": "churn_at_time_of_cancelation",
+            "churn_when_zero_mrr": False,
+            "auto_churn_subscription": False,
+            "refund_handling": "refund_ignore",
+            "proximate_movement_reclassification": "one_hour_reclassification",
+        }
+
+        include = (
+            "churn_recognition,churn_when_zero_mrr,"
+            "auto_churn_subscription,refund_handling,"
+            "proximate_movement_reclassification"
+        )
+
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/account?include=" + include,
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=allIncludeResponse,
+        )
+
+        config = Config("token")
+        account = Account.retrieve(config, include=include).get()
+        self.assertTrue(isinstance(account, Account))
+        self.assertEqual(account.churn_recognition, "churn_at_time_of_cancelation")
+        self.assertEqual(account.churn_when_zero_mrr, False)
+        self.assertEqual(account.auto_churn_subscription, False)
+        self.assertEqual(account.refund_handling, "refund_ignore")
+        self.assertEqual(
+            account.proximate_movement_reclassification,
+            "one_hour_reclassification"
+        )
