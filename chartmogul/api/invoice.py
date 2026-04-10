@@ -27,6 +27,7 @@ class LineItem(DataObject):
         account_code = fields.String(allow_none=True)
         description = fields.String(allow_none=True)
         event_order = fields.Int(allow_none=True)
+        errors = fields.Dict(allow_none=True)
         disabled = fields.Boolean(allow_none=True)
         disabled_at = fields.DateTime(allow_none=True)
         disabled_by = fields.String(allow_none=True)

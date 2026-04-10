@@ -36,3 +36,7 @@ class CustomAttributes(Resource):
             return cls._customers(customers)
         else:
             return cls._schema.load(jsonObj)
+
+
+CustomAttributes.add_by_email = CustomAttributes._method(
+    "create", "post", "/customers/attributes/custom")
