@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource, DataObject
+from ..errors import ArgumentMissingError
 from .transaction import Transaction
 from collections import namedtuple
 
@@ -95,10 +96,15 @@ class Invoice(Resource):
 
     @classmethod
     def update_status(cls, config, **kwargs):
-        """Update invoice status. Supports both uuid and data_source_uuid + invoice_external_id."""
-        if "data_source_uuid" in kwargs and "invoice_external_id" in kwargs:
-            return cls._update_status_by_ext(config, **kwargs)
-        return cls._update_status_by_uuid(config, **kwargs)
+        """Update invoice status via PUT /data_sources/{ds_uuid}/invoices/{ext_id}/status.
+
+        Requires data_source_uuid and invoice_external_id.
+        """
+        if "data_source_uuid" not in kwargs or "invoice_external_id" not in kwargs:
+            raise ArgumentMissingError(
+                "Please pass 'data_source_uuid' and 'invoice_external_id' parameters"
+            )
+        return cls._update_status_by_ext(config, **kwargs)
 
 
 Invoice.all_any = Invoice._method("all", "get", "/invoices")
@@ -109,8 +115,6 @@ Invoice.destroy_all = Invoice._method(
     "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
-Invoice._update_status_by_uuid = Invoice._method(
-    "modify", "patch", "/invoices{/uuid}")
 Invoice._update_status_by_ext = Invoice._method(
     "update_status_by_ext", "put",
     "/data_sources{/data_source_uuid}/invoices{/invoice_external_id}/status")

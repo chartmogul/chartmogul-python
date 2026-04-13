@@ -629,66 +629,13 @@ class InvoiceTestCase(unittest.TestCase):
 class InvoiceEndpointsTestCase(unittest.TestCase):
     maxDiff = None
 
-    @requests_mock.mock()
-    def test_update_status(self, mock_requests):
-        updatedInvoice = dict(retrieveInvoiceExample)
-        updatedInvoice["disabled"] = False
-
-        mock_requests.register_uri(
-            "PATCH",
-            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
-            request_headers={"Authorization": "Basic dG9rZW46"},
-            headers={"Content-Type": "application/json"},
-            status_code=200,
-            json=updatedInvoice,
-        )
-
+    def test_update_status_missing_params_raises(self):
         config = Config("token")
-        result = Invoice.update_status(
-            config,
-            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
-            data={"disabled": False}
-        ).get()
-
-        self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(isinstance(result, Invoice))
-
-    @requests_mock.mock()
-    def test_update_status_verifies_request_body(self, mock_requests):
-        mock_requests.register_uri(
-            "PATCH",
-            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
-            request_headers={"Authorization": "Basic dG9rZW46"},
-            headers={"Content-Type": "application/json"},
-            status_code=200,
-            json=retrieveInvoiceExample,
-        )
-
-        config = Config("token")
-        Invoice.update_status(
-            config,
-            uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
-            data={"disabled": False}
-        ).get()
-
-        self.assertEqual(mock_requests.last_request.json(), {"disabled": False})
-
-    @requests_mock.mock()
-    def test_update_status_not_found(self, mock_requests):
-        mock_requests.register_uri(
-            "PATCH",
-            "https://api.chartmogul.com/v1/invoices/inv_nonexistent",
-            request_headers={"Authorization": "Basic dG9rZW46"},
-            headers={"Content-Type": "application/json"},
-            status_code=404,
-            json={"error": "Invoice not found"},
-        )
-
-        config = Config("token")
-        with self.assertRaises(APIError):
+        with self.assertRaises(ArgumentMissingError):
             Invoice.update_status(
-                config, uuid="inv_nonexistent", data={"disabled": False}
-            ).get()
+                config, uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+                data={"status": "voided"}
+            )
 
     @requests_mock.mock()
     def test_disable(self, mock_requests):
