@@ -77,7 +77,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_update_status_with_external_id(self, mock_requests):
         mock_requests.register_uri(
-            "PATCH",
+            "PUT",
             "https://api.chartmogul.com/v1/invoices"
             "?data_source_uuid=ds_123&external_id=inv_ext_1",
             request_headers={"Authorization": "Basic dG9rZW46"},
@@ -100,7 +100,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
     @requests_mock.mock()
     def test_update_status_with_handle_as_user_edit(self, mock_requests):
         mock_requests.register_uri(
-            "PATCH",
+            "PUT",
             "https://api.chartmogul.com/v1/invoices"
             "?data_source_uuid=ds_123&external_id=inv_ext_1&handle_as_user_edit=true",
             request_headers={"Authorization": "Basic dG9rZW46"},

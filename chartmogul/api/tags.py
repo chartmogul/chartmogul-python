@@ -36,3 +36,6 @@ class Tags(Resource):
             return cls._customers(customers)
         else:
             return cls._schema.load(jsonObj)
+
+
+Tags.add_by_email = Tags._method("create", "post", "/customers/attributes/tags")
