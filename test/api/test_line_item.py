@@ -40,7 +40,7 @@ class LineItemTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1)
         self.assertIn("data_source_uuid", mock_requests.last_request.qs)
         self.assertIn("external_id", mock_requests.last_request.qs)
-        self.assertTrue(isinstance(result, LineItem))
+        self.assertIsInstance(result, LineItem)
         self.assertEqual(result.uuid, "li_test")
 
     @requests_mock.mock()
@@ -67,7 +67,7 @@ class LineItemTestCase(unittest.TestCase):
 
         self.assertEqual(mock_requests.call_count, 1)
         self.assertEqual(mock_requests.last_request.json(), {"amount_in_cents": 10000})
-        self.assertTrue(isinstance(result, LineItem))
+        self.assertIsInstance(result, LineItem)
         self.assertEqual(result.amount_in_cents, 10000)
 
     @requests_mock.mock()
@@ -110,7 +110,7 @@ class LineItemTestCase(unittest.TestCase):
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(result is None)
+        self.assertIsNone(result)
 
     @requests_mock.mock()
     def test_disable(self, mock_requests):
@@ -136,7 +136,7 @@ class LineItemTestCase(unittest.TestCase):
 
         self.assertEqual(mock_requests.call_count, 1)
         self.assertEqual(mock_requests.last_request.json(), {"disabled": True})
-        self.assertTrue(isinstance(result, LineItem))
+        self.assertIsInstance(result, LineItem)
         self.assertTrue(result.disabled)
 
     @requests_mock.mock()
@@ -153,7 +153,7 @@ class LineItemTestCase(unittest.TestCase):
         result = LineItem.retrieve(config, uuid="li_test").get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(isinstance(result, LineItem))
+        self.assertIsInstance(result, LineItem)
         self.assertEqual(result.uuid, "li_test")
 
     @requests_mock.mock()
@@ -175,7 +175,7 @@ class LineItemTestCase(unittest.TestCase):
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(isinstance(result, LineItem))
+        self.assertIsInstance(result, LineItem)
         self.assertEqual(result.amount_in_cents, 10000)
 
     @requests_mock.mock()
@@ -191,7 +191,7 @@ class LineItemTestCase(unittest.TestCase):
         result = LineItem.destroy(config, uuid="li_test").get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(result is None)
+        self.assertIsNone(result)
 
     @requests_mock.mock()
     def test_create(self, mock_requests):
@@ -211,7 +211,7 @@ class LineItemTestCase(unittest.TestCase):
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(isinstance(result, LineItem))
+        self.assertIsInstance(result, LineItem)
 
     @requests_mock.mock()
     def test_disable_by_uuid(self, mock_requests):
@@ -232,7 +232,7 @@ class LineItemTestCase(unittest.TestCase):
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(isinstance(result, LineItem))
+        self.assertIsInstance(result, LineItem)
         self.assertTrue(result.disabled)
 
     @requests_mock.mock()

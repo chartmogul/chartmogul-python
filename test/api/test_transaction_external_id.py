@@ -32,7 +32,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         result = Transaction.retrieve(config, uuid="tr_test").get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(isinstance(result, Transaction))
+        self.assertIsInstance(result, Transaction)
         self.assertEqual(result.uuid, "tr_test")
 
     @requests_mock.mock()
@@ -54,7 +54,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(isinstance(result, Transaction))
+        self.assertIsInstance(result, Transaction)
 
     @requests_mock.mock()
     def test_destroy_by_uuid(self, mock_requests):
@@ -69,7 +69,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         result = Transaction.destroy(config, uuid="tr_test").get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(result is None)
+        self.assertIsNone(result)
 
     @requests_mock.mock()
     def test_retrieve_with_external_id(self, mock_requests):
@@ -90,7 +90,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1)
         self.assertIn("data_source_uuid", mock_requests.last_request.qs)
         self.assertIn("external_id", mock_requests.last_request.qs)
-        self.assertTrue(isinstance(result, Transaction))
+        self.assertIsInstance(result, Transaction)
         self.assertEqual(result.uuid, "tr_test")
 
     @requests_mock.mock()
@@ -117,7 +117,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
 
         self.assertEqual(mock_requests.call_count, 1)
         self.assertEqual(mock_requests.last_request.json(), {"amount_in_cents": 10000})
-        self.assertTrue(isinstance(result, Transaction))
+        self.assertIsInstance(result, Transaction)
 
     @requests_mock.mock()
     def test_modify_with_handle_as_user_edit(self, mock_requests):
@@ -159,7 +159,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(result is None)
+        self.assertIsNone(result)
 
     @requests_mock.mock()
     def test_disable(self, mock_requests):
@@ -185,7 +185,7 @@ class TransactionExternalIdTestCase(unittest.TestCase):
 
         self.assertEqual(mock_requests.call_count, 1)
         self.assertEqual(mock_requests.last_request.json(), {"disabled": True})
-        self.assertTrue(isinstance(result, Transaction))
+        self.assertIsInstance(result, Transaction)
         self.assertTrue(result.disabled)
 
     @requests_mock.mock()
@@ -225,5 +225,5 @@ class TransactionExternalIdTestCase(unittest.TestCase):
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertTrue(isinstance(result, Transaction))
+        self.assertIsInstance(result, Transaction)
         self.assertTrue(result.disabled)

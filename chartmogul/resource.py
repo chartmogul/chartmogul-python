@@ -219,7 +219,7 @@ class Resource(DataObject):
             if (ext_id_path is not None
                     and "data_source_uuid" in kwargs
                     and "external_id" in kwargs):
-                query_params = _build_ext_id_params(kwargs)
+                query_params = _build_ext_id_params(cls, kwargs)
                 # Preserve path suffix after {/uuid}, e.g.
                 # "/line_items{/uuid}/disabled_state" → "/line_items/disabled_state"
                 suffix = ""
@@ -233,8 +233,8 @@ class Resource(DataObject):
                 if method == "retrieve" and hasattr(cls, '_root_key'):
                     root_key = cls._root_key
                     return result.then(
-                        lambda r: getattr(r, root_key, [None])[0]
-                        if getattr(r, root_key, []) else None)
+                        lambda r, _key=root_key: getattr(r, _key, [None])[0]
+                        if getattr(r, _key, []) else None)
                 return result
 
             cls._validate_arguments(method, kwargs)
@@ -268,13 +268,15 @@ for method, http_verb in MAPPINGS.items():
     _add_method(Resource, method, http_verb)
 
 
-def _build_ext_id_params(kwargs):
-    """Extract data_source_uuid, external_id, and optional handle_as_user_edit
-    from kwargs into a query params dict for external-id-based operations."""
+def _build_ext_id_params(cls, kwargs):
+    """Extract data_source_uuid, external_id, and any recognised bool query
+    params from kwargs into a query params dict for external-id-based
+    operations."""
     params = {
         "data_source_uuid": kwargs["data_source_uuid"],
         "external_id": kwargs["external_id"],
     }
-    if kwargs.get("handle_as_user_edit") is not None:
-        params["handle_as_user_edit"] = kwargs["handle_as_user_edit"]
+    for key in getattr(cls, '_bool_query_params', []):
+        if key in kwargs:
+            params[key] = kwargs[key]
     return params
