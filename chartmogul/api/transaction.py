@@ -9,7 +9,11 @@ class Transaction(Resource):
 
     _path = "/import/invoices{/uuid}/transactions"
     _ext_id_path = "/transactions"
-    _bool_query_params = ['handle_as_user_edit']
+    _bool_query_params = [
+        'include_edit_histories',
+        'with_disabled',
+        'handle_as_user_edit',
+    ]
 
     class _Schema(Schema):
         uuid = fields.String()

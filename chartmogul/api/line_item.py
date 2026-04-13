@@ -10,7 +10,11 @@ class LineItem(Resource):
 
     _path = "/line_items"
     _ext_id_path = "/line_items"
-    _bool_query_params = ['handle_as_user_edit']
+    _bool_query_params = [
+        'include_edit_histories',
+        'with_disabled',
+        'handle_as_user_edit',
+    ]
 
     class _Schema(Schema):
         uuid = fields.String()
