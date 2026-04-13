@@ -9,6 +9,7 @@ from requests.exceptions import HTTPError
 from chartmogul import Config
 from chartmogul import APIError
 from chartmogul import Invoice
+from chartmogul import ArgumentMissingError
 
 
 requestData = {
@@ -245,6 +246,7 @@ retrieveInvoiceExample = {
     "date": "2015-11-01T00:00:00.000Z",
     "due_date": "2015-11-15T00:00:00.000Z",
     "currency": "USD",
+    "status": "paid",
     "disabled": True,
     "disabled_at": "2024-01-15T10:30:00.000Z",
     "disabled_by": "user@example.com",
@@ -482,6 +484,7 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result, Invoice))
 
         self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
+        self.assertEqual(result.status, "paid")
 
     @requests_mock.mock()
     def test_retrieve_invoice_with_validation_type(self, mock_requests):
@@ -621,6 +624,99 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertEqual(qs["with_disabled"], ["true"])
         self.assertTrue(isinstance(result, Invoice._many))
         self.assertEqual(len(result.invoices), 1)
+
+
+class InvoiceEndpointsTestCase(unittest.TestCase):
+    maxDiff = None
+
+    def test_update_status_missing_params_raises(self):
+        config = Config("token")
+        with self.assertRaises(ArgumentMissingError):
+            Invoice.update_status(
+                config, uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+                data={"status": "voided"}
+            )
+
+    @requests_mock.mock()
+    def test_disable(self, mock_requests):
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/invoices/inv_22910fc6-c931-48e7-ac12-90d2cb5f0059/disabled_state",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json=retrieveInvoiceExample,
+        )
+
+        config = Config("token")
+        result = Invoice.disable(
+            config, uuid="inv_22910fc6-c931-48e7-ac12-90d2cb5f0059",
+            data={"disabled": True}
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertTrue(isinstance(result, Invoice))
+        self.assertTrue(result.disabled)
+
+    @requests_mock.mock()
+    def test_disable_not_found(self, mock_requests):
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/invoices/inv_nonexistent/disabled_state",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=404,
+            json={"error": "Invoice not found"},
+        )
+
+        config = Config("token")
+        with self.assertRaises(APIError):
+            Invoice.disable(config, uuid="inv_nonexistent", data={"disabled": True}).get()
+
+    def test_disable_missing_uuid_raises(self):
+        config = Config("token")
+        with self.assertRaises(ArgumentMissingError):
+            Invoice.disable(config)
+
+    @requests_mock.mock()
+    def test_update_status_by_ext_id(self, mock_requests):
+        mock_requests.register_uri(
+            "PUT",
+            "https://api.chartmogul.com/v1/data_sources/ds_123/invoices/inv_ext_1/status",
+            request_headers={"Authorization": "Basic dG9rZW46"},
+            headers={"Content-Type": "application/json"},
+            status_code=200,
+            json={
+                "message": "Invoice updated",
+                "invoice": {
+                    "uuid": "inv_test",
+                    "external_id": "inv_ext_1",
+                    "date": "2015-11-01T00:00:00.000Z",
+                    "due_date": "2015-11-15T00:00:00.000Z",
+                    "currency": "USD",
+                    "status": "voided",
+                    "line_items": [],
+                    "transactions": [],
+                },
+            },
+        )
+
+        config = Config("token")
+        result = Invoice.update_status(
+            config,
+            data_source_uuid="ds_123",
+            external_id="inv_ext_1",
+            data={"status": "voided"},
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1)
+        self.assertEqual(
+            mock_requests.last_request.json(), {"status": "voided"}
+        )
+
+
+class InvoiceErrorsTestCase(unittest.TestCase):
+    """Tests for PIP-304: errors field on LineItem and Transaction."""
 
     def _make_errors_response(self, li_errors=None, tx_errors=None, include_errors=True):
         """Build a minimal invoice response with configurable errors fields."""

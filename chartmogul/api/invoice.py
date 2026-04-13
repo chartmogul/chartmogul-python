@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE
 from ..resource import Resource, DataObject
+from ..errors import ArgumentMissingError
 from .transaction import Transaction
 from collections import namedtuple
 
@@ -28,6 +29,9 @@ class LineItem(DataObject):
         description = fields.String(allow_none=True)
         event_order = fields.Int(allow_none=True)
         errors = fields.Dict(allow_none=True)
+        disabled = fields.Boolean(allow_none=True)
+        disabled_at = fields.DateTime(allow_none=True)
+        disabled_by = fields.String(allow_none=True)
 
         @post_load
         def make(self, data, **kwargs):
@@ -60,6 +64,7 @@ class Invoice(Resource):
         data_source_uuid = fields.String(allow_none=True)
 
         currency = fields.String()
+        status = fields.String(allow_none=True)
         date = fields.DateTime()
         due_date = fields.DateTime(allow_none=True)
 
@@ -89,6 +94,18 @@ class Invoice(Resource):
         else:
             return cls.all_any(config, **kwargs)
 
+    @classmethod
+    def update_status(cls, config, **kwargs):
+        """Update invoice status via PUT /data_sources/{ds_uuid}/invoices/{ext_id}/status.
+
+        Requires data_source_uuid and external_id.
+        """
+        if "data_source_uuid" not in kwargs or "external_id" not in kwargs:
+            raise ArgumentMissingError(
+                "Please pass 'data_source_uuid' and 'external_id' parameters"
+            )
+        return cls._update_status_by_ext(config, **kwargs)
+
 
 Invoice.all_any = Invoice._method("all", "get", "/invoices")
 Invoice.destroy = Invoice._method("destroy", "delete", "/invoices{/uuid}")
@@ -98,3 +115,7 @@ Invoice.destroy_all = Invoice._method(
     "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
+Invoice._update_status_by_ext = Invoice._method(
+    "update_status_by_ext", "put",
+    "/data_sources{/data_source_uuid}/invoices{/external_id}/status")
+Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disabled_state")
