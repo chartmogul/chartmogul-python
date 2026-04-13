@@ -98,11 +98,11 @@ class Invoice(Resource):
     def update_status(cls, config, **kwargs):
         """Update invoice status via PUT /data_sources/{ds_uuid}/invoices/{ext_id}/status.
 
-        Requires data_source_uuid and invoice_external_id.
+        Requires data_source_uuid and external_id.
         """
-        if "data_source_uuid" not in kwargs or "invoice_external_id" not in kwargs:
+        if "data_source_uuid" not in kwargs or "external_id" not in kwargs:
             raise ArgumentMissingError(
-                "Please pass 'data_source_uuid' and 'invoice_external_id' parameters"
+                "Please pass 'data_source_uuid' and 'external_id' parameters"
             )
         return cls._update_status_by_ext(config, **kwargs)
 
@@ -117,5 +117,5 @@ Invoice.destroy_all = Invoice._method(
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
 Invoice._update_status_by_ext = Invoice._method(
     "update_status_by_ext", "put",
-    "/data_sources{/data_source_uuid}/invoices{/invoice_external_id}/status")
+    "/data_sources{/data_source_uuid}/invoices{/external_id}/status")
 Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disabled_state")

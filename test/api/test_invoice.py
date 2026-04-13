@@ -705,7 +705,7 @@ class InvoiceEndpointsTestCase(unittest.TestCase):
         result = Invoice.update_status(
             config,
             data_source_uuid="ds_123",
-            invoice_external_id="inv_ext_1",
+            external_id="inv_ext_1",
             data={"status": "voided"},
         ).get()
 
