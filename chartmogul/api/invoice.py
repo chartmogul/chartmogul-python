@@ -98,15 +98,22 @@ class Invoice(Resource):
 
     @classmethod
     def update_status(cls, config, **kwargs):
-        """Update invoice status.
+        """Update invoice status via PUT /data_sources/{ds_uuid}/invoices/{ext_id}/status.
 
-        Requires data_source_uuid and external_id (uses query-param dispatch).
+        Requires data_source_uuid and external_id.
         """
         if "data_source_uuid" not in kwargs or "external_id" not in kwargs:
             raise ArgumentMissingError(
                 "Please pass 'data_source_uuid' and 'external_id' parameters"
             )
-        return cls._update_status_impl(config, **kwargs)
+        path = "/data_sources/{}/invoices/{}/status".format(
+            kwargs["data_source_uuid"], kwargs["external_id"])
+        query_params = None
+        if kwargs.get("handle_as_user_edit") is not None:
+            query_params = {"handle_as_user_edit": kwargs["handle_as_user_edit"]}
+        return cls._request(
+            config, "update_status", "put", path,
+            data=kwargs.get("data"), query_params=query_params)
 
 
 Invoice.all_any = Invoice._method("all", "get", "/invoices")
@@ -117,6 +124,4 @@ Invoice.destroy_all = Invoice._method(
     "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
-Invoice._update_status_impl = Invoice._method(
-    "modify", "put", "/invoices")
 Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disabled_state")

@@ -103,8 +103,7 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
     def test_update_status_with_external_id(self, mock_requests):
         mock_requests.register_uri(
             "PUT",
-            "https://api.chartmogul.com/v1/invoices"
-            "?data_source_uuid=ds_123&external_id=inv_ext_1",
+            "https://api.chartmogul.com/v1/data_sources/ds_123/invoices/inv_ext_1/status",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=single_invoice_response,
@@ -119,15 +118,16 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1)
-        self.assertIn("data_source_uuid", mock_requests.last_request.qs)
+        self.assertIn("/data_sources/ds_123/", mock_requests.last_request.path)
+        self.assertIn("/invoices/inv_ext_1/", mock_requests.last_request.path)
         self.assertEqual(mock_requests.last_request.json(), {"currency": "EUR"})
 
     @requests_mock.mock()
     def test_update_status_with_handle_as_user_edit(self, mock_requests):
         mock_requests.register_uri(
             "PUT",
-            "https://api.chartmogul.com/v1/invoices"
-            "?data_source_uuid=ds_123&external_id=inv_ext_1&handle_as_user_edit=true",
+            "https://api.chartmogul.com/v1/data_sources/ds_123/invoices/inv_ext_1/status"
+            "?handle_as_user_edit=true",
             request_headers={"Authorization": "Basic dG9rZW46"},
             status_code=200,
             json=single_invoice_response,

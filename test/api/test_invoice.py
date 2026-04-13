@@ -682,7 +682,7 @@ class InvoiceEndpointsTestCase(unittest.TestCase):
     def test_update_status_by_ext_id(self, mock_requests):
         mock_requests.register_uri(
             "PUT",
-            "https://api.chartmogul.com/v1/invoices?data_source_uuid=ds_123&external_id=inv_ext_1",
+            "https://api.chartmogul.com/v1/data_sources/ds_123/invoices/inv_ext_1/status",
             request_headers={"Authorization": "Basic dG9rZW46"},
             headers={"Content-Type": "application/json"},
             status_code=200,
