@@ -63,6 +63,7 @@ class Invoice(Resource):
         data_source_uuid = fields.String(allow_none=True)
 
         currency = fields.String()
+        status = fields.String(allow_none=True)
         date = fields.DateTime()
         due_date = fields.DateTime(allow_none=True)
 

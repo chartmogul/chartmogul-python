@@ -246,6 +246,7 @@ retrieveInvoiceExample = {
     "date": "2015-11-01T00:00:00.000Z",
     "due_date": "2015-11-15T00:00:00.000Z",
     "currency": "USD",
+    "status": "paid",
     "disabled": True,
     "disabled_at": "2024-01-15T10:30:00.000Z",
     "disabled_by": "user@example.com",
@@ -483,6 +484,7 @@ class InvoiceTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result, Invoice))
 
         self.assertEqual(result.uuid, "inv_22910fc6-c931-48e7-ac12-90d2cb5f0059")
+        self.assertEqual(result.status, "paid")
 
     @requests_mock.mock()
     def test_retrieve_invoice_with_validation_type(self, mock_requests):
