@@ -7,7 +7,7 @@
 <p align='center'><code>chartmogul-python</code> provides convenient Python bindings for <a href='https://dev.chartmogul.com'>ChartMogul's API</a>.</p>
 <p align='center'>
   <a href="https://badge.fury.io/py/chartmogul"><img src="https://badge.fury.io/py/chartmogul.svg" alt="PyPI version" height="18"></a>
-  <a href='https://travis-ci.org/chartmogul/chartmogul-python'><img src='https://travis-ci.org/chartmogul/chartmogul-python.svg?branch=main' alt='Build Status'/></a>
+  <a href='https://github.com/chartmogul/chartmogul-python/actions/workflows/test.yml'><img src='https://github.com/chartmogul/chartmogul-python/actions/workflows/test.yml/badge.svg?branch=main' alt='Build Status'/></a>
 </p>
 <hr>
 
@@ -472,17 +472,7 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/chartm
 
 ## Releasing
 
-Make sure that:
-1. you have prepared `~/.pypirc` with credentials,
-2. a higher version has been set in `chartmogul/__init__.py`,
-3. Run tests `python3 -m unittest`
-4. Build package `python3 setup.py sdist`
-4. release works `twine upload --repository-url https://test.pypi.org/legacy/ dist/*`,
-5. release to production `twine upload dist/*`,
-
-[Read full HOWTO](http://peterdowns.com/posts/first-time-with-pypi.html)
-
-See also [RELEASING.md](RELEASING.md) for the full release process and security details.
+See [RELEASING.md](RELEASING.md) for the full release process and security details.
 
 ## Security
 
