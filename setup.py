@@ -1,16 +1,10 @@
 #!/usr/bin/env python
-import os
 import re
-import sys
 
 from codecs import open
 from setuptools import setup
 
 github_url = "https://github.com/chartmogul/chartmogul-python"
-
-if sys.argv[-1] == "publish":
-    os.system("python setup.py sdist upload")
-    sys.exit()
 
 requires = [
     "requests>=2.31.0",
