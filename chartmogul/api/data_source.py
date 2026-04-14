@@ -53,9 +53,3 @@ class DataSource(Resource):
             return DataSource(**data)
 
     _schema = _Schema(unknown=EXCLUDE)
-
-
-DataSource.import_json = DataSource._method(
-    "create", "post", "/data_sources{/uuid}/json_imports")
-DataSource.import_status = DataSource._method(
-    "retrieve", "get", "/data_sources{/uuid}/json_imports{/import_id}")
