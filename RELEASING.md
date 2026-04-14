@@ -58,6 +58,7 @@ These will be automatically marked as pre-releases on GitHub.
 
 - Publishing uses [Trusted Publishers (OIDC)](https://docs.pypi.org/trusted-publishers/) — no API tokens or secrets are stored in the repository
 - Authentication is based on GitHub's OIDC identity token, scoped to this specific repository, workflow file, and environment
+- Each release includes [build attestations](https://docs.pypi.org/attestations/) (SLSA provenance), allowing users to cryptographically verify that the package was built from this repository
 - [PyPI](https://pypi.org) enforces version immutability: once a package version is published, it cannot be overwritten
 - Users can verify package integrity using pip's hash-checking mode (`--require-hashes`)
 - Pinning versions in `requirements.txt` with hashes ensures reproducible installs
