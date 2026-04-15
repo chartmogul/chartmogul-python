@@ -15,6 +15,7 @@ from .api.customer_note import CustomerNote
 from .api.contact import Contact
 from .api.data_source import DataSource
 from .api.invoice import Invoice
+from .api.line_item import LineItem
 from .api.metrics import Metrics
 from .api.opportunity import Opportunity
 from .api.task import Task

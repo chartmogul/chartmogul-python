@@ -44,10 +44,12 @@ class Invoice(Resource):
     """
 
     _path = "/import/customers{/uuid}/invoices"
+    _ext_id_path = "/invoices"
     _root_key = "invoices"
     _bool_query_params = [
         'include_edit_histories',
-        'with_disabled'
+        'with_disabled',
+        'handle_as_user_edit',
     ]
     _many = namedtuple(
         "Invoices",
@@ -104,7 +106,14 @@ class Invoice(Resource):
             raise ArgumentMissingError(
                 "Please pass 'data_source_uuid' and 'external_id' parameters"
             )
-        return cls._update_status_by_ext(config, **kwargs)
+        path = "/data_sources/{}/invoices/{}/status".format(
+            kwargs["data_source_uuid"], kwargs["external_id"])
+        query_params = None
+        if kwargs.get("handle_as_user_edit") is not None:
+            query_params = {"handle_as_user_edit": kwargs["handle_as_user_edit"]}
+        return cls._request(
+            config, "update_status", "put", path,
+            data=kwargs.get("data"), query_params=query_params)
 
 
 Invoice.all_any = Invoice._method("all", "get", "/invoices")
@@ -115,7 +124,4 @@ Invoice.destroy_all = Invoice._method(
     "/data_sources{/data_source_uuid}/customers{/customer_uuid}/invoices",
 )
 Invoice.retrieve = Invoice._method("retrieve", "get", "/invoices{/uuid}")
-Invoice._update_status_by_ext = Invoice._method(
-    "update_status_by_ext", "put",
-    "/data_sources{/data_source_uuid}/invoices{/external_id}/status")
 Invoice.disable = Invoice._method("disable", "patch", "/invoices{/uuid}/disabled_state")

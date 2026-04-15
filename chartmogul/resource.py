@@ -133,12 +133,12 @@ class Resource(DataObject):
         return params
 
     @classmethod
-    def _request(cls, config, method, http_verb, path, data=None, **kwargs):
+    def _request(cls, config, method, http_verb, path, data=None, query_params=None, **kwargs):
         if http_verb == "get":
-            params = cls._preProcessParams(kwargs)
+            params = cls._preProcessParams(query_params if query_params is not None else kwargs)
             data = None
         else:
-            params = None
+            params = cls._preProcessParams(query_params) if query_params is not None else None
             if data is not None:
                 data = dumps(data, default=json_serial)
 
@@ -214,6 +214,29 @@ class Resource(DataObject):
             if pathTemp is None:
                 pathTemp = cls._path
 
+            # Dispatch to external_id query-param path when supported.
+            ext_id_path = getattr(cls, '_ext_id_path', None)
+            if (ext_id_path is not None
+                    and kwargs.get("data_source_uuid")
+                    and kwargs.get("external_id")):
+                query_params = _build_ext_id_params(kwargs)
+                # Preserve path suffix after {/uuid}, e.g.
+                # "/line_items{/uuid}/disabled_state" → "/line_items/disabled_state"
+                suffix = ""
+                if pathTemp and "{/uuid}" in pathTemp:
+                    suffix = pathTemp.split("{/uuid}", 1)[1]
+                result = cls._request(
+                    config, method, http_verb, ext_id_path + suffix,
+                    data=kwargs.get("data"), query_params=query_params)
+                # For retrieve, unwrap the first item from the list response
+                # so the return type matches uuid-based retrieve.
+                if method == "retrieve" and hasattr(cls, '_root_key'):
+                    root_key = cls._root_key
+                    return result.then(
+                        lambda r, _key=root_key: getattr(r, _key, [None])[0]
+                        if getattr(r, _key, []) else None)
+                return result
+
             cls._validate_arguments(method, kwargs)
 
             pathTemp = Resource._expandPath(pathTemp, kwargs)
@@ -243,3 +266,10 @@ def _add_method(cls, method, http_verb, path=None):
 
 for method, http_verb in MAPPINGS.items():
     _add_method(Resource, method, http_verb)
+
+
+def _build_ext_id_params(kwargs):
+    """Build query params dict for external-id-based operations.
+
+    Forwards all kwargs except 'data' as query parameters."""
+    return {k: v for k, v in kwargs.items() if k != "data"}
