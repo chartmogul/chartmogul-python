@@ -2,7 +2,7 @@ import unittest
 
 import requests_mock
 
-from chartmogul import Invoice, Config, APIError
+from chartmogul import Invoice, Config, APIError, ArgumentMissingError
 
 
 invoice_response = {
@@ -165,6 +165,22 @@ class InvoiceExternalIdTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1)
         self.assertIn("data_source_uuid", mock_requests.last_request.qs)
         self.assertIsNone(result)
+
+    def test_retrieve_with_empty_external_id_falls_through(self):
+        """Empty external_id should not trigger ext_id dispatch."""
+        config = Config("token")
+        with self.assertRaises(ArgumentMissingError):
+            Invoice.retrieve(
+                config, data_source_uuid="ds_123", external_id=""
+            )
+
+    def test_retrieve_with_empty_data_source_uuid_falls_through(self):
+        """Empty data_source_uuid should not trigger ext_id dispatch."""
+        config = Config("token")
+        with self.assertRaises(ArgumentMissingError):
+            Invoice.retrieve(
+                config, data_source_uuid="", external_id="inv_ext_1"
+            )
 
     @requests_mock.mock()
     def test_disable(self, mock_requests):

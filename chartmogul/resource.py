@@ -217,8 +217,8 @@ class Resource(DataObject):
             # Dispatch to external_id query-param path when supported.
             ext_id_path = getattr(cls, '_ext_id_path', None)
             if (ext_id_path is not None
-                    and "data_source_uuid" in kwargs
-                    and "external_id" in kwargs):
+                    and kwargs.get("data_source_uuid")
+                    and kwargs.get("external_id")):
                 query_params = _build_ext_id_params(kwargs)
                 # Preserve path suffix after {/uuid}, e.g.
                 # "/line_items{/uuid}/disabled_state" → "/line_items/disabled_state"
