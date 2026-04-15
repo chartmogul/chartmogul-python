@@ -220,7 +220,7 @@ class JsonImportTestCase(unittest.TestCase):
         config = Config("token")
         result = JsonImport.create(
             config,
-            uuid="ds_45d064ca-fcf8-11f0-903f-33618f80d753",
+            data_source_uuid="ds_45d064ca-fcf8-11f0-903f-33618f80d753",
             data=importRequestData,
         ).get()
 
@@ -256,8 +256,8 @@ class JsonImportTestCase(unittest.TestCase):
         config = Config("token")
         result = JsonImport.retrieve(
             config,
-            uuid="ds_45d064ca-fcf8-11f0-903f-33618f80d753",
-            import_id="4815d987-abcd-11ee-a987-978df45c5114",
+            data_source_uuid="ds_45d064ca-fcf8-11f0-903f-33618f80d753",
+            id="4815d987-abcd-11ee-a987-978df45c5114",
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1)
