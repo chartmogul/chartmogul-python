@@ -91,3 +91,16 @@ ENV/
 .ropeproject
 
 /.idea
+
+# AI tools - ephemeral data (shared config is tracked)
+.claude/plans/
+.claude/todos/
+.claude/settings.local.json
+.claude/worktrees/
+.cursor/
+.aider*
+.codeium/
+.copilot/
+.windsurf/
+.cline/
+.codex/
