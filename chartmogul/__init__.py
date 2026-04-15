@@ -29,6 +29,7 @@ from .api.transaction import Transaction
 from .api.account import Account
 from .api.activity import Activity
 from .api.activities_export import ActivitiesExport
+from .api.json_import import JsonImport
 
 from .version import __version__
 
