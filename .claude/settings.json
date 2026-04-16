@@ -6,6 +6,7 @@
       "Bash(python -m pytest:*)",
       "Bash(flake8:*)",
       "Bash(coverage:*)",
+      "Bash(python setup.py sdist:*)",
       "Bash(python --version)",
       "Bash(git status:*)",
       "Bash(git log:*)",
@@ -40,7 +41,7 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
