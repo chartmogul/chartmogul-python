@@ -39,7 +39,7 @@ Nested objects that don't have their own API endpoint extend `DataObject` instea
 
 ## Testing
 
-Stack: unittest + requests_mock. Tests live in `test/api/test_<resource>.py`. CI runs on GitHub Actions with Python 3.10-3.14.
+Stack: unittest + requests_mock. Tests live in `test/api/test_<resource>.py`.
 
 Test pattern:
 1. Define fixture dicts at module level matching API JSON responses

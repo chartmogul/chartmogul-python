@@ -92,18 +92,12 @@ ENV/
 
 /.idea
 
-# AI agent local/ephemeral data
-.claude/plans/
-.claude/memory/
-.claude/worktrees/
-.claude/scheduled-tasks/
-.claude/settings.local.json
-.claude/todos/
-.claude/credentials.json
+# AI agent local/ephemeral data (shared config is tracked via negation)
+.claude/*
+!.claude/hooks/
+!.claude/settings.json
 CLAUDE.local.md
-.cursor/chat/
-.cursor/composer/
-.cursor/mcp.json
+.cursor/
 .windsurf/
 .cline/
 .continue/

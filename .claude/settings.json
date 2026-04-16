@@ -21,8 +21,7 @@
       "Bash(git pull:*)",
       "Bash(git cherry-pick:*)",
       "Bash(git reset:*)",
-      "Bash(gh pr:*)",
-      "Bash(gh api:*)"
+      "Bash(gh pr:*)"
     ],
     "deny": [
       "Read(./.env*)"
