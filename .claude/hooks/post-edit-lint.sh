@@ -8,7 +8,8 @@ FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 
 # Only track .py files, skip vendored/generated paths
 if [[ "$FILE" == *.py ]] && [[ "$FILE" != *__pycache__* ]] && [[ "$FILE" != *.egg-info* ]] && [[ "$FILE" != */dist/* ]] && [[ "$FILE" != */build/* ]]; then
-  TRACKER="/tmp/claude-edited-py-files-${CLAUDE_HOOK_SESSION_ID:-default}"
+  TRACKER="$CLAUDE_PROJECT_DIR/.claude/tmp/edited-py-files-${CLAUDE_HOOK_SESSION_ID:-default}"
+  mkdir -p "$CLAUDE_PROJECT_DIR/.claude/tmp"
   echo "$FILE" >> "$TRACKER"
   sort -u "$TRACKER" -o "$TRACKER"
 fi

@@ -3,7 +3,7 @@
 # Python has no autoformatter configured, so lint + tests only.
 cd "$CLAUDE_PROJECT_DIR" || exit 0
 
-TRACKER="/tmp/claude-edited-py-files-${CLAUDE_HOOK_SESSION_ID:-default}"
+TRACKER="$CLAUDE_PROJECT_DIR/.claude/tmp/edited-py-files-${CLAUDE_HOOK_SESSION_ID:-default}"
 
 ctx=""
 

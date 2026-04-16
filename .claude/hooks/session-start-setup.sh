@@ -1,11 +1,13 @@
 #!/bin/bash
-# SessionStart: generate session ID, detect repo state. Must be <1s, no network.
+# SessionStart: persist session ID, detect repo state. Must be <1s, no network.
 cd "$CLAUDE_PROJECT_DIR" || exit 0
 
-# Generate a stable session ID and persist via CLAUDE_ENV_FILE
-# so the edit tracker and stop hook share the same file path
-SESSION_ID="$(date +%s)-$$"
-if [[ -n "$CLAUDE_ENV_FILE" ]]; then
+INPUT=$(cat)
+SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // empty')
+
+# Persist session ID via CLAUDE_ENV_FILE so the edit tracker
+# and stop hook share the same file path
+if [[ -n "$CLAUDE_ENV_FILE" ]] && [[ -n "$SESSION_ID" ]]; then
   echo "export CLAUDE_HOOK_SESSION_ID='$SESSION_ID'" >> "$CLAUDE_ENV_FILE"
 fi
 
