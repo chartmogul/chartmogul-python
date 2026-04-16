@@ -97,7 +97,9 @@ ENV/
 !.claude/hooks/
 !.claude/settings.json
 CLAUDE.local.md
-.cursor/
+.cursor/chat/
+.cursor/composer/
+.cursor/mcp.json
 .windsurf/
 .cline/
 .continue/
