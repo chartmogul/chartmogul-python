@@ -34,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "./.claude/hooks/session-start.sh"
+            "command": "./.claude/hooks/session-start-setup.sh"
           }
         ]
       }

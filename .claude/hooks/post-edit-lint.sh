@@ -1,20 +1,16 @@
 #!/bin/bash
-# PostToolUse (Edit|Write): record touched file for batch processing in Stop.
+# PostToolUse (Edit|Write|MultiEdit): record touched file for batch processing in Stop.
 # Must be <50ms. No linting, no formatting, no git calls.
 cd "$CLAUDE_PROJECT_DIR" || exit 0
 
 INPUT=$(cat)
 FILE=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 
-[[ -z "$FILE" ]] && exit 0
-[[ "$FILE" != *.py ]] && exit 0
-
-# Skip generated/vendored paths
-case "$FILE" in
-  *__pycache__*|*.egg-info*|*/dist/*|*/build/*|*/node_modules/*|*/vendor/*|*/coverage/*) exit 0 ;;
-esac
-
-# Append to tracker (dedup at read time)
-echo "$FILE" >> /tmp/claude-py-touched-files 2>/dev/null || true
+# Only track .py files, skip vendored/generated paths
+if [[ "$FILE" == *.py ]] && [[ "$FILE" != *__pycache__* ]] && [[ "$FILE" != *.egg-info* ]] && [[ "$FILE" != */dist/* ]] && [[ "$FILE" != */build/* ]]; then
+  TRACKER="/tmp/claude-edited-py-files-${CLAUDE_HOOK_SESSION_ID:-default}"
+  echo "$FILE" >> "$TRACKER"
+  sort -u "$TRACKER" -o "$TRACKER"
+fi
 
 exit 0

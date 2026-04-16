@@ -92,15 +92,23 @@ ENV/
 
 /.idea
 
-# AI tools - ephemeral data (shared config is tracked)
+# AI agent local/ephemeral data
 .claude/plans/
-.claude/todos/
-.claude/settings.local.json
+.claude/memory/
 .claude/worktrees/
-.cursor/
-.aider*
-.codeium/
-.copilot/
+.claude/scheduled-tasks/
+.claude/settings.local.json
+.claude/todos/
+.claude/credentials.json
+CLAUDE.local.md
+.cursor/chat/
+.cursor/composer/
+.cursor/mcp.json
 .windsurf/
 .cline/
+.continue/
+.junie/
+.aider*
 .codex/
+.codeium/
+.copilot/
