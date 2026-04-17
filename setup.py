@@ -1,16 +1,10 @@
 #!/usr/bin/env python
-import os
 import re
-import sys
 
 from codecs import open
 from setuptools import setup
 
 github_url = "https://github.com/chartmogul/chartmogul-python"
-
-if sys.argv[-1] == "publish":
-    os.system("python setup.py sdist upload")
-    sys.exit()
 
 requires = [
     "requests>=2.31.0",
@@ -65,10 +59,10 @@ setup(
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
     ],
 )
