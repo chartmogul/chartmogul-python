@@ -91,3 +91,20 @@ ENV/
 .ropeproject
 
 /.idea
+
+# AI agent local/ephemeral data (shared config is tracked via negation)
+.claude/*
+!.claude/hooks/
+!.claude/settings.json
+CLAUDE.local.md
+.cursor/chat/
+.cursor/composer/
+.cursor/mcp.json
+.windsurf/
+.cline/
+.continue/
+.junie/
+.aider*
+.codex/
+.codeium/
+.copilot/
