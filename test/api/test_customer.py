@@ -1,5 +1,5 @@
 import unittest
-from chartmogul import Customer, Contact, Config, CustomerNote, Opportunity, Task
+from chartmogul import Customer, Contact, Config, CustomerNote, EntityNote, Opportunity, Task
 from chartmogul.api.customer import Attributes, Address
 from chartmogul.api.customers.subscription import CustomerSubscription
 from datetime import datetime
@@ -312,6 +312,27 @@ noteEntry = {
 }
 
 allNotes = {"entries": [noteEntry], "cursor": "cursor==", "has_more": True}
+
+entityNote = {
+    "uuid": "note_00000000-0000-0000-0000-000000000000",
+    "customer_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "associated_object": "customer",
+    "associated_object_uuid": "cus_00000000-0000-0000-0000-000000000000",
+    "type": "note",
+    "text": "This is a note",
+    "call_duration": 0,
+    "author": "John Doe (john@example.com)",
+    "created_at": "2015-06-09T13:16:00-04:00",
+    "updated_at": "2015-06-09T13:16:00-04:00"
+}
+
+createEntityNote = {
+    "type": "note",
+    "text": "This is a note",
+    "author_email": "john@example.com"
+}
+
+allEntityNotes = {"entries": [entityNote], "cursor": "cursor==", "has_more": True}
 
 opportunity = {
     "uuid": "00000000-0000-0000-0000-000000000000",
@@ -734,12 +755,13 @@ class CustomerTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        notes = Customer.notes(
-            config,
-            uuid="cus_00000000-0000-0000-0000-000000000000",
-            cursor="ym9vewfo",
-            per_page=1,
-            ).get()
+        with self.assertWarns(DeprecationWarning):
+            notes = Customer.notes(
+                config,
+                uuid="cus_00000000-0000-0000-0000-000000000000",
+                cursor="ym9vewfo",
+                per_page=1,
+                ).get()
         expected = Customer._many(**allNotes)
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -760,14 +782,63 @@ class CustomerTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        expected = Customer.createNote(
-            config, uuid="cus_00000000-0000-0000-0000-000000000000", data=createNote
-        ).get()
+        with self.assertWarns(DeprecationWarning):
+            expected = Customer.createNote(
+                config, uuid="cus_00000000-0000-0000-0000-000000000000", data=createNote
+            ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), createNote)
         self.assertTrue(isinstance(expected, CustomerNote))
+
+    @requests_mock.mock()
+    def test_entityNotes(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/notes?customer_uuid=cus_00000000-0000-0000-0000-000000000000&cursor=ym9vewfo&per_page=1",
+            status_code=200,
+            json=allEntityNotes,
+        )
+
+        config = Config("token")
+        notes = Customer.entityNotes(
+            config,
+            uuid="cus_00000000-0000-0000-0000-000000000000",
+            cursor="ym9vewfo",
+            per_page=1,
+        ).get()
+        expected = EntityNote._many(**allEntityNotes)
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {'customer_uuid': ['cus_00000000-0000-0000-0000-000000000000'], 'cursor': ['ym9vewfo'], 'per_page': ['1']})
+        self.assertEqual(mock_requests.last_request.text, None)
+        self.assertEqual(sorted(dir(notes)), sorted(dir(expected)))
+        self.assertTrue(isinstance(notes.entries[0], EntityNote))
+        self.assertEqual(notes.cursor, "cursor==")
+        self.assertTrue(notes.has_more)
+
+    @requests_mock.mock()
+    def test_createEntityNote(self, mock_requests):
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/notes",
+            status_code=200,
+            json=entityNote,
+        )
+
+        config = Config("token")
+        result = Customer.createEntityNote(
+            config, uuid="cus_00000000-0000-0000-0000-000000000000", data=dict(createEntityNote)
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(
+            mock_requests.last_request.json(),
+            {**createEntityNote, "customer_uuid": "cus_00000000-0000-0000-0000-000000000000"},
+        )
+        self.assertTrue(isinstance(result, EntityNote))
 
     @requests_mock.mock()
     def test_opportunities(self, mock_requests):

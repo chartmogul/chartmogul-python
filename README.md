@@ -178,8 +178,12 @@ chartmogul.Customer.disconnectSubscriptions(config, uuid='cus_5915ee5a-babd-406b
 })
 chartmogul.Customer.contacts(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
 chartmogul.Customer.createContact(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+# DEPRECATED: use chartmogul.Customer.entityNotes() instead
 chartmogul.Customer.notes(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
+# DEPRECATED: use chartmogul.Customer.createEntityNote() instead
 chartmogul.Customer.createNote(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+chartmogul.Customer.entityNotes(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
+chartmogul.Customer.createEntityNote(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 chartmogul.Customer.opportunities(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
 chartmogul.Customer.createOpportunity(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 chartmogul.Customer.tasks(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
@@ -190,17 +194,54 @@ chartmogul.Customer.createTask(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133
 
 ```python
 chartmogul.Contact.create(config, data={})
-chartmogul.Contact.all(config, cursor='aabbcc', per_page=20)
+chartmogul.Contact.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data_source_uuid='ds_fef05d54-47b4-431b-aed2-eb6b9e545430', email='test@example.com', customer_external_id='cus_0001', external_id='con_0001')
 chartmogul.Contact.retrieve(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Contact.merge(config, into_uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', from_uuid='con_2123290f-09c8-4628-a205-db5596bd58f7')
 chartmogul.Contact.modify(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   "email": "test@example.com"
 })
 chartmogul.Contact.destroy(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Contact.tasks(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
+chartmogul.Contact.createTask(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
+chartmogul.Contact.entityNotes(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
+chartmogul.Contact.createEntityNote(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 ```
 
-#### [Customer Notes](https://dev.chartmogul.com/reference/notes-and-call-logs/)
+`Contact.createTask` and `Contact.createEntityNote` add an `associated_object_identifier` pointing at the contact unless the payload already contains `customer_uuid` or `associated_object_identifier`.
+
+#### [Notes](https://dev.chartmogul.com/reference/notes-and-call-logs/)
+
+Notes and call logs attached to a customer or a contact. Replaces Customer Notes.
+
 ```python
+chartmogul.EntityNote.create(config, data={
+  "customer_uuid": "cus_5915ee5a-babd-406b-b8ce-d207133fb4cb",
+  "type": "note",
+  "text": "This is a note",
+  "author_email": "john@example.com"
+})
+chartmogul.EntityNote.create(config, data={
+  "associated_object_identifier": {
+    "associated_object": "contact",
+    "method": "uuid",
+    "value": "con_5915ee5a-babd-406b-b8ce-d207133fb4cb"
+  },
+  "type": "call",
+  "call_duration": 60,
+  "text": "This is a call log"
+})
+chartmogul.EntityNote.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.EntityNote.all(config, contact_uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', type='call', author_email='john@example.com')
+chartmogul.EntityNote.retrieve(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.EntityNote.patch(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={"text": "Updated text"})
+chartmogul.EntityNote.destroy(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+```
+
+`EntityNote.patch` returns `None` when the API reports nothing was updated (HTTP 304).
+
+#### [Customer Notes (deprecated)](https://dev.chartmogul.com/reference/notes-and-call-logs/)
+```python
+# DEPRECATED: use chartmogul.EntityNote instead
 chartmogul.CustomerNote.create(config, data={})
 chartmogul.CustomerNote.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.CustomerNote.retrieve(config, uuid='note_5915ee5a-babd-406b-b8ce-d207133fb4cb')
@@ -221,12 +262,30 @@ chartmogul.Opportunity.destroy(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4c
 #### [Tasks](https://dev.chartmogul.com/reference/tasks/)
 
 ```python
-chartmogul.Task.create(config, data={})
+chartmogul.Task.create(config, data={
+  "customer_uuid": "cus_5915ee5a-babd-406b-b8ce-d207133fb4cb",
+  "task_details": "Follow up on renewal",
+  "assignee": "john@example.com",
+  "due_date": "2025-04-30T00:00:00Z"
+})
+chartmogul.Task.create(config, data={
+  "associated_object_identifier": {
+    "associated_object": "contact",
+    "method": "uuid",
+    "value": "con_5915ee5a-babd-406b-b8ce-d207133fb4cb"
+  },
+  "task_details": "Follow up on renewal",
+  "assignee": "john@example.com",
+  "due_date": "2025-04-30T00:00:00Z"
+})
 chartmogul.Task.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Task.all(config, contact_uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', assignee='john@example.com', due_date_on_or_after='2025-04-01T00:00:00Z', due_date_on_or_before='2025-04-30T00:00:00Z', completed=False)
 chartmogul.Task.retrieve(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
-chartmogul.Task.patch(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Task.patch(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb', data={"completed_at": "2025-04-20T00:00:00Z"})
 chartmogul.Task.destroy(config, uuid='5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
+
+Date filters take ISO 8601 strings. `Task.patch` returns `None` when the API reports nothing was updated (HTTP 304).
 
 #### [Customer Attributes](https://dev.chartmogul.com/reference/customers/attributes/)
 
