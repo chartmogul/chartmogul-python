@@ -38,6 +38,7 @@ createContact = {
     "linked_in": "https://linkedin.com/not_found",
     "twitter": "https://twitter.com/not_found",
     "notes": "Heading\nBody\nFooter",
+    "last_seen": "2025-04-01T12:00:00Z",
     "custom": [
         {"key": "MyStringAttribute", "value": "Test"},
         {"key": "MyIntegerAttribute", "value": 123},
@@ -266,7 +267,7 @@ class ContactTestCase(unittest.TestCase):
             json=contact,
         )
 
-        jsonRequest = {"email": "test2@example.com"}
+        jsonRequest = {"email": "test2@example.com", "last_seen": "2025-04-01T12:00:00Z"}
         config = Config("token")
         expected = Contact.modify(
             config, uuid="con_00000000-0000-0000-0000-000000000000", data=jsonRequest
@@ -276,6 +277,7 @@ class ContactTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
         self.assertTrue(isinstance(expected, Contact))
+        self.assertTrue(isinstance(expected.last_seen, datetime))
 
     @requests_mock.mock()
     def test_modify_with_null_external_id(self, mock_requests):

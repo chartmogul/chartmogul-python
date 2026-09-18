@@ -198,7 +198,8 @@ chartmogul.Contact.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_
 chartmogul.Contact.retrieve(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Contact.merge(config, into_uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', from_uuid='con_2123290f-09c8-4628-a205-db5596bd58f7')
 chartmogul.Contact.modify(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
-  "email": "test@example.com"
+  "email": "test@example.com",
+  "last_seen": "2025-04-01T12:00:00Z"
 })
 chartmogul.Contact.destroy(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Contact.tasks(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
