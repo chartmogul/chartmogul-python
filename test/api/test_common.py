@@ -88,6 +88,18 @@ class CommonTestCase(unittest.TestCase):
             self.fail("DeprecatedArgumentError not raised")
 
     @requests_mock.mock()
+    def test_not_modified_returns_none(self, mock_requests):
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/data_sources/my_uuid",
+            status_code=304,
+        )
+
+        config = Config("token")
+        result = DataSource.modify(config, uuid="my_uuid", data={}).get()
+        self.assertEqual(result, None)
+
+    @requests_mock.mock()
     def test_api_incorrect(self, mock_requests):
         mock_requests.register_uri(
             "POST",

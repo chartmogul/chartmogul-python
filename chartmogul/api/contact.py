@@ -1,6 +1,8 @@
 from marshmallow import Schema, fields, post_load, EXCLUDE
-from ..resource import Resource
+from ..resource import ASSOCIATED_OBJECT_CONTACT, Resource
 from collections import namedtuple
+from .entity_note import EntityNote
+from .task import Task
 
 
 class Contact(Resource):
@@ -29,6 +31,7 @@ class Contact(Resource):
         # load_default=None ensures this attribute is always present on the Contact
         # object even when the API omits the field (e.g. older responses)
         external_id = fields.String(allow_none=True, load_default=None)
+        last_seen = fields.DateTime(allow_none=True)
         custom = fields.Dict(allow_none=True)
 
         @post_load
@@ -39,3 +42,15 @@ class Contact(Resource):
 
 
 Contact.merge = Contact._method("merge", "post", "/contacts/{into_uuid}/merge/{from_uuid}")
+Contact.tasks = Task._method("all", "get", "/tasks?contact_uuid={uuid}", useCallerClass=True)
+Contact.createTask = Task._method(
+    "create", "post", "/tasks", useCallerClass=True,
+    useAssociatedObjectFor=ASSOCIATED_OBJECT_CONTACT
+)
+Contact.entityNotes = EntityNote._method(
+    "all", "get", "/notes?contact_uuid={uuid}", useCallerClass=True
+)
+Contact.createEntityNote = EntityNote._method(
+    "create", "post", "/notes", useCallerClass=True,
+    useAssociatedObjectFor=ASSOCIATED_OBJECT_CONTACT
+)
