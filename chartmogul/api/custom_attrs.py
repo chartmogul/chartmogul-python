@@ -13,6 +13,8 @@ class CustomAttributes(Resource):
 
     class _Schema(Schema):
         custom = fields.Dict()
+        overrides = fields.Dict()
+        message = fields.String()
 
         @post_load
         def make(self, data, **kwargs):

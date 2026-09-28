@@ -857,3 +857,68 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), createTask)
         self.assertTrue(isinstance(expected, Task))
+
+    @requests_mock.mock()
+    def test_retrieve_with_overrides_and_history(self, mock_requests):
+        overrides = {"company": True, "attributes": {"custom": {"salesRep": True}}}
+        historical_values = {
+            "company": [
+                {
+                    "value": "Example Company",
+                    "update_performed_at": "2026-01-01T16:58:58Z",
+                    "update_performed_by": "adam@example.com",
+                    "initial": False,
+                }
+            ],
+            "attributes": {
+                "custom": {
+                    "salesRep": [
+                        {
+                            "value": "Gabi",
+                            "update_performed_at": None,
+                            "update_performed_by": None,
+                            "initial": True,
+                        }
+                    ]
+                }
+            },
+        }
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/customers/cus_00000000-0000-0000-0000-000000000000",
+            status_code=200,
+            json={**entry, "overrides": overrides, "historical_values": historical_values},
+        )
+
+        config = Config("token")
+        result = Customer.retrieve(
+            config,
+            uuid="cus_00000000-0000-0000-0000-000000000000",
+            with_overrides=True,
+            attributes_with_history="company,custom.salesrep",
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {"with_overrides": ["true"], "attributes_with_history": ["company,custom.salesrep"]},
+        )
+        self.assertEqual(result.overrides, overrides)
+        self.assertEqual(result.historical_values, historical_values)
+
+    @requests_mock.mock()
+    def test_create_with_overrides(self, mock_requests):
+        overrides = {"company": True, "attributes": {"custom": {"channel": True}}}
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/customers",
+            status_code=200,
+            json={**entry, "overrides": overrides},
+        )
+
+        config = Config("token")
+        result = Customer.create(config, data={**createCustomer, "overrides": overrides}).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json()["overrides"], overrides)
+        self.assertEqual(result.overrides, overrides)

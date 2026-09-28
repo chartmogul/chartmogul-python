@@ -220,3 +220,59 @@ class ContactTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertTrue(expected, {})
+
+    @requests_mock.mock()
+    def test_retrieve_with_overrides_and_history(self, mock_requests):
+        overrides = {"title": True}
+        historical_values = {
+            "title": [
+                {
+                    "value": "CEO",
+                    "update_performed_at": "2026-01-01T16:58:58Z",
+                    "update_performed_by": "adam@example.com",
+                    "initial": False,
+                }
+            ]
+        }
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/contacts/con_00000000-0000-0000-0000-000000000000",
+            status_code=200,
+            json={**contact, "overrides": overrides, "historical_values": historical_values},
+        )
+
+        config = Config("token")
+        result = Contact.retrieve(
+            config,
+            uuid="con_00000000-0000-0000-0000-000000000000",
+            with_overrides=True,
+            attributes_with_history="title",
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(
+            mock_requests.last_request.qs,
+            {"with_overrides": ["true"], "attributes_with_history": ["title"]},
+        )
+        self.assertEqual(result.overrides, overrides)
+        self.assertEqual(result.historical_values, historical_values)
+
+    @requests_mock.mock()
+    def test_modify_with_overrides(self, mock_requests):
+        overrides = {"title": True}
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/contacts/con_00000000-0000-0000-0000-000000000000",
+            status_code=200,
+            json={**contact, "overrides": overrides},
+        )
+
+        jsonRequest = {"title": "CTO", "overrides": overrides}
+        config = Config("token")
+        result = Contact.modify(
+            config, uuid="con_00000000-0000-0000-0000-000000000000", data=jsonRequest
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.overrides, overrides)
