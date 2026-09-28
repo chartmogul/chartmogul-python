@@ -8,12 +8,15 @@ class Attributes(Resource):
     """
 
     _path = "/customers{/uuid}/attributes"
+    _bool_query_params = ["with_overrides"]
 
     class _Schema(Schema):
         tags = fields.List(fields.String())
         stripe = fields.Dict()
         clearbit = fields.Dict()
         custom = fields.Dict()
+        overrides = fields.Dict()
+        historical_values = fields.Dict()
 
         @post_load
         def make(self, data, **kwargs):

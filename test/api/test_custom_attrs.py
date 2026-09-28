@@ -122,3 +122,48 @@ class CustomAttributesTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.json(), jsonRequest2)
         # No comparison, because unicode strings, dates, serialization order etc.
         # vary on different Python versions.
+
+    @requests_mock.mock()
+    def test_add_with_overrides(self, mock_requests):
+        overrides = {"custom": {"channel": True}}
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            status_code=200,
+            json={"custom": {"channel": "Facebook"}, "overrides": overrides},
+        )
+
+        jsonRequest = {
+            "custom": [{"type": "String", "key": "channel", "value": "Facebook"}],
+            "overrides": overrides,
+        }
+        config = Config("token")
+        result = CustomAttributes.add(config, uuid="CUSTOMER_UUID", data=jsonRequest).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.custom, {"channel": "Facebook"})
+        self.assertEqual(result.overrides, overrides)
+
+    @requests_mock.mock()
+    def test_remove_with_overrides_and_message(self, mock_requests):
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            status_code=202,
+            json={
+                "custom": {"channel": "Facebook"},
+                "overrides": {},
+                "message": "Custom attributes deleted from customer",
+            },
+        )
+
+        jsonRequest = {"custom": ["age"], "overrides": {"custom": {"age": False}}}
+        config = Config("token")
+        result = CustomAttributes.remove(config, uuid="CUSTOMER_UUID", data=jsonRequest).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.custom, {"channel": "Facebook"})
+        self.assertEqual(result.overrides, {})
+        self.assertEqual(result.message, "Custom attributes deleted from customer")

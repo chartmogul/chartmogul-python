@@ -12,6 +12,7 @@ class Contact(Resource):
 
     _path = "/contacts{/uuid}"
     _root_key = "entries"
+    _bool_query_params = ["with_overrides"]
     _many = namedtuple("Contacts", [_root_key, "has_more", "cursor"])
 
     class _Schema(Schema):
@@ -33,6 +34,8 @@ class Contact(Resource):
         external_id = fields.String(allow_none=True, load_default=None)
         last_seen = fields.DateTime(allow_none=True)
         custom = fields.Dict(allow_none=True)
+        overrides = fields.Dict()
+        historical_values = fields.Dict()
 
         @post_load
         def make(self, data, **kwargs):
