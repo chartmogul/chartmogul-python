@@ -43,7 +43,8 @@ class AttributesTestCase(unittest.TestCase):
         self.assertIsNone(result.overrides)
         self.assertIsNone(result.historical_values)
 
-    @requests_mock.mock()
+    # case_sensitive pins that the SDK preserves attribute name casing in the query
+    @requests_mock.Mocker(case_sensitive=True)
     def test_retrieve_with_overrides_and_history(self, mock_requests):
         mock_requests.register_uri(
             "GET",
@@ -57,13 +58,13 @@ class AttributesTestCase(unittest.TestCase):
             config,
             uuid="CUSTOMER_UUID",
             with_overrides=True,
-            attributes_with_history="custom.salesrep",
+            attributes_with_history="custom.salesRep",
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(
             mock_requests.last_request.qs,
-            {"with_overrides": ["true"], "attributes_with_history": ["custom.salesrep"]},
+            {"with_overrides": ["true"], "attributes_with_history": ["custom.salesRep"]},
         )
         self.assertTrue(isinstance(result, Attributes))
         self.assertEqual(result.custom, attributesResponse["custom"])
