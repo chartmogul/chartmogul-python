@@ -169,3 +169,25 @@ class CustomAttributesTestCase(unittest.TestCase):
         self.assertEqual(result.custom, {"channel": "Facebook"})
         self.assertEqual(result.overrides, {})
         self.assertEqual(result.message, "Custom attributes deleted from customer")
+
+    @requests_mock.mock()
+    def test_remove_last_attribute_omits_custom(self, mock_requests):
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            status_code=202,
+            json={
+                "overrides": {},
+                "message": "Custom attributes deleted from customer",
+            },
+        )
+
+        config = Config("token")
+        result = CustomAttributes.remove(
+            config, uuid="CUSTOMER_UUID", data={"custom": ["age"]}
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertIsNone(result.custom)
+        self.assertEqual(result.overrides, {})
+        self.assertEqual(result.message, "Custom attributes deleted from customer")
