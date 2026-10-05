@@ -34,8 +34,10 @@ class Contact(Resource):
         external_id = fields.String(allow_none=True, load_default=None)
         last_seen = fields.DateTime(allow_none=True)
         custom = fields.Dict(allow_none=True)
-        overrides = fields.Dict()
-        historical_values = fields.Dict()
+        # load_default=None ensures these attributes are always present; the API
+        # omits the keys unless with_overrides / attributes_with_history is passed
+        overrides = fields.Dict(load_default=None)
+        historical_values = fields.Dict(load_default=None)
 
         @post_load
         def make(self, data, **kwargs):

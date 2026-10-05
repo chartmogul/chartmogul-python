@@ -314,6 +314,8 @@ class ContactTestCase(unittest.TestCase):
         self.assertTrue(isinstance(expected, Contact))
         self.assertEqual(expected.email, "test@example.com")
         self.assertTrue(isinstance(expected.last_seen, datetime))
+        self.assertIsNone(expected.overrides)
+        self.assertIsNone(expected.historical_values)
 
     @requests_mock.mock()
     def test_tasks(self, mock_requests):
