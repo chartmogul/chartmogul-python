@@ -136,6 +136,7 @@ chartmogul.Customer.all(config, cursor='cursor==', per_page=20)
 chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb',
                              with_overrides=True, attributes_with_history='company,custom.channel')
+# with_overrides and attributes_with_history only work on retrieve; list and search endpoints ignore them
 chartmogul.Customer.search(config, email='email@email.com')
 chartmogul.Customer.merge(config, data={
   'from': {'customer_uuid': 'cus_5915ee5a-babd-406b-b8ce-d207133fb4cb'},
@@ -204,6 +205,7 @@ chartmogul.Contact.all(config, cursor='aabbcc', per_page=20)
 chartmogul.Contact.retrieve(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Contact.retrieve(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb',
                             with_overrides=True, attributes_with_history='title,email')
+# with_overrides and attributes_with_history only work on retrieve; list endpoints ignore them
 chartmogul.Contact.merge(config, into_uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', from_uuid='con_2123290f-09c8-4628-a205-db5596bd58f7')
 chartmogul.Contact.modify(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   "email": "test@example.com"
