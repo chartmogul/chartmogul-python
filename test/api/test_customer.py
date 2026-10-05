@@ -505,10 +505,12 @@ class CustomerTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        Customer.create(config, data=createCustomer).get()
+        result = Customer.create(config, data=createCustomer).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), sentCreateExpected)
+        self.assertIsNone(result.overrides)
+        self.assertIsNone(result.historical_values)
 
     @requests_mock.mock()
     def test_search(self, mock_requests):

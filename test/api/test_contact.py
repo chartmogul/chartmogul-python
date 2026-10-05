@@ -204,6 +204,8 @@ class ContactTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertTrue(isinstance(expected, Contact))
+        self.assertIsNone(expected.overrides)
+        self.assertIsNone(expected.historical_values)
 
     @requests_mock.mock()
     def test_destroy(self, mock_requests):

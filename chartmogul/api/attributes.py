@@ -15,8 +15,10 @@ class Attributes(Resource):
         stripe = fields.Dict()
         clearbit = fields.Dict()
         custom = fields.Dict()
-        overrides = fields.Dict()
-        historical_values = fields.Dict()
+        # load_default=None ensures these attributes are always present; the API
+        # omits the keys unless with_overrides / attributes_with_history is passed
+        overrides = fields.Dict(load_default=None)
+        historical_values = fields.Dict(load_default=None)
 
         @post_load
         def make(self, data, **kwargs):

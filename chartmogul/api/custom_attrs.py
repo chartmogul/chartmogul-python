@@ -13,8 +13,10 @@ class CustomAttributes(Resource):
 
     class _Schema(Schema):
         custom = fields.Dict()
-        overrides = fields.Dict()
-        message = fields.String()
+        # load_default=None ensures these attributes are always present; the API
+        # returns message only on DELETE responses
+        overrides = fields.Dict(load_default=None)
+        message = fields.String(load_default=None)
 
         @post_load
         def make(self, data, **kwargs):
