@@ -223,7 +223,8 @@ class ContactTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertTrue(expected, {})
 
-    @requests_mock.mock()
+    # case_sensitive pins that the SDK does not alter query param casing
+    @requests_mock.Mocker(case_sensitive=True)
     def test_retrieve_with_overrides_and_history(self, mock_requests):
         overrides = {"title": True}
         historical_values = {
