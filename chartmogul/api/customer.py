@@ -35,6 +35,7 @@ class Customer(Resource):
 
     _path = "/customers{/uuid}"
     _root_key = "entries"
+    _bool_query_params = ["with_overrides"]
     _many = namedtuple("Customers", [_root_key, "has_more", "cursor"], defaults=[None, None])
 
     class _Schema(Schema):
@@ -70,6 +71,10 @@ class Customer(Resource):
         currency_sign = fields.String(data_key="currency-sign")
         address = fields.Nested(Address._Schema, allow_none=True, unknown=EXCLUDE)
         website_url = fields.String(allow_none=True)
+        # load_default=None ensures these attributes are always present; the API
+        # omits the keys unless with_overrides / attributes_with_history is passed
+        overrides = fields.Dict(load_default=None)
+        historical_values = fields.Dict(load_default=None)
 
         @post_load
         def make(self, data, **kwargs):

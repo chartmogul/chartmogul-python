@@ -10,6 +10,7 @@ class Contact(Resource):
 
     _path = "/contacts{/uuid}"
     _root_key = "entries"
+    _bool_query_params = ["with_overrides"]
     _many = namedtuple("Contacts", [_root_key, "has_more", "cursor"])
 
     class _Schema(Schema):
@@ -30,6 +31,10 @@ class Contact(Resource):
         # object even when the API omits the field (e.g. older responses)
         external_id = fields.String(allow_none=True, load_default=None)
         custom = fields.Dict(allow_none=True)
+        # load_default=None ensures these attributes are always present; the API
+        # omits the keys unless with_overrides / attributes_with_history is passed
+        overrides = fields.Dict(load_default=None)
+        historical_values = fields.Dict(load_default=None)
 
         @post_load
         def make(self, data, **kwargs):

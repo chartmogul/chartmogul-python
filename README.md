@@ -134,6 +134,9 @@ chartmogul.DataSource.destroy(config, uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb
 chartmogul.Customer.create(config, data={})
 chartmogul.Customer.all(config, cursor='cursor==', per_page=20)
 chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb',
+                             with_overrides=True, attributes_with_history='company,custom.channel')
+# with_overrides and attributes_with_history only work on retrieve; list and search endpoints ignore them
 chartmogul.Customer.search(config, email='email@email.com')
 chartmogul.Customer.merge(config, data={
   'from': {'customer_uuid': 'cus_5915ee5a-babd-406b-b8ce-d207133fb4cb'},
@@ -149,6 +152,14 @@ chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4c
   "city": "San Francisco",
   "country": "US",
   "state": "CA",
+})
+chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  "company": "Pinata Technologies",
+  "overrides": {
+    "company": True,
+    "address": True,
+    "attributes": {"custom": {"channel": True}}
+  }
 })
 chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.subscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
@@ -192,9 +203,16 @@ chartmogul.Customer.createTask(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133
 chartmogul.Contact.create(config, data={})
 chartmogul.Contact.all(config, cursor='aabbcc', per_page=20)
 chartmogul.Contact.retrieve(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Contact.retrieve(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb',
+                            with_overrides=True, attributes_with_history='title,email')
+# with_overrides and attributes_with_history only work on retrieve; list endpoints ignore them
 chartmogul.Contact.merge(config, into_uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', from_uuid='con_2123290f-09c8-4628-a205-db5596bd58f7')
 chartmogul.Contact.modify(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   "email": "test@example.com"
+})
+chartmogul.Contact.modify(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  "title": "CTO",
+  "overrides": {"title": True}
 })
 chartmogul.Contact.destroy(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 ```
@@ -234,6 +252,8 @@ Note that the returned attributes of type date are not parsed and stay in string
 
 ```python
 chartmogul.Attributes.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Attributes.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb',
+                               with_overrides=True, attributes_with_history='custom.channel')
 ```
 
 #### [Tags](https://dev.chartmogul.com/reference/customers/tags/)
@@ -265,6 +285,12 @@ chartmogul.CustomAttributes.add(config, data={
     {'type': 'Integer', 'key': 'age', 'value': 8}
   ]
 })
+chartmogul.CustomAttributes.add(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  'custom': [
+    {'type': 'String', 'key': 'channel', 'value': 'Facebook'}
+  ],
+  'overrides': {'custom': {'channel': True}}
+})
 chartmogul.CustomAttributes.update(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   'custom': {
     'age': 20,
@@ -273,6 +299,10 @@ chartmogul.CustomAttributes.update(config, uuid='cus_5915ee5a-babd-406b-b8ce-d20
 });
 chartmogul.CustomAttributes.remove(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   'custom': ['CAC']
+})
+chartmogul.CustomAttributes.remove(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  'custom': ['CAC'],
+  'overrides': {'custom': {'CAC': False}}
 })
 ```
 
