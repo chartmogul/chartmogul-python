@@ -986,7 +986,7 @@ class CustomerTestCase(unittest.TestCase):
         mock_requests.register_uri(
             "POST",
             "https://api.chartmogul.com/v1/customers",
-            status_code=200,
+            status_code=201,
             json={**entry, "overrides": overrides},
         )
 
