@@ -40,12 +40,13 @@ class CustomerNoteTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        notes = CustomerNote.all(
-            config,
-            customer_uuid="cus_00000000-0000-0000-0000-000000000000",
-            cursor="ym9vewfo",
-            per_page=1,
-        ).get()
+        with self.assertWarns(DeprecationWarning):
+            notes = CustomerNote.all(
+                config,
+                customer_uuid="cus_00000000-0000-0000-0000-000000000000",
+                cursor="ym9vewfo",
+                per_page=1,
+            ).get()
         expected = CustomerNote._many(**allNotes)
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
@@ -70,7 +71,8 @@ class CustomerNoteTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        expected = CustomerNote.create(config, data=createNote).get()
+        with self.assertWarns(DeprecationWarning):
+            expected = CustomerNote.create(config, data=createNote).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), createNote)
@@ -96,9 +98,10 @@ class CustomerNoteTestCase(unittest.TestCase):
         new_text = {"text": "new text"}
 
         config = Config("token")
-        expected = CustomerNote.patch(
-            config, uuid="note_00000000-0000-0000-0000-000000000000", data=new_text
-        ).get()
+        with self.assertWarns(DeprecationWarning):
+            expected = CustomerNote.patch(
+                config, uuid="note_00000000-0000-0000-0000-000000000000", data=new_text
+            ).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), new_text)
@@ -114,9 +117,10 @@ class CustomerNoteTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        expected = CustomerNote.retrieve(
-            config, uuid="note_00000000-0000-0000-0000-000000000000"
-        ).get()
+        with self.assertWarns(DeprecationWarning):
+            expected = CustomerNote.retrieve(
+                config, uuid="note_00000000-0000-0000-0000-000000000000"
+            ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
@@ -132,9 +136,10 @@ class CustomerNoteTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        expected = CustomerNote.destroy(
-            config, uuid="note_00000000-0000-0000-0000-000000000000"
-        ).get()
+        with self.assertWarns(DeprecationWarning):
+            expected = CustomerNote.destroy(
+                config, uuid="note_00000000-0000-0000-0000-000000000000"
+            ).get()
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertTrue(expected, {})

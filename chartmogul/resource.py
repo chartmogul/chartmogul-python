@@ -1,3 +1,4 @@
+import warnings
 from datetime import date, datetime
 from json import dumps
 
@@ -36,6 +37,10 @@ MAPPINGS = {
 
 LIST_PARAMS = ["has_more", "summary", "customer_uuid", "data_source_uuid", "cursor"]
 ESCAPED_QUERY_KEYS = {"start_date": "start-date", "end_date": "end-date"}
+EMPTY_BODY_STATUS_CODES = (202, 204, 304)
+
+ASSOCIATED_OBJECT_CONTACT = "contact"
+ASSOCIATED_OBJECT_IDENTIFIER_METHOD_UUID = "uuid"
 
 
 class DataObject(object):
@@ -96,7 +101,7 @@ class Resource(DataObject):
         (immutable, therefore all set on creation by generator)
         """
         response.raise_for_status()
-        if response.status_code == 204 or response.status_code == 202:
+        if response.status_code in EMPTY_BODY_STATUS_CODES:
             return None
         try:
             jsonObj = response.json()
@@ -200,7 +205,8 @@ class Resource(DataObject):
             )
 
     @classmethod
-    def _method(callerClass, method, http_verb, path=None, useCallerClass=False, useUUIDFor=None):
+    def _method(callerClass, method, http_verb, path=None, useCallerClass=False, useUUIDFor=None,
+                useAssociatedObjectFor=None):
         @classmethod
         def fc(calleeClass, config, **kwargs):
             if config is None or not isinstance(config, Config):
@@ -244,6 +250,9 @@ class Resource(DataObject):
             if useUUIDFor is not None and 'data' in kwargs.keys():
                 kwargs["data"][useUUIDFor] = kwargs["uuid"]
 
+            if useAssociatedObjectFor is not None and 'data' in kwargs.keys():
+                _inject_associated_object(kwargs["data"], useAssociatedObjectFor, kwargs["uuid"])
+
             # UUID is always path parameter only.
             if "uuid" in kwargs:
                 del kwargs["uuid"]
@@ -266,6 +275,33 @@ def _add_method(cls, method, http_verb, path=None):
 
 for method, http_verb in MAPPINGS.items():
     _add_method(Resource, method, http_verb)
+
+
+def _deprecated_method(original, message):
+    """
+    Wraps a method built by Resource._method so it emits a DeprecationWarning
+    before delegating to the original.
+    """
+    @classmethod
+    def fc(cls, config, **kwargs):
+        warnings.warn(message, DeprecationWarning, stacklevel=2)
+        return original.__func__(cls, config, **kwargs)
+
+    return fc
+
+
+def _inject_associated_object(data, associated_object, uuid):
+    """
+    Points a create payload at its parent object unless the caller already
+    identified it via customer_uuid or associated_object_identifier.
+    """
+    if "customer_uuid" in data or "associated_object_identifier" in data:
+        return
+    data["associated_object_identifier"] = {
+        "associated_object": associated_object,
+        "method": ASSOCIATED_OBJECT_IDENTIFIER_METHOD_UUID,
+        "value": uuid,
+    }
 
 
 def _build_ext_id_params(kwargs):

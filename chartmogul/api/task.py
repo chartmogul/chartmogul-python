@@ -11,11 +11,15 @@ class Task(Resource):
     _path = "/tasks{/uuid}"
     _root_key = "entries"
     _many = namedtuple("Tasks", [_root_key, "has_more", "cursor"])
+    _bool_query_params = ["completed"]
 
     class _Schema(Schema):
 
         task_uuid = fields.String()
-        customer_uuid = fields.String()
+        customer_uuid = fields.String(allow_none=True)
+        # load_default=None keeps these attributes present even when the API omits them
+        associated_object = fields.String(allow_none=True, load_default=None)
+        associated_object_uuid = fields.String(allow_none=True, load_default=None)
         assignee = fields.String()
         task_details = fields.String()
         due_date = fields.DateTime()

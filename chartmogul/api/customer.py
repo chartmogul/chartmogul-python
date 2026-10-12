@@ -6,11 +6,12 @@ requires Customer class and simple dict/array data.
 Validation is done on server.
 """
 from marshmallow import Schema, fields, post_load, EXCLUDE
-from ..resource import DataObject, Resource
+from ..resource import DataObject, Resource, _deprecated_method
 from collections import namedtuple
 from .attributes import Attributes
 from .contact import Contact
 from .customer_note import CustomerNote
+from .entity_note import EntityNote
 from .opportunity import Opportunity
 from .task import Task
 from .customers.subscription import CustomerSubscription
@@ -94,8 +95,16 @@ Customer.contacts = Contact._method("all", "get", "/customers/{uuid}/contacts", 
 Customer.createContact = Contact._method(
     "create", "post", "/customers/{uuid}/contacts", useCallerClass=True
 )
-Customer.notes = CustomerNote._method("all", "get", "/customer_notes?customer_uuid={uuid}", useCallerClass=True)
-Customer.createNote = CustomerNote._method("create", "post", "/customer_notes", useCallerClass=True, useUUIDFor="customer_uuid")
+Customer.notes = _deprecated_method(
+    CustomerNote._method("all", "get", "/customer_notes?customer_uuid={uuid}", useCallerClass=True),
+    "Customer.notes() is deprecated. Use Customer.entityNotes() instead.",
+)
+Customer.createNote = _deprecated_method(
+    CustomerNote._method("create", "post", "/customer_notes", useCallerClass=True, useUUIDFor="customer_uuid"),
+    "Customer.createNote() is deprecated. Use Customer.createEntityNote() instead.",
+)
+Customer.entityNotes = EntityNote._method("all", "get", "/notes?customer_uuid={uuid}", useCallerClass=True)
+Customer.createEntityNote = EntityNote._method("create", "post", "/notes", useCallerClass=True, useUUIDFor="customer_uuid")
 Customer.opportunities = Opportunity._method("all", "get", "/opportunities?customer_uuid={uuid}", useCallerClass=True)
 Customer.createOpportunity = Opportunity._method("create", "post", "/opportunities", useCallerClass=True, useUUIDFor="customer_uuid")
 Customer.tasks = Task._method("all", "get", "/tasks?customer_uuid={uuid}", useCallerClass=True)
