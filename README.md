@@ -137,6 +137,8 @@ chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb
 chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb',
                              with_overrides=True, attributes_with_history='company,custom.channel')
 # with_overrides and attributes_with_history only work on retrieve; list and search endpoints ignore them
+# Overrides and history live at the top level of the customer (customer.overrides,
+# customer.historical_values); customer.attributes.overrides is never populated
 chartmogul.Customer.search(config, email='email@email.com')
 chartmogul.Customer.merge(config, data={
   'from': {'customer_uuid': 'cus_5915ee5a-babd-406b-b8ce-d207133fb4cb'},
