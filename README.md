@@ -161,6 +161,10 @@ chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4c
     "attributes": {"custom": {"channel": True}}
   }
 })
+# An overrides flag set to True protects the value written by the request from
+# later updates; False removes an existing override, keeping the current value.
+# API writes to an overridden field are reverted unless the request carries a
+# flag for that field.
 chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.subscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
@@ -364,6 +368,8 @@ chartmogul.CustomAttributes.remove(config, uuid='cus_5915ee5a-babd-406b-b8ce-d20
   'custom': ['CAC'],
   'overrides': {'custom': {'CAC': False}}
 })
+# remove keeps overridden attributes unless the request carries a False flag
+# for them; the response message names the ones kept.
 ```
 
 #### [Plans](https://dev.chartmogul.com/reference/plans/)
