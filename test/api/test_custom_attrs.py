@@ -56,6 +56,7 @@ jsonResponse2 = {
                 "clearbit": {"name": "Acme"},
                 "custom": {"channel": "Facebook"},
             },
+            "overrides": {"attributes": {"custom": {"channel": True}}},
         },
         {
             "id": 13456,
@@ -71,6 +72,7 @@ jsonResponse2 = {
                 "clearbit": {"name": "Umbrella Corp."},
                 "custom": {"channel": "Facebook"},
             },
+            "overrides": {},
         },
     ]
 }
@@ -111,19 +113,19 @@ class CustomAttributesTestCase(unittest.TestCase):
     def test_add_to_email(self, mock_requests):
         mock_requests.register_uri(
             "POST",
-            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            "https://api.chartmogul.com/v1/customers/attributes/custom",
             status_code=200,
             json=jsonResponse2,
         )
 
         config = Config("token")
-        result = CustomAttributes.add(config, uuid="CUSTOMER_UUID", data=jsonRequest2).get()
+        result = CustomAttributes.add_by_email(config, data=jsonRequest2).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest2)
-        # No comparison, because unicode strings, dates, serialization order etc.
-        # vary on different Python versions.
+        self.assertEqual(result.entries[0].overrides, {"attributes": {"custom": {"channel": True}}})
+        self.assertEqual(result.entries[1].overrides, {})
 
     @requests_mock.mock()
     def test_add_with_overrides(self, mock_requests):
