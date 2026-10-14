@@ -355,6 +355,9 @@ chartmogul.CustomAttributes.add(config, uuid='cus_5915ee5a-babd-406b-b8ce-d20713
   ],
   'overrides': {'custom': {'channel': True}}
 })
+# Note the overrides shape here is {'custom': {...}} — on Customer create/modify
+# and in Customer.retrieve responses the same flags nest under 'attributes':
+# {'attributes': {'custom': {...}}}
 chartmogul.CustomAttributes.update(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   'custom': {
     'age': 20,
