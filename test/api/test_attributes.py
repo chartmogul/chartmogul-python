@@ -43,7 +43,7 @@ class AttributesTestCase(unittest.TestCase):
         self.assertIsNone(result.overrides)
         self.assertIsNone(result.historical_values)
 
-    # case_sensitive pins that the SDK preserves attribute name casing in the query
+    # case_sensitive asserts that the SDK preserves attribute name casing in the query
     @requests_mock.Mocker(case_sensitive=True)
     def test_retrieve_with_overrides_and_history(self, mock_requests):
         mock_requests.register_uri(

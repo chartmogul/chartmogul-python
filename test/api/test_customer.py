@@ -949,7 +949,7 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.last_request.json(), createTask)
         self.assertTrue(isinstance(expected, Task))
 
-    # case_sensitive pins that the SDK preserves attribute name casing in the query
+    # case_sensitive asserts that the SDK preserves attribute name casing in the query
     @requests_mock.Mocker(case_sensitive=True)
     def test_retrieve_with_overrides_and_history(self, mock_requests):
         overrides = {"company": True, "attributes": {"custom": {"salesRep": True}}}
