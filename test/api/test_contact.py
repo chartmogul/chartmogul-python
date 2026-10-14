@@ -533,3 +533,21 @@ class ContactTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
         self.assertEqual(result.overrides, overrides)
+
+    @requests_mock.mock()
+    def test_create_with_overrides(self, mock_requests):
+        overrides = {"title": True}
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/contacts",
+            status_code=201,
+            json={**contact, "overrides": overrides},
+        )
+
+        jsonRequest = {**createContact, "overrides": overrides}
+        config = Config("token")
+        result = Contact.create(config, data=jsonRequest).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.overrides, overrides)

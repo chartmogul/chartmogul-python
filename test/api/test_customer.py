@@ -1014,3 +1014,43 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.json()["overrides"], overrides)
         self.assertEqual(result.overrides, overrides)
+
+    @requests_mock.mock()
+    def test_modify_with_overrides(self, mock_requests):
+        overrides = {"company": True, "attributes": {"custom": {"channel": True}}}
+        mock_requests.register_uri(
+            "PATCH",
+            "https://api.chartmogul.com/v1/customers/cus_5915ee5a-babd-406b-b8ce-d207133fb4cb",
+            status_code=200,
+            json={**entry, "overrides": overrides},
+        )
+
+        jsonRequest = {"company": "Pinata Technologies", "overrides": overrides}
+        config = Config("token")
+        result = Customer.modify(
+            config, uuid="cus_5915ee5a-babd-406b-b8ce-d207133fb4cb", data=jsonRequest
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.overrides, overrides)
+
+    @requests_mock.mock()
+    def test_createContact_with_overrides(self, mock_requests):
+        overrides = {"title": True}
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/customers/cus_00000000-0000-0000-0000-000000000000/contacts",
+            status_code=201,
+            json={**contact, "overrides": overrides},
+        )
+
+        jsonRequest = {**createContact, "overrides": overrides}
+        config = Config("token")
+        result = Customer.createContact(
+            config, uuid="cus_00000000-0000-0000-0000-000000000000", data=jsonRequest
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.overrides, overrides)

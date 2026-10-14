@@ -150,6 +150,25 @@ class CustomAttributesTestCase(unittest.TestCase):
         self.assertEqual(result.overrides, overrides)
 
     @requests_mock.mock()
+    def test_update_with_overrides(self, mock_requests):
+        overrides = {"custom": {"channel": True}}
+        mock_requests.register_uri(
+            "PUT",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            status_code=200,
+            json={"custom": {"channel": "Twitter"}, "overrides": overrides},
+        )
+
+        jsonRequest = {"custom": {"channel": "Twitter"}, "overrides": overrides}
+        config = Config("token")
+        result = CustomAttributes.update(config, uuid="CUSTOMER_UUID", data=jsonRequest).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.custom, {"channel": "Twitter"})
+        self.assertEqual(result.overrides, overrides)
+
+    @requests_mock.mock()
     def test_remove_with_overrides_and_message(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
