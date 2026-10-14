@@ -318,7 +318,7 @@ Date filters take ISO 8601 strings. `Task.patch` returns `None` when the API rep
 
 #### [Customer Attributes](https://dev.chartmogul.com/reference/customers/attributes/)
 
-Note that the returned attributes of type date are not parsed and stay in string.
+Note that the returned attributes of type date are not parsed and stay in string. The same applies inside `historical_values` entries: `update_performed_at` stays an ISO 8601 string.
 
 ```python
 chartmogul.Attributes.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
