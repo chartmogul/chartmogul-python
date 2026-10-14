@@ -168,7 +168,9 @@ chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4c
 # An overrides flag set to True protects the value written by the request from
 # later updates; False removes an existing override, keeping the current value.
 # API writes to an overridden field are reverted unless the request carries a
-# flag for that field.
+# flag for that field. All write calls accept an overrides entry in data:
+# Customer and Contact create/modify, Customer.createContact, and
+# CustomAttributes add/update/remove (including add by email).
 chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.subscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
