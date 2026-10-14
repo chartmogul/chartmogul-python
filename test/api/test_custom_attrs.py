@@ -87,7 +87,7 @@ class CustomAttributesTestCase(unittest.TestCase):
             "POST",
             "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
             status_code=200,
-            json=simpleJSONResult,
+            json={**simpleJSONResult, "overrides": {}},
         )
 
         expected = CustomAttributes(**simpleJSONResult)
@@ -104,7 +104,7 @@ class CustomAttributesTestCase(unittest.TestCase):
         self.assertEqual(result.custom["convertedAt"], expected.custom["convertedAt"])
         self.assertEqual(result.custom["pro"], expected.custom["pro"])
         self.assertEqual(result.custom["salesRep"], expected.custom["salesRep"])
-        self.assertIsNone(result.overrides)
+        self.assertEqual(result.overrides, {})
         self.assertIsNone(result.message)
 
     @requests_mock.mock()

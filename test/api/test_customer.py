@@ -521,8 +521,8 @@ class CustomerTestCase(unittest.TestCase):
         mock_requests.register_uri(
             "POST",
             "https://api.chartmogul.com/v1/customers",
-            status_code=200,
-            json=entry,
+            status_code=201,
+            json={**entry, "overrides": {}},
         )
 
         config = Config("token")
@@ -530,6 +530,24 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), sentCreateExpected)
+        self.assertEqual(result.overrides, {})
+        self.assertIsNone(result.historical_values)
+
+    @requests_mock.mock()
+    def test_retrieve(self, mock_requests):
+        mock_requests.register_uri(
+            "GET",
+            "https://api.chartmogul.com/v1/customers/cus_5915ee5a-babd-406b-b8ce-d207133fb4cb",
+            status_code=200,
+            json=entry,
+        )
+
+        config = Config("token")
+        result = Customer.retrieve(config, uuid="cus_5915ee5a-babd-406b-b8ce-d207133fb4cb").get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertTrue(isinstance(result, Customer))
         self.assertIsNone(result.overrides)
         self.assertIsNone(result.historical_values)
 
