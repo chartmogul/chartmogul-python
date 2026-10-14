@@ -137,6 +137,8 @@ chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb
 chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb',
                              with_overrides=True, attributes_with_history='company,custom.channel')
 # with_overrides and attributes_with_history only work on retrieve; list and search endpoints ignore them
+# attributes_with_history is a comma-separated string of case-sensitive names;
+# custom attributes take the custom. prefix; unknown names return a 422
 # Overrides and history live at the top level of the customer (customer.overrides,
 # customer.historical_values); customer.attributes.overrides is never populated
 chartmogul.Customer.search(config, email='email@email.com')
@@ -320,6 +322,8 @@ Note that the returned attributes of type date are not parsed and stay in string
 chartmogul.Attributes.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Attributes.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb',
                                with_overrides=True, attributes_with_history='custom.channel')
+# attributes_with_history accepts custom attributes only on this endpoint;
+# standard field names like 'company' return a 422
 ```
 
 #### [Tags](https://dev.chartmogul.com/reference/customers/tags/)
