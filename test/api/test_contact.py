@@ -485,7 +485,7 @@ class ContactTestCase(unittest.TestCase):
                 {
                     "value": "CEO",
                     "update_performed_at": "2026-01-01T16:58:58Z",
-                    "update_performed_by": "adam@example.com",
+                    "update_performed_by": "API",
                     "initial": False,
                 }
             ]
