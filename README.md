@@ -134,6 +134,13 @@ chartmogul.DataSource.destroy(config, uuid='ds_5915ee5a-babd-406b-b8ce-d207133fb
 chartmogul.Customer.create(config, data={})
 chartmogul.Customer.all(config, cursor='cursor==', per_page=20)
 chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Customer.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb',
+                             with_overrides=True, attributes_with_history='company,custom.channel')
+# with_overrides and attributes_with_history only work on retrieve; list and search endpoints ignore them
+# attributes_with_history is a comma-separated string of case-sensitive names;
+# custom attributes take the custom. prefix; unknown names return a 422
+# Overrides and history live at the top level of the customer (customer.overrides,
+# customer.historical_values); customer.attributes.overrides is never populated
 chartmogul.Customer.search(config, email='email@email.com')
 chartmogul.Customer.merge(config, data={
   'from': {'customer_uuid': 'cus_5915ee5a-babd-406b-b8ce-d207133fb4cb'},
@@ -150,6 +157,20 @@ chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4c
   "country": "US",
   "state": "CA",
 })
+chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  "company": "Pinata Technologies",
+  "overrides": {
+    "company": True,
+    "address": True,
+    "attributes": {"custom": {"channel": True}}
+  }
+})
+# An overrides flag set to True protects the value written by the request from
+# later updates; False removes an existing override and restores the field's
+# most recent value from edit history. API writes to an overridden field are
+# reverted unless the request carries a flag for that field. All write calls accept an overrides entry in data:
+# Customer and Contact create/modify, Customer.createContact, and
+# CustomAttributes add/update/remove (including add by email).
 chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.subscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
@@ -196,10 +217,17 @@ chartmogul.Customer.createTask(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133
 chartmogul.Contact.create(config, data={})
 chartmogul.Contact.all(config, cursor='aabbcc', per_page=20, customer_uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data_source_uuid='ds_fef05d54-47b4-431b-aed2-eb6b9e545430', email='test@example.com', customer_external_id='cus_0001', external_id='con_0001')
 chartmogul.Contact.retrieve(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Contact.retrieve(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb',
+                            with_overrides=True, attributes_with_history='title,email')
+# with_overrides and attributes_with_history only work on retrieve; list endpoints ignore them
 chartmogul.Contact.merge(config, into_uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', from_uuid='con_2123290f-09c8-4628-a205-db5596bd58f7')
 chartmogul.Contact.modify(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   "email": "test@example.com",
   "last_seen": "2025-04-01T12:00:00Z"
+})
+chartmogul.Contact.modify(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  "title": "CTO",
+  "overrides": {"title": True}
 })
 chartmogul.Contact.destroy(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Contact.tasks(config, uuid='con_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
@@ -290,10 +318,14 @@ Date filters take ISO 8601 strings. `Task.patch` returns `None` when the API rep
 
 #### [Customer Attributes](https://dev.chartmogul.com/reference/customers/attributes/)
 
-Note that the returned attributes of type date are not parsed and stay in string.
+Note that the returned attributes of type date are not parsed and stay in string. The same applies inside `historical_values` entries: `update_performed_at` stays an ISO 8601 string.
 
 ```python
 chartmogul.Attributes.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+chartmogul.Attributes.retrieve(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb',
+                               with_overrides=True, attributes_with_history='custom.channel')
+# attributes_with_history accepts custom attributes only on this endpoint;
+# standard field names like 'company' return a 422
 ```
 
 #### [Tags](https://dev.chartmogul.com/reference/customers/tags/)
@@ -325,6 +357,15 @@ chartmogul.CustomAttributes.add(config, data={
     {'type': 'Integer', 'key': 'age', 'value': 8}
   ]
 })
+chartmogul.CustomAttributes.add(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  'custom': [
+    {'type': 'String', 'key': 'channel', 'value': 'Facebook'}
+  ],
+  'overrides': {'custom': {'channel': True}}
+})
+# Note the overrides shape here is {'custom': {...}} — on Customer create/modify
+# and in Customer.retrieve responses the same flags nest under 'attributes':
+# {'attributes': {'custom': {...}}}
 chartmogul.CustomAttributes.update(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   'custom': {
     'age': 20,
@@ -334,6 +375,12 @@ chartmogul.CustomAttributes.update(config, uuid='cus_5915ee5a-babd-406b-b8ce-d20
 chartmogul.CustomAttributes.remove(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   'custom': ['CAC']
 })
+chartmogul.CustomAttributes.remove(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
+  'custom': ['CAC'],
+  'overrides': {'custom': {'CAC': False}}
+})
+# remove keeps overridden attributes unless the request carries a False flag
+# for them; the response message names the ones kept.
 ```
 
 #### [Plans](https://dev.chartmogul.com/reference/plans/)

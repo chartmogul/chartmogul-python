@@ -12,7 +12,12 @@ class CustomAttributes(Resource):
     _path = "/customers{/uuid}/attributes/custom"
 
     class _Schema(Schema):
-        custom = fields.Dict()
+        # load_default=None ensures these attributes are always present; the API
+        # omits custom when a DELETE removes the last custom attribute, and
+        # returns message only on DELETE responses
+        custom = fields.Dict(load_default=None)
+        overrides = fields.Dict(load_default=None)
+        message = fields.String(load_default=None)
 
         @post_load
         def make(self, data, **kwargs):

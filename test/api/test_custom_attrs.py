@@ -56,6 +56,7 @@ jsonResponse2 = {
                 "clearbit": {"name": "Acme"},
                 "custom": {"channel": "Facebook"},
             },
+            "overrides": {"attributes": {"custom": {"channel": True}}},
         },
         {
             "id": 13456,
@@ -71,6 +72,7 @@ jsonResponse2 = {
                 "clearbit": {"name": "Umbrella Corp."},
                 "custom": {"channel": "Facebook"},
             },
+            "overrides": {},
         },
     ]
 }
@@ -87,7 +89,7 @@ class CustomAttributesTestCase(unittest.TestCase):
             "POST",
             "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
             status_code=200,
-            json=simpleJSONResult,
+            json={**simpleJSONResult, "overrides": {}},
         )
 
         expected = CustomAttributes(**simpleJSONResult)
@@ -104,21 +106,109 @@ class CustomAttributesTestCase(unittest.TestCase):
         self.assertEqual(result.custom["convertedAt"], expected.custom["convertedAt"])
         self.assertEqual(result.custom["pro"], expected.custom["pro"])
         self.assertEqual(result.custom["salesRep"], expected.custom["salesRep"])
+        self.assertEqual(result.overrides, {})
+        self.assertIsNone(result.message)
 
     @requests_mock.mock()
     def test_add_to_email(self, mock_requests):
         mock_requests.register_uri(
             "POST",
-            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            "https://api.chartmogul.com/v1/customers/attributes/custom",
             status_code=200,
             json=jsonResponse2,
         )
 
         config = Config("token")
-        result = CustomAttributes.add(config, uuid="CUSTOMER_UUID", data=jsonRequest2).get()
+        result = CustomAttributes.add_by_email(config, data=jsonRequest2).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.json(), jsonRequest2)
-        # No comparison, because unicode strings, dates, serialization order etc.
-        # vary on different Python versions.
+        self.assertEqual(result.entries[0].overrides, {"attributes": {"custom": {"channel": True}}})
+        self.assertEqual(result.entries[1].overrides, {})
+
+    @requests_mock.mock()
+    def test_add_with_overrides(self, mock_requests):
+        overrides = {"custom": {"channel": True}}
+        mock_requests.register_uri(
+            "POST",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            status_code=200,
+            json={"custom": {"channel": "Facebook"}, "overrides": overrides},
+        )
+
+        jsonRequest = {
+            "custom": [{"type": "String", "key": "channel", "value": "Facebook"}],
+            "overrides": overrides,
+        }
+        config = Config("token")
+        result = CustomAttributes.add(config, uuid="CUSTOMER_UUID", data=jsonRequest).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.custom, {"channel": "Facebook"})
+        self.assertEqual(result.overrides, overrides)
+
+    @requests_mock.mock()
+    def test_update_with_overrides(self, mock_requests):
+        overrides = {"custom": {"channel": True}}
+        mock_requests.register_uri(
+            "PUT",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            status_code=200,
+            json={"custom": {"channel": "Twitter"}, "overrides": overrides},
+        )
+
+        jsonRequest = {"custom": {"channel": "Twitter"}, "overrides": overrides}
+        config = Config("token")
+        result = CustomAttributes.update(config, uuid="CUSTOMER_UUID", data=jsonRequest).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.custom, {"channel": "Twitter"})
+        self.assertEqual(result.overrides, overrides)
+
+    @requests_mock.mock()
+    def test_remove_with_overrides_and_message(self, mock_requests):
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            status_code=202,
+            json={
+                "custom": {"channel": "Facebook"},
+                "overrides": {},
+                "message": "Custom attributes deleted from customer",
+            },
+        )
+
+        jsonRequest = {"custom": ["age"], "overrides": {"custom": {"age": False}}}
+        config = Config("token")
+        result = CustomAttributes.remove(config, uuid="CUSTOMER_UUID", data=jsonRequest).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.json(), jsonRequest)
+        self.assertEqual(result.custom, {"channel": "Facebook"})
+        self.assertEqual(result.overrides, {})
+        self.assertEqual(result.message, "Custom attributes deleted from customer")
+
+    @requests_mock.mock()
+    def test_remove_last_attribute_omits_custom(self, mock_requests):
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/customers/CUSTOMER_UUID/attributes/custom",
+            status_code=202,
+            json={
+                "overrides": {},
+                "message": "Custom attributes deleted from customer",
+            },
+        )
+
+        config = Config("token")
+        result = CustomAttributes.remove(
+            config, uuid="CUSTOMER_UUID", data={"custom": ["age"]}
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertIsNone(result.custom)
+        self.assertEqual(result.overrides, {})
+        self.assertEqual(result.message, "Custom attributes deleted from customer")
