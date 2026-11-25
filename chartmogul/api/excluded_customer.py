@@ -3,6 +3,28 @@ from ..resource import Resource
 from collections import namedtuple
 
 
+class ReincludedCustomer(Resource):
+    """
+    Result of removing a customer from the exclude list with ExcludedCustomer.reinclude.
+    """
+
+    class _Schema(Schema):
+        customer_uuid = fields.String()
+        status = fields.String()
+
+        @post_load
+        def make(self, data, **kwargs):
+            return ReincludedCustomer(**data)
+
+    _schema = _Schema(unknown=EXCLUDE)
+
+    @classmethod
+    def _load(cls, response):
+        # The API responds 202 with a body, which Resource._load would discard
+        response.raise_for_status()
+        return cls._loadJSON(response.json())
+
+
 class ExcludedCustomer(Resource):
     """
     Customers on the account's exclude list, which keeps them from being
@@ -21,9 +43,6 @@ class ExcludedCustomer(Resource):
         name = fields.String(allow_none=True)
         email = fields.String(allow_none=True)
         excluded_at = fields.DateTime(allow_none=True)
-        # Returned only when a customer is re-included (destroy); load_default=None
-        # keeps the attribute present on list entries
-        status = fields.String(load_default=None)
 
         @post_load
         def make(self, data, **kwargs):
@@ -31,8 +50,7 @@ class ExcludedCustomer(Resource):
 
     _schema = _Schema(unknown=EXCLUDE)
 
-    @classmethod
-    def _load(cls, response):
-        # destroy responds 202 with a body, which Resource._load would discard
-        response.raise_for_status()
-        return cls._loadJSON(response.json())
+
+ExcludedCustomer.reinclude = ReincludedCustomer._method(
+    "destroy", "delete", "/excluded_customers{/uuid}", useCallerClass=True
+)

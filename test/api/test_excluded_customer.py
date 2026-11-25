@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 import requests_mock
 
-from chartmogul import ExcludedCustomer, Config, APIError
+from chartmogul import ExcludedCustomer, ReincludedCustomer, Config, APIError
 
 allExcludedCustomers = {
     "entries": [
@@ -59,12 +59,12 @@ class ExcludedCustomerTestCase(unittest.TestCase):
         self.assertEqual(entry.name, "Acme")
         self.assertEqual(entry.email, "acme@example.com")
         self.assertEqual(entry.excluded_at, datetime(2026, 11, 20, 10, tzinfo=timezone.utc))
-        self.assertIsNone(entry.status)
+        self.assertFalse(hasattr(entry, "status"))
         self.assertEqual(result.entries[1].data_source_uuid, "ds_00000000-0000-0000-0000-000000000002")
         self.assertIsNone(result.entries[1].email)
 
     @requests_mock.mock()
-    def test_destroy(self, mock_requests):
+    def test_reinclude(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
             "https://api.chartmogul.com/v1/excluded_customers/cus_00000000-0000-0000-0000-000000000001",
@@ -77,31 +77,35 @@ class ExcludedCustomerTestCase(unittest.TestCase):
         )
 
         config = Config("token")
-        result = ExcludedCustomer.destroy(
+        result = ExcludedCustomer.reinclude(
             config, uuid="cus_00000000-0000-0000-0000-000000000001"
         ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.qs, {})
         self.assertEqual(mock_requests.last_request.text, None)
-        self.assertTrue(isinstance(result, ExcludedCustomer))
+        self.assertTrue(isinstance(result, ReincludedCustomer))
         self.assertEqual(result.customer_uuid, "cus_00000000-0000-0000-0000-000000000001")
         self.assertEqual(result.status, "reimporting")
 
     @requests_mock.mock()
-    def test_destroy_not_excluded(self, mock_requests):
+    def test_reinclude_not_excluded(self, mock_requests):
         mock_requests.register_uri(
             "DELETE",
             "https://api.chartmogul.com/v1/excluded_customers/cus_00000000-0000-0000-0000-000000000001",
             status_code=404,
-            json={"error": "Customer not found"},
+            json={
+                "code": 404,
+                "message": "Excluded customer \"00000000-0000-0000-0000-000000000001\" does not exist",
+                "param": "customer_uuid",
+            },
         )
 
         config = Config("token")
         with self.assertRaises(APIError) as context:
-            ExcludedCustomer.destroy(
+            ExcludedCustomer.reinclude(
                 config, uuid="cus_00000000-0000-0000-0000-000000000001"
             ).get()
 
         self.assertEqual(mock_requests.call_count, 1, "expected call")
-        self.assertTrue("Customer not found" in str(context.exception))
+        self.assertTrue("does not exist" in str(context.exception))
