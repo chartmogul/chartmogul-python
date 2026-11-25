@@ -1054,3 +1054,41 @@ class CustomerTestCase(unittest.TestCase):
         self.assertEqual(mock_requests.call_count, 1, "expected call")
         self.assertEqual(mock_requests.last_request.json(), jsonRequest)
         self.assertEqual(result.overrides, overrides)
+
+    @requests_mock.mock()
+    def test_destroy(self, mock_requests):
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/customers/cus_00000000-0000-0000-0000-000000000000",
+            status_code=202,
+            json={"message": "Customer deleted"},
+        )
+
+        config = Config("token")
+        result = Customer.destroy(config, uuid="cus_00000000-0000-0000-0000-000000000000").get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.qs, {})
+        self.assertEqual(mock_requests.last_request.text, None)
+        self.assertIsNone(result)
+
+    # case_sensitive asserts that exclude=True is sent as the lowercase string the API expects
+    @requests_mock.Mocker(case_sensitive=True)
+    def test_destroy_with_exclude(self, mock_requests):
+        mock_requests.register_uri(
+            "DELETE",
+            "https://api.chartmogul.com/v1/customers/cus_00000000-0000-0000-0000-000000000000",
+            status_code=202,
+            json={"message": "Customer deleted"},
+        )
+
+        config = Config("token")
+        result = Customer.destroy(
+            config, uuid="cus_00000000-0000-0000-0000-000000000000", exclude=True
+        ).get()
+
+        self.assertEqual(mock_requests.call_count, 1, "expected call")
+        self.assertEqual(mock_requests.last_request.path, "/v1/customers/cus_00000000-0000-0000-0000-000000000000")
+        self.assertEqual(mock_requests.last_request.qs, {"exclude": ["true"]})
+        self.assertEqual(mock_requests.last_request.text, None)
+        self.assertIsNone(result)

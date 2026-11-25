@@ -36,7 +36,7 @@ class Customer(Resource):
 
     _path = "/customers{/uuid}"
     _root_key = "entries"
-    _bool_query_params = ["with_overrides"]
+    _bool_query_params = ["with_overrides", "exclude"]
     _many = namedtuple("Customers", [_root_key, "has_more", "cursor"], defaults=[None, None])
 
     class _Schema(Schema):
@@ -83,6 +83,13 @@ class Customer(Resource):
             return Customer(**data)
 
     _schema = _Schema(unknown=EXCLUDE)
+
+    @classmethod
+    def destroy(cls, config, **kwargs):
+        # Non-GET requests only send query params passed explicitly as query_params
+        if "exclude" in kwargs:
+            kwargs["query_params"] = {"exclude": kwargs.pop("exclude")}
+        return super(Customer, cls).destroy(config, **kwargs)
 
 
 Customer.search = Customer._method("all", "get", "/customers/search")
