@@ -172,6 +172,9 @@ chartmogul.Customer.modify(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4c
 # Customer and Contact create/modify, Customer.createContact, and
 # CustomAttributes add/update/remove (including add by email).
 chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+# exclude=True also adds the customer to the account's exclude list so it is not
+# re-imported; it is ignored when the account doesn't have customer exclusion enabled
+chartmogul.Customer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', exclude=True)
 chartmogul.Customer.subscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
 chartmogul.Customer.connectSubscriptions(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={
   'subscriptions': [
@@ -210,6 +213,19 @@ chartmogul.Customer.createOpportunity(config, uuid='cus_5915ee5a-babd-406b-b8ce-
 chartmogul.Customer.tasks(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', cursor='aabbcc', per_page=20)
 chartmogul.Customer.createTask(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb', data={})
 ```
+
+#### Excluded Customers
+
+```python
+# Newest first; each entry is one excluded data source customer, so the same
+# customer_uuid can appear once per data source
+chartmogul.ExcludedCustomer.all(config, cursor='aabbcc', per_page=20)
+# Removes the customer from the exclude list; the result has customer_uuid and
+# status ('reimporting' or 'manual_reimport_required')
+chartmogul.ExcludedCustomer.destroy(config, uuid='cus_5915ee5a-babd-406b-b8ce-d207133fb4cb')
+```
+
+Both endpoints respond 404 when the account doesn't have customer exclusion enabled, and `destroy` responds 404 when the customer is not excluded.
 
 #### [Contacts](https://dev.chartmogul.com/reference/contacts/)
 
